@@ -1,0 +1,103 @@
+.profile-page-container {
+    --primary: #3498db;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3544;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Боковое меню */
+.menu-sidebar {
+    border-radius: 12px;
+    background: var(--gray-100);
+    padding: 1rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 8px;
+    transition: all 0.3s;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.menu-item.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+.menu-item:hover:not(.active) {
+    background: var(--gray-200);
+}
+
+/* Аватар */
+.avatar-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+/* Карточки данных */
+.card {
+    border: none !important;
+    border-radius: 12px;
+}
+
+.card-title {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+/* Таблица заказов */
+.table thead {
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.table td {
+    vertical-align: middle !important;
+}
+
+.badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Сборки */
+.build-card {
+    transition: transform 0.3s;
+}
+
+.build-card:hover {
+    transform: translateY(-5px);
+}
+
+.build-card .btn {
+    transition: all 0.3s;
+}
+
+.build-card:hover .btn {
+    background: var(--primary);
+    color: white;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .avatar-img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .menu-item {
+        font-size: 0.9rem;
+        padding: 0.8rem;
+    }
+}

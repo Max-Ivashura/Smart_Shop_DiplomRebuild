@@ -1,0 +1,33 @@
+.product-card {
+    transition: transform 0.2s ease;
+    border-radius: 0.75rem;
+    overflow: hidden;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.product-image {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: #f8f9fa;
+}
+
+.product-image img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+}
+
+.badge.position-absolute {
+    font-size: 0.8rem;
+    padding: 0.35rem 0.65rem;
+}
+
+.add-to-cart {
+    transition: all 0.3s ease;
+}

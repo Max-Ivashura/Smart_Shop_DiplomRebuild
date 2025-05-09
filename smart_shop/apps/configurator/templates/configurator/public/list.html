@@ -1,0 +1,47 @@
+<!-- apps/configurator/templates/configurator/public/list.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Публичные сборки</h2>
+
+    <div class="row">
+        {% for build in public_builds %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Сборка от {{ build.user.username }}
+                        <span class="badge bg-primary">{{ build.total_price }} руб.</span>
+                    </h5>
+
+                    <div class="components-list mb-3">
+                        <h6>Компоненты:</h6>
+                        <ul class="list-group">
+                            {% for component in build.components.all %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>{{ component.name }}</span>
+                                <small>{{ component.category.name }}</small>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'configurator:clone_build' build.id %}"
+                           class="btn btn-sm btn-success">
+                            Клонировать
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">Публичных сборок пока нет.</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

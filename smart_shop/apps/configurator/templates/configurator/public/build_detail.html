@@ -1,0 +1,93 @@
+<!-- apps/configurator/templates/configurator/public/build_detail.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h2>Сборка от {{ build.user.username }}</h2>
+                <span class="badge bg-primary">{{ build.total_price }} руб.</span>
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Компоненты:</h4>
+                        <ul class="list-group">
+                            {% for component in build.components.all %}
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <div>
+                                        <h5>{{ component.name }}</h5>
+                                        <small class="text-muted">{{ component.category.name }}</small>
+                                    </div>
+                                    <span>{{ component.price }} руб.</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5>Действия</h5>
+                                <a href="{% url 'configurator:clone_build' build.id %}"
+                                   class="btn btn-success w-100 mb-2">
+                                    Клонировать сборку
+                                </a>
+                                {% if build.user == request.user %}
+                                    <a href="{% url 'configurator:edit_build' build.id %}"
+                                       class="btn btn-outline-primary w-100">
+                                        Редактировать
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Блок комментариев -->
+    <div class="mt-5">
+        <h3>Комментарии и оценки</h3>
+
+        <!-- Форма добавления комментария -->
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'configurator:add_comment' build.id %}">
+                {% csrf_token %}
+                <textarea name="text" class="form-control mb-2" placeholder="Ваш комментарий..."></textarea>
+                <button type="submit" class="btn btn-primary">Отправить</button>
+            </form>
+
+            <!-- Форма оценки -->
+            <form method="post" action="{% url 'configurator:add_rating' build.id %}" class="mt-3">
+                {% csrf_token %}
+                <div class="rating">
+                    {% for i in "54321" %}
+                        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}">
+                        <label for="star{{ i }}">★</label>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-outline-secondary mt-2">Оценить</button>
+            </form>
+        {% endif %}
+
+        <!-- Список комментариев -->
+        <div class="comments-list mt-4">
+            {% for comment in build.comments.filter(is_approved=True) %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5>{{ comment.user.username }}</h5>
+                            <small>{{ comment.created_at|date:"d.m.Y H:i" }}</small>
+                        </div>
+                        <p class="mb-0">{{ comment.text }}</p>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="alert alert-info">Пока нет комментариев.</div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

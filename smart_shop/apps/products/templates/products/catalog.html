@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'products/css/catalog.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container my-5">
+        <div class="row">
+            <!-- Фильтры и категории -->
+            <div class="col-md-3 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Категории</h5>
+                    </div>
+                    <div class="list-group list-group-flush">
+                        {% for category in categories %}
+                            <a href="{% url 'products:category' category.slug %}"
+                               class="list-group-item list-group-item-action d-flex justify-content-between align-items-center
+                       {% if category.slug == active_category %}active{% endif %}">
+                                {{ category.name }}
+                                <span class="badge bg-secondary rounded-pill">{{ category.product_count }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Основной контент -->
+            <div class="col-md-9">
+                <div class="row mb-4 align-items-center">
+                    <div class="col">
+                        <h1 class="mb-0">
+                            {% if active_category %}
+                                {{ active_category.name }}
+                            {% else %}
+                                Все товары
+                            {% endif %}
+                        </h1>
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-select" id="sortSelect" aria-label="Сортировка">
+                            <option value="newest" {% if sort_param == 'newest' %}selected{% endif %}>Новинки</option>
+                            <option value="price_asc" {% if sort_param == 'price_asc' %}selected{% endif %}>Сначала
+                                дешевые
+                            </option>
+                            <option value="price_desc" {% if sort_param == 'price_desc' %}selected{% endif %}>Сначала
+                                дорогие
+                            </option>
+                            <option value="popular" {% if sort_param == 'popular' %}selected{% endif %}>Популярные
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Сетка товаров -->
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    {% for product in products %}
+                        <div class="col">
+                            <div class="card h-100 product-card shadow-sm transition-all">
+                                <div class="product-image position-relative">
+                                    {% if product.images.exists %}
+                                        <img src="{{ product.images.first.image.url }}"
+                                             class="card-img-top"
+                                             alt="{{ product.name }}"
+                                             loading="lazy">
+                                    {% else %}
+                                        <div class="placeholder-image bg-light d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-image text-muted fs-1"></i>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="position-absolute top-0 end-0 m-2">
+                                        {% if product.is_new %}
+                                            <span class="badge bg-danger">Новинка</span>
+                                        {% endif %}
+                                        {% if product.stock <= 0 %}
+                                            <span class="badge bg-dark">Нет в наличии</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title">
+                                        <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark">
+                                            {{ product.name|truncatechars:40 }}
+                                        </a>
+                                    </h5>
+
+                                    <div class="mt-auto">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span class="h5 text-primary mb-0">{{ product.price }} ₽</span>
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary">
+                                        {{ product.category.name }}
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer bg-transparent">
+                                    <button class="btn btn-primary w-100 add-to-cart{% if product.stock <= 0 %} disabled{% endif %}"
+                                            data-product-id="{{ product.id }}"
+                                            {% if product.stock <= 0 %}disabled title="Нет в наличии"{% endif %}>
+                                        <i class="bi bi-cart-plus"></i>
+                                        {% if product.stock > 0 %}В корзину{% else %}Недоступно{% endif %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-info text-center py-4">
+                                <i class="bi bi-box-seam fs-1"></i>
+                                <p class="mt-3 mb-0">В этой категории пока нет товаров</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Улучшенная пагинация -->
+                {% if is_paginated %}
+                    <nav class="mt-5" aria-label="Навигация по страницам">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page=1" aria-label="Первая">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if num == page_obj.number %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"
+                                       aria-label="Последняя">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Динамическое обновление кнопок корзины
+            const handleCartAction = async (button) => {
+                const productId = button.dataset.productId;
+                button.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>';
+
+                try {
+                    const response = await fetch(`{% url 'cart:add' 0 %}`.replace('0', productId), {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+
+                    if (response.ok) {
+                        button.innerHTML = '<i class="bi bi-check2"></i> В корзине';
+                        button.classList.remove('btn-primary');
+                        button.classList.add('btn-success');
+                        button.disabled = true;
+
+                        // Обновление счетчика в шапке
+                        const cartBadge = document.querySelector('.cart-count');
+                        if (cartBadge) {
+                            cartBadge.textContent = parseInt(cartBadge.textContent) + 1;
+                        }
+                    }
+                } catch (error) {
+                    button.innerHTML = '<i class="bi bi-x-circle"></i> Ошибка';
+                    button.classList.add('btn-danger');
+                    console.error('Ошибка:', error);
+                }
+            };
+
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (!button.disabled) handleCartAction(button);
+                });
+            });
+
+            // Сохранение параметров сортировки при пагинации
+            document.getElementById('sortSelect').addEventListener('change', function () {
+                const url = new URL(window.location.href);
+                url.searchParams.set('sort', this.value);
+                window.location.href = url.toString();
+            });
+        });
+    </script>
+{% endblock %}

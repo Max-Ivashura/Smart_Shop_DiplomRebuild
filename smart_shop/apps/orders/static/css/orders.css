@@ -1,0 +1,63 @@
+/* Orders Container */
+.orders-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 15px;
+}
+
+.order-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    transition: transform 0.2s;
+}
+
+.order-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.order-id {
+    color: #2d3748;
+    font-weight: 600;
+}
+
+.order-status .badge {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+}
+
+.order-total {
+    color: #2b6cb0;
+    font-weight: 700;
+}
+
+/* Order Detail */
+.order-detail-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 15px;
+}
+
+.order-item img {
+    max-height: 100px;
+    object-fit: contain;
+    padding: 1rem;
+}
+
+.order-actions {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Empty State */
+.empty-orders {
+    text-align: center;
+    padding: 3rem;
+    border-radius: 0.5rem;
+}
+
+.empty-orders i {
+    color: #718096;
+    margin-bottom: 1rem;
+}

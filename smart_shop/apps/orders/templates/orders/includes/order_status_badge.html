@@ -1,0 +1,5 @@
+{% load orders_extras %}
+
+<span class="badge bg-{{ order.status_color }}">
+    {{ order.get_status_display }}
+</span>

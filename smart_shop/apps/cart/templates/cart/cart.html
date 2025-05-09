@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+    <h1 class="cart-title">Ваша корзина</h1>
+
+    {% if object.items.all %}
+        <div class="cart-items">
+            {% for item in object.items.all %}
+                <div class="cart-item card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-2">
+                            <img src="{{ item.product.get_first_image.image.url }}"
+                                 class="img-fluid rounded-start"
+                                 alt="{{ item.product.name }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.product.name }}</h5>
+                                <p class="text-muted mb-1">Артикул: {{ item.product.sku }}</p>
+                                <p class="text-success mb-0">В наличии: {{ item.product.stock }} шт.</p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="card-body h-100 d-flex flex-column justify-content-between">
+                                <div class="quantity-controls">
+                                    <form method="post" action="{% url 'cart:update' item.id %}">
+                                        {% csrf_token %}
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-secondary minus-btn" type="button">−</button>
+                                            <input type="number"
+                                                   name="quantity"
+                                                   value="{{ item.quantity }}"
+                                                   min="1"
+                                                   max="{{ item.product.stock }}"
+                                                   class="form-control text-center quantity-input">
+                                            <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">{{ item.product.price }} ₽ × {{ item.quantity }}</span>
+                                    <a href="{% url 'cart:remove' item.id %}"
+                                       class="btn btn-danger btn-sm delete-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="cart-summary card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">Итого:</h4>
+                    <h4 class="mb-0 total-price">{{ object.total_price }} ₽</h4>
+                </div>
+                <a href="{% url 'orders:create' %}" class="btn btn-primary btn-lg w-100">
+                    Перейти к оформлению
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div class="empty-cart alert alert-info">
+            <i class="bi bi-cart-x fs-4"></i>
+            <p class="mb-0">Ваша корзина пуста</p>
+            <a href="{% url 'products:catalog' %}" class="btn btn-outline-primary mt-3">
+                Начать покупки
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

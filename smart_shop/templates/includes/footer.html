@@ -1,42 +1,42 @@
-<footer class="bg-light mt-5">
-  <div class="container py-4">
-    <div class="row">
-      <div class="col-md-3">
-        <h5>Информация</h5>
-        <ul class="list-unstyled">
-          <li><a href="/about">О нас</a></li>
-          <li><a href="/delivery">Доставка</a></li>
-          <li><a href="/contacts">Контакты</a></li>
-        </ul>
-      </div>
-      <div class="col-md-3">
-        <h5>Покупателям</h5>
-        <ul class="list-unstyled">
-          <li><a href="/payment">Оплата</a></li>
-          <li><a href="/returns">Возвраты</a></li>
-          <li><a href="/faq">FAQ</a></li>
-        </ul>
-      </div>
-      <div class="col-md-3">
-        <h5>Соцсети</h5>
-        <div class="d-flex gap-3">
-          <a href="#"><i class="bi bi-facebook fs-4"></i></a>
-          <a href="#"><i class="bi bi-instagram fs-4"></i></a>
-          <a href="#"><i class="bi bi-vk fs-4"></i></a>
+<footer class="bg-light mt-auto pt-5 pb-3">
+    <div class="container py-4">
+        <div class="row gy-4">
+            <div class="col-md-3">
+                <h5 class="fw-bold text-dark">Информация</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'about' %}" class="footer-link">О нас</a></li>
+                    <li><a href="{% url 'delivery' %}" class="footer-link">Доставка</a></li>
+                    <li><a href="{% url 'contacts' %}" class="footer-link">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold text-dark">Покупателям</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/payment" class="footer-link">Оплата</a></li>
+                    <li><a href="/returns" class="footer-link">Возвраты</a></li>
+                    <li><a href="/faq" class="footer-link">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold text-dark">Соцсети</h5>
+                <div class="d-flex gap-3 social-icons">
+                    <a href="#" class="text-secondary"><i class="bi bi-facebook fs-4"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-instagram fs-4"></i></a>
+                    <a href="#" class="text-secondary"><i class="bi bi-vk fs-4"></i></a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <h5 class="fw-bold text-dark">Подписка</h5>
+                <form class="input-group">
+                    <input type="email" class="form-control rounded-start" placeholder="Ваш email">
+                    <button class="btn btn-primary rounded-end" type="submit">
+                        <i class="bi bi-envelope-fill"></i>
+                    </button>
+                </form>
+            </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <h5>Подписка</h5>
-        <form>
-          <div class="input-group">
-            <input type="email" class="form-control" placeholder="Ваш email">
-            <button class="btn btn-primary" type="submit">Подписаться</button>
-          </div>
-        </form>
-      </div>
+        <div class="text-center mt-4">
+            <small class="text-muted">© 2025 Мой магазин. Все права защищены.</small>
+        </div>
     </div>
-    <div class="text-center mt-4">
-      <small>© 2025 Мой магазин. Все права защищены.</small>
-    </div>
-  </div>
 </footer>

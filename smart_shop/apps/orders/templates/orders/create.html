@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Оформление заказа{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Оформление заказа</h1>
+
+    <div class="row">
+        <!-- Товары в корзине -->
+        <div class="col-md-7">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Ваши товары</h5>
+                    {% for item in request.user.cart.items.all %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <h6>{{ item.product.name }}</h6>
+                                <small class="text-muted">{{ item.quantity }} × {{ item.product.price }} руб.</small>
+                            </div>
+                            <span class="fw-bold">{{ item.total_price }} руб.</span>
+                        </div>
+                    {% endfor %}
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <h5>Итого:</h5>
+                        <h5>{{ request.user.cart.total_price }} руб.</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Форма заказа -->
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Адрес доставки</label>
+                            <input
+                                type="text"
+                                name="address"
+                                class="form-control"
+                                value="{{ request.user.address }}"
+                                placeholder="Укажите адрес"
+                            >
+                            <div class="form-text">Оставьте пустым, чтобы использовать адрес из профиля</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Комментарий</label>
+                            <textarea
+                                name="comment"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Дополнительные пожелания"
+                            ></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 btn-lg">
+                            Подтвердить заказ
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

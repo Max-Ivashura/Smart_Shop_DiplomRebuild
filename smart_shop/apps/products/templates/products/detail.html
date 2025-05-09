@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'products/css/detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <!-- Хлебные крошки -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Главная</a></li>
+                {% for cat in breadcrumbs|slice:":-1" %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'products:category' cat.slug %}">{{ cat.name }}</a>
+                    </li>
+                {% endfor %}
+                <li class="breadcrumb-item active">{{ product.name }}</li>
+            </ol>
+        </nav>
+
+        <!-- Основная информация -->
+        <div class="row g-5">
+            <!-- Галерея изображений -->
+            <div class="col-md-6">
+                {% if product.images.exists %}
+                    <div class="main-image mb-3">
+                        <img src="{{ product.images.first.image.url }}"
+                             class="img-fluid rounded-3"
+                             alt="{{ product.name }}"
+                             id="mainImage">
+                    </div>
+                    <div class="thumbnails row g-2">
+                        {% for image in product.images.all %}
+                            <div class="col-3">
+                                <img src="{{ image.image.url }}"
+                                     class="img-thumbnail {% if forloop.first %}active{% endif %}"
+                                     role="button"
+                                     data-main-src="{{ image.image.url }}"
+                                     alt="Thumbnail {{ forloop.counter }}">
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">Изображения отсутствуют</div>
+                {% endif %}
+            </div>
+
+            <!-- Характеристики -->
+            <div class="col-md-6">
+                <h1 class="mb-4">{{ product.name }}</h1>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <p class="h3 text-primary">{{ product.price }} руб.</p>
+                    <span class="badge bg-{% if in_stock %}success{% else %}danger{% endif %}">
+                    {{ product.stock }} шт. в наличии
+                </span>
+                </div>
+
+                <!-- Динамические характеристики -->
+                <div class="specs-accordion">
+                    {% for group_name, params in specs.items %}
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#specs-{{ forloop.counter }}">
+                                    {{ group_name }}
+                                </button>
+                            </h3>
+                            <div id="specs-{{ forloop.counter }}"
+                                 class="accordion-collapse collapse {% if forloop.first %}show{% endif %}">
+                                <div class="accordion-body">
+                                    <dl class="row">
+                                        {% for param, value in params.items %}
+                                            <dt class="col-sm-5 text-muted">{{ param }}</dt>
+                                            <dd class="col-sm-7">{{ value }}</dd>
+                                        {% endfor %}
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="mt-4 d-grid gap-2 d-md-flex">
+                    <form action="{% url 'cart:add' product.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn btn-lg {% if in_stock %}btn-primary{% else %}btn-secondary disabled{% endif %}"
+                                {% if not in_stock %}disabled{% endif %}>
+                            <i class="bi bi-cart3"></i>
+                            {% if in_stock %}В корзину{% else %}Нет в наличии{% endif %}
+                        </button>
+                    </form>
+
+                    <form action="{% url 'accounts:add_to_wishlist' product.id %}" method="post" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-danger btn-lg">
+                            <i class="bi bi-heart{% if product in wishlist %}-fill{% endif %}"></i>
+                            {% if product in wishlist %}В избранном{% else %}В избранное{% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Связанные товары -->
+        {% if related_products %}
+            <div class="row mt-5">
+                <h3 class="mb-4">С этим товаром покупают</h3>
+                {% for product in related_products %}
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.images.exists %}
+                                    <img src="{{ product.images.first.image.url }}"
+                                         class="card-img-top"
+                                         alt="{{ product.name }}">
+                                {% endif %}
+                            </a>
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                                        {{ product.name|truncatechars:40 }}
+                                    </a>
+                                </h6>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="text-primary">{{ product.price }} руб.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Переключение главного изображения
+            document.querySelectorAll('.thumbnails img').forEach(thumb => {
+                thumb.addEventListener('click', function () {
+                    document.querySelector('#mainImage').src = this.dataset.mainSrc
+                    document.querySelectorAll('.thumbnails img').forEach(t => t.classList.remove('active'))
+                    this.classList.add('active')
+                })
+            })
+
+            // Динамическое обновление избранного
+            document.querySelectorAll('[data-wishlist-action]').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    e.preventDefault()
+                    const response = await fetch(button.dataset.wishlistAction, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    })
+                    if (response.ok) location.reload()
+                })
+            })
+        })
+    </script>
+{% endblock %}

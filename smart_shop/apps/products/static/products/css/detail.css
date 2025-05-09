@@ -1,0 +1,27 @@
+/* Галерея изображений */
+.main-image {
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.thumbnails img {
+    height: 80px;
+    object-fit: contain;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.thumbnails img.active {
+    border-color: #0d6efd;
+    transform: scale(0.95);
+}
+
+/* Аккордеон характеристик */
+.specs-accordion .accordion-button:not(.collapsed) {
+    background-color: #f8f9fa;
+}
+
+.specs-accordion dt {
+    font-weight: 500;
+}

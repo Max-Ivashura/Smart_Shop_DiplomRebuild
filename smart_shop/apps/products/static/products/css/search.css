@@ -1,0 +1,23 @@
+/* Подсветка найденного текста */
+.highlight {
+    background-color: #fff3cd;
+    padding: 0 0.2em;
+    border-radius: 3px;
+}
+
+/* Форма поиска */
+.search-form .input-group {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    border-radius: 50rem;
+}
+
+.search-form .form-control {
+    border-radius: 50rem 0 0 50rem;
+    border: none;
+}
+
+.search-form .btn {
+    border-radius: 0 50rem 50rem 0;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}

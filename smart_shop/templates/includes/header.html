@@ -1,49 +1,52 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-  <div class="container">
-    <a class="navbar-brand" href="/">
-      <img src="{% static 'images/logo.png' %}" alt="Logo">
-    </a>
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+        </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Главная</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/catalog">Каталог</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/builds">Сборки</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/configurator">Конфигуратор</a>
-        </li>
-      </ul>
-
-      <form class="d-flex me-3">
-        <input class="form-control me-2" type="search" placeholder="Поиск...">
-        <button class="btn btn-outline-primary" type="submit">
-          <i class="bi bi-search"></i>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
         </button>
-      </form>
 
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" href="/cart">
-            <i class="bi bi-cart-fill"></i> Корзина
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/profile">
-            <i class="bi bi-person-circle"></i> Профиль
-          </a>
-        </li>
-      </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}"
+                       href="{% url 'home' %}">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'configurator:start' %}">
+                        🛠️ Конфигуратор
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.view_name == 'products:catalog' %}active{% endif %}"
+                       href="{% url 'products:catalog' %}">Каталог</a>
+                </li>
+
+            </ul>
+
+            <form class="d-flex me-3 search-form">
+                <input class="form-control me-2 rounded-start" type="search" placeholder="Поиск...">
+                <button class="btn btn-outline-primary rounded-end" type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </form>
+
+            <ul class="navbar-nav user-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cart:detail' %}">
+                        <i class="bi bi-cart-fill"></i>
+                        {% include 'cart/includes/cart_badge.html' %}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'accounts:profile' %}">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>

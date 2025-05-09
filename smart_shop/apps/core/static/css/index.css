@@ -1,21 +1,100 @@
-.main-content {
-    animation: fadeIn 1s ease-in;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+.background-pattern {
+    background-image: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 10%, transparent 10.5%),
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.15) 15%, transparent 15.5%);
+    opacity: 0.8;
 }
 
 .hero-section {
-    min-height: calc(100vh - 400px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 2rem 0;
+    min-height: 60vh;
+    background: linear-gradient(135deg, #0a58ca, #0d6efd);
+    padding: 6rem 0;
+    margin-top: -1rem;
+}
+
+.hero-section .container {
+    position: relative;
+    max-width: 1200px;
+    z-index: 2;
+}
+
+.background-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.1) 10%, transparent 10.5%),
+    radial-gradient(circle at 30% 70%, rgba(255, 255, 255, 0.15) 15%, transparent 15.5%);
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+
+.hero-section h1 {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+    animation: floatIn 1.5s ease-out;
+}
+
+.hero-section .lead {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes floatIn {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.features-section {
+    background: #f8f9fa;
+}
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card i {
+    transition: color 0.3s ease;
+}
+
+.feature-card:hover i {
+    color: var(--primary);
+}
+
+@media (min-width: 1920px) {
+    .hero-section {
+        padding: 6rem 0;
+    }
+}
+
+@media (max-width: 1200px) {
+    .hero-section {
+        padding: 3rem 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 80vh;
+        padding: 4rem 0;
+    }
+
+    .features-section {
+        padding: 2rem 0;
+    }
+
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
 }

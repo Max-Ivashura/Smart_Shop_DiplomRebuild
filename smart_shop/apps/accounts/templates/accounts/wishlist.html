@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/wishlist.css' %}">
+{% endblock %}
+{% block title %}Список желаемого{% endblock %}
+
+{% block content %}
+    <div class="wishlist-page-container">
+        <h1 class="wishlist-heading">Мой список желаний</h1>
+
+        {% if wishlist_items %}
+            <div class="wishlist-grid">
+                {% for item in wishlist_items %}
+                    <div class="wishlist-item">
+                        <div class="card product-card mx-auto">
+                            <!-- Блок изображения -->
+                            <div class="product-image-wrapper">
+                                {% with main_image=item.product.main_image %}
+                                    {% if main_image %}
+                                        <img src="{{ main_image.image.url }}"
+                                             class="card-img-top product-image"
+                                             alt="{{ item.product.name }}">
+                                    {% else %}
+                                        <img src="{% static 'images/placeholder.png' %}"
+                                             class="card-img-top product-image"
+                                             alt="Заглушка">
+                                    {% endif %}
+                                {% endwith %}
+                            </div>
+
+                            <!-- Информация о товаре -->
+                            <div class="card-body">
+                                <h5 class="card-title product-name">
+                                    {{ item.product.name }}
+                                </h5>
+                                <p class="card-text product-price">{{ item.product.price }} ₽</p>
+
+                                <!-- Дата добавления -->
+                                <small class="text-muted added-date">
+                                    Добавлено: {{ item.added_at|date:"d.m.Y H:i" }}
+                                </small>
+
+                                <!-- Кнопки действий -->
+                                <div class="product-actions">
+                                    <a href="{% url 'accounts:remove_from_wishlist' item.product.id %}"
+                                       class="btn btn-remove"
+                                       onclick="return confirm('Удалить товар из списка желаний?')">
+                                        <i class="fas fa-trash-alt"></i> Удалить
+                                    </a>
+                                    <a href="{% url 'product_detail' item.product.slug %}"
+                                       class="btn btn-view">
+                                        <i class="fas fa-eye"></i> Посмотреть
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <div class="empty-wishlist">
+                <i class="fas fa-heart-broken empty-icon"></i>
+                <p class="empty-message">Ваш список желаний пуст</p>
+                <a href="{% url 'product_list' %}" class="btn btn-primary btn-explore">
+                    <i class="fas fa-store"></i> Перейти в каталог
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

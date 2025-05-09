@@ -1,0 +1,110 @@
+.builds-page-container {
+    --card-bg: #ffffff;
+    --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --primary-btn-bg: var(--cfg-primary);
+    --danger-btn-bg: #e74c3c;
+}
+
+.builds-page-container h1 {
+    color: var(--cfg-dark);
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.builds-page-container .create-build-btn {
+    background: var(--primary-btn-bg);
+    border: none;
+    padding: 12px 25px;
+    font-weight: 600;
+    transition: transform 0.3s;
+}
+
+.builds-page-container .create-build-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Стили карточек сборок */
+.builds-page-container .build-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+    background: var(--card-bg);
+    height: 100%;
+}
+
+.builds-page-container .build-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.builds-page-container .card-title {
+    color: var(--cfg-dark);
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.builds-page-container .card-text {
+    color: var(--cfg-dark);
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+}
+
+.builds-page-container .build-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.builds-page-container .build-date {
+    font-size: 0.875rem;
+}
+
+.builds-page-container .build-actions .btn {
+    margin-left: 0.5rem;
+    padding: 6px 12px;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+
+.builds-page-container .build-actions .btn:hover {
+    transform: translateY(-1px);
+}
+
+.builds-page-container .btn-danger {
+    background: var(--danger-btn-bg);
+    border: none;
+}
+
+/* Стили для пустого состояния */
+.builds-page-container .empty-builds-alert {
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.builds-page-container .empty-builds-alert .btn {
+    margin-top: 1.5rem;
+    padding: 10px 25px;
+    font-weight: 600;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .builds-page-container .build-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .builds-page-container .build-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .builds-page-container .build-actions {
+        width: 100%;
+        margin-top: 1rem;
+    }
+}

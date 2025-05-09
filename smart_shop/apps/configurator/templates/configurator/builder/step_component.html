@@ -1,0 +1,89 @@
+<!-- apps/configurator/templates/configurator/builder/step_component.html -->
+{% extends "configurator/base.html" %}
+{% load static %}
+
+{% block configurator_content %}
+<div class="component-selection">
+    <div class="mb-4">
+        <a href="{% url 'configurator:select_category' %}" class="btn btn-outline-secondary btn-sm">
+            ← Вернуться к выбору категории
+        </a>
+    </div>
+
+    <h2 class="mb-4">Выберите {{ category.name }}</h2>
+
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-6 mb-4">
+            <div class="card component-card
+                {% if product.compatibility_issues %}border-warning{% endif %}">
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+
+                    <!-- Изображение товара -->
+                    {% with product.images.first as image %}
+                    {% if image %}
+                    <img src="{{ image.image.url }}"
+                         class="card-img-top mb-3"
+                         alt="{{ product.name }}">
+                    {% endif %}
+                    {% endwith %}
+
+                    <!-- Характеристики -->
+                    <div class="specs mb-3">
+                        {% for group, params in product.specs.items %}
+                        <div class="spec-group mb-2">
+                            <h6 class="text-muted">{{ group }}</h6>
+                            <ul class="list-unstyled">
+                                {% for key, value in params.items %}
+                                <li><strong>{{ key }}:</strong> {{ value }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Кнопки и цена -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="h4">{{ product.price }} ₽</span>
+                            {% if product.stock > 0 %}
+                                <small class="text-success">В наличии</small>
+                            {% else %}
+                                <small class="text-danger">Под заказ</small>
+                            {% endif %}
+                        </div>
+                        <form method="post" action="{% url 'configurator:add_component' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="btn btn-primary">
+                                Выбрать
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Предупреждения о совместимости -->
+                    {% if product.compatibility_issues %}
+                    <div class="alert alert-warning mt-3 small">
+                        <strong>Ограничения:</strong>
+                        <ul class="mb-0">
+                            {% for issue in product.compatibility_issues %}
+                            <li>{{ issue }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-warning">
+                Нет доступных компонентов, соответствующих требованиям совместимости
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

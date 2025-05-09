@@ -1,22 +1,37 @@
-# config/settings/base.py
+import sys
 from pathlib import Path
 import os
 from dotenv import load_dotenv
 
+# ENV
 load_dotenv()
 
+# BASE PATHS
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 INSTALLED_APPS = [
+    # DEFAULT APPS
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # PLUGINS
+    'mptt',
+
+    # CUSTOM APPS
     'apps.core.apps.CoreConfig',
+    'apps.products.apps.ProductsConfig',
+    'apps.accounts.apps.AccountsConfig',
+    'apps.cart.apps.CartConfig',
+    'apps.orders.apps.OrdersConfig',
+    'apps.configurator.apps.ConfiguratorConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -29,7 +44,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'  # <-- Ключевая строка
+# PATHS
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -83,3 +99,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'accounts.CustomUser'

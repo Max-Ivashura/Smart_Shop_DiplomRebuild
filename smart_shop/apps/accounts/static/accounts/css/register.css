@@ -1,0 +1,110 @@
+.auth-container {
+    --primary: #3498db;
+    --gray-100: #f8f9fa;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-card-wrapper {
+    max-width: 450px;
+    width: 100%;
+}
+
+.auth-card {
+    border: none;
+    border-radius: 15px;
+    background: white;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.5s ease;
+}
+
+.auth-card .card-body {
+    padding: 2.5rem 2rem;
+}
+
+/* Заголовок */
+.auth-card .card-title {
+    color: var(--primary);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.auth-card .card-title::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--primary);
+    transform: translateX(-50%);
+}
+
+/* Поля ввода */
+.auth-card .form-control {
+    border: 2px solid var(--gray-100);
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: all 0.3s;
+    width: 100% !important; /* Фиксируем ширину */
+}
+
+.auth-card .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Метки */
+.auth-card .form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+/* Подсказки для пароля */
+.password-hint {
+    font-size: 0.875rem;
+    opacity: 0.8;
+}
+
+/* Кнопка */
+.auth-card .btn-primary {
+    padding: 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: transform 0.3s;
+}
+
+.auth-card .btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Ссылка */
+.auth-link {
+    color: var(--primary);
+    transition: color 0.3s;
+}
+
+.auth-link:hover {
+    color: #2c3e50;
+}
+
+/* Анимация */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+    .auth-card-wrapper {
+        max-width: 350px;
+    }
+
+    .auth-card .card-body {
+        padding: 1.5rem;
+    }
+}

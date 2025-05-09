@@ -1,0 +1,205 @@
+/* Все стили изолированы через .wishlist-page-container */
+.wishlist-page-container {
+    --primary-color: #3498db;
+    --danger-color: #e74c3c;
+    --success-color: #28a745; /* Добавлен зелёный для кнопки "Посмотреть" */
+    --card-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --spacing: 1.5rem;
+    --card-height: 350px;
+    --image-size: 200px;
+    --card-spacing: 1.5rem;
+    --max-image-width: 200px;
+    --max-image-height: 150px;
+}
+
+.wishlist-page-container .added-date {
+    display: block;
+    margin: 0.5rem 0;
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.wishlist-page-container .btn-view {
+    background: var(--success-color);
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    width: 100%;
+    padding: 10px;
+    font-weight: 600;
+    margin-top: 10px; /* Отступ между кнопками */
+}
+
+.wishlist-page-container .btn-view:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(40, 167, 69, 0.3);
+}
+
+/* Иконка пустого списка */
+.wishlist-page-container .empty-icon {
+    font-size: 3rem;
+    color: var(--danger-color);
+    margin-bottom: 1rem;
+}
+
+.wishlist-page-container .product-image-wrapper {
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    object-fit: cover; /* Сохраняет пропорции и обрезает */
+    transition: transform 0.3s;
+    margin: 0 auto 1rem; /* Центрирование */
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.wishlist-page-container .wishlist-heading {
+    color: var(--cfg-dark);
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.wishlist-page-container .wishlist-heading::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: var(--primary-color);
+    margin: 1rem auto;
+}
+
+.wishlist-page-container .wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+
+.wishlist-page-container .product-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    height: var(--card-height);
+    display: flex;
+    flex-direction: column;
+    max-width: 350px; /* Максимальная ширина карточки */
+    margin: 0 auto;
+}
+
+.wishlist-page-container .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.wishlist-page-container .product-image {
+    width: 100%;
+    height: var(--image-size);
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    transition: transform 0.3s;
+}
+
+.wishlist-page-container .card-body {
+    flex: 1;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.wishlist-page-container .product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.wishlist-page-container .product-name {
+    font-size: 1.25rem;
+    color: var(--cfg-dark);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    min-height: 60px;
+}
+
+.wishlist-page-container .product-price {
+    color: var(--cfg-primary);
+    font-weight: 600;
+    margin-bottom: auto; /* Прижимаем к низу */
+    font-size: 1.1rem;
+}
+
+.wishlist-page-container .product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.wishlist-page-container .btn-remove {
+    background: var(--danger-color);
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    width: 100%;
+    padding: 10px;
+    font-weight: 600;
+}
+
+.wishlist-page-container .btn-remove:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(231, 76, 60, 0.3);
+}
+
+.wishlist-page-container .empty-wishlist {
+    text-align: center;
+    padding: 4rem 2rem;
+    border-radius: 15px;
+    background: var(--cfg-light);
+    box-shadow: var(--card-shadow);
+}
+
+.wishlist-page-container .btn-explore {
+    margin-top: 1.5rem;
+    padding: 1rem 3rem;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: transform 0.3s;
+}
+
+.wishlist-page-container .btn-explore:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .wishlist-page-container {
+        --max-image-width: 150px;
+        --max-image-height: 120px;
+    }
+
+    .wishlist-page-container .wishlist-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wishlist-page-container .product-card {
+        max-width: 300px;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .wishlist-page-container {
+        --max-image-width: 120px;
+        --max-image-height: 90px;
+        --card-height: auto;
+    }
+
+    .wishlist-page-container .product-card {
+        height: auto;
+    }
+}

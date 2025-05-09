@@ -1,0 +1,101 @@
+<!-- apps/configurator/templates/configurator/builder/summary.html -->
+{% extends "configurator/base.html" %}
+{% load static %}
+
+{% block configurator_content %}
+<div class="build-summary">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+        <h2>Ваша сборка</h2>
+        <span class="badge bg-primary fs-6">{{ build.total_price|floatformat:2 }} ₽</span>
+    </div>
+
+    <!-- Ошибки -->
+    {% if errors %}
+    <div class="alert {% if errors.system %}alert-danger{% else %}alert-warning{% endif %} mb-4">
+        <h4 class="alert-heading">
+            {% if errors.system %}Критические ошибки{% else %}Проблемы совместимости{% endif %}
+        </h4>
+        <ul class="mb-0">
+            {% for key, message in errors.items %}
+            <li>
+                <strong>{{ key|capfirst }}:</strong>
+                {{ message }}
+                {% if key == 'psu' and 'рекомендуется' in message %}
+                    <a href="{% url 'configurator:select_category' 'psus' %}"
+                       class="badge bg-info ms-2">
+                        Выбрать другой
+                    </a>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- Список компонентов -->
+    <div class="components-list mb-5">
+        {% for component in build.buildcomponent_set.all %}
+        <div class="card mb-3
+            {% if component.product.category.slug in error_categories %}border-danger
+            {% else %}border-success{% endif %}">
+
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">{{ component.product.name }}</h5>
+                        <small class="text-muted">
+                            {{ component.product.category.name }}
+                            {% if component.quantity > 1 %}
+                            ×{{ component.quantity }}
+                            {% endif %}
+                        </small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <span class="h5">{{ component.product.price }} ₽</span>
+                        <form method="post"
+                              action="{% url 'configurator:remove_component' component.id %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-danger btn-sm"
+                                    title="Удалить компонент">
+                                ✕
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Кнопки действий -->
+    <div class="d-grid gap-3">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit"
+                    name="add_to_cart"
+                    class="btn btn-primary btn-lg w-100
+                           {% if errors %}disabled{% endif %}"
+                    {% if errors %}title="Исправьте ошибки перед добавлением в корзину"{% endif %}>
+                🛒 Добавить в корзину
+            </button>
+        </form>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'configurator:select_category' %}"
+               class="btn btn-outline-secondary flex-grow-1">
+                ✎ Продолжить редактирование
+            </a>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit"
+                        class="btn btn-success flex-grow-1
+                               {% if errors %}disabled{% endif %}"
+                        {% if errors %}title="Исправьте ошибки перед сохранением"{% endif %}>
+                    💾 Сохранить сборку
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

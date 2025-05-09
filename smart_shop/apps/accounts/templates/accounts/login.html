@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="auth-login">
+        <div class="auth-card-wrapper">
+            <div class="card shadow auth-card">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Вход в аккаунт</h3>
+
+                    <!-- Общие ошибки -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger mb-3">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Логин -->
+                        <div class="mb-3">
+                            <label for="{{ form.username.id_for_label }}" class="form-label">Логин или Email</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Пароль -->
+                        <div class="mb-3 position-relative">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">Пароль</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback d-block">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+                            <div class="password-toggle" onclick="togglePassword()">
+                                <i class="fas fa-eye-slash" id="toggleIcon"></i>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка -->
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Войти</button>
+                        </div>
+
+                        <!-- Ссылки -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'accounts:password_reset' %}" class="auth-link">Забыли пароль?</a>
+                            <a href="{% url 'accounts:register' %}" class="auth-link">Регистрация</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const password = document.getElementById('{{ form.password.id_for_label }}');
+            const icon = document.getElementById('toggleIcon');
+            if (password.type === "password") {
+                password.type = "text";
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            } else {
+                password.type = "password";
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,167 @@
+.edit-profile-container {
+    --primary: #3498db;
+    --danger: #e74c3c;
+    --success: #2ecc71;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Основные стили формы */
+.edit-profile-form {
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        transition: transform 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .card-header {
+        font-weight: 600;
+        border-radius: 12px 12px 0 0;
+        background: var(--gray-100);
+        padding: 1.5rem;
+    }
+
+    .form-control {
+        border: 1px solid var(--gray-200);
+        border-radius: 8px;
+        padding: 1rem;
+        background: white;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        outline: none;
+    }
+
+    .form-label {
+        font-weight: 500;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .invalid-feedback {
+        color: var(--danger);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .btn-primary {
+        padding: 1.25rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: transform 0.3s;
+        background: var(--primary);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        background: #2980b9;
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .edit-profile-form .card {
+        margin-bottom: 1.5rem;
+    }
+
+    .edit-profile-form .form-control {
+        font-size: 0.9rem;
+    }
+}
+
+/* Анимация для сообщений об ошибках */
+@keyframes error-shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
+
+.alert-danger {
+    animation: error-shake 0.5s;
+    border-left: 4px solid var(--danger);
+}
+
+#id_phone {
+    font-family: monospace;
+    letter-spacing: 1px;
+}
+
+.inputmask {
+    width: 100% !important;
+    caret-color: var(--primary);
+}
+
+/* Подсветка шаблона */
+.inputmask::placeholder {
+    color: #999;
+    opacity: 0.7;
+    font-weight: 300;
+}
+
+.edit-profile-container .form-control {
+    width: 100% !important; /* Фикс ширины */
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.edit-profile-container .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Блок аватарки */
+.avatar-preview {
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.avatar-preview:hover {
+    transform: scale(1.05);
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Поле загрузки аватарки */
+#id_avatar {
+    display: none;
+}
+
+.custom-file-upload {
+    display: inline-block;
+    padding: 10px 20px;
+    background: var(--cfg-primary);
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.custom-file-upload:hover {
+    background: #2980b9;
+}

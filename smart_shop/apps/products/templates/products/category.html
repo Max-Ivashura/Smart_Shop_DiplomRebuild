@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'products/css/category.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <!-- Хлебные крошки -->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Главная</a></li>
+                {% for cat in breadcrumbs %}
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'products:category' cat.slug %}">{{ cat.name }}</a>
+                    </li>
+                {% endfor %}
+            </ol>
+        </nav>
+
+        <!-- Заголовок категории -->
+        <h1 class="mb-4">{{ category.name }}</h1>
+
+        <!-- Список товаров -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in products %}
+                <div class="col">
+                    <div class="card h-100 product-card">
+                        <img
+                                src="{{ product.images.first.image.url }}"
+                                class="card-img-top"
+                                alt="{{ product.name }}"
+                        >
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'products:detail' category.slug product.slug %}">
+                                    {{ product.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted">{{ product.sku }}</p>
+                            <p class="fw-bold">{{ product.price }} руб.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- Пагинация -->
+        {% if page_obj.paginator.num_pages > 1 %}
+            <nav class="mt-5">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+{% endblock %}

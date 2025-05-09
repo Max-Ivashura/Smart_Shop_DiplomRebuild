@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h2>Модерация комментариев</h2>
+
+        <table class="table table-hover mt-3">
+            <thead>
+            <tr>
+                <th>Сборка</th>
+                <th>Пользователь</th>
+                <th>Текст</th>
+                <th>Дата</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for comment in comments %}
+                <tr>
+                    <td>
+                        <a href="{% url 'configurator:build_detail' comment.build.id %}">
+                            Сборка #{{ comment.build.id }}
+                        </a>
+                    </td>
+                    <td>{{ comment.user.username }}</td>
+                    <td>{{ comment.text|truncatechars:50 }}</td>
+                    <td>{{ comment.created_at|date:"d.m.Y H:i" }}</td>
+                    <td>
+                        <form method="post"
+                              action="{% url 'configurator:approve_comment' comment.id %}"
+                              class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">
+                                ✅ Одобрить
+                            </button>
+                        </form>
+                        <form method="post"
+                              action="{% url 'configurator:delete_comment' comment.id %}"
+                              class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                ❌ Удалить
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Нет комментариев для модерации 🎉</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

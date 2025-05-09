@@ -1,0 +1,129 @@
+.auth-login {
+    --primary: #3498db;
+    --danger: #e74c3c;
+    --gray-100: #f8f9fa;
+    --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    min-height: 65vh; /* Изменено с 60vh на 100vh */
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Добавлено для центрирования по горизонтали */
+    padding: 2rem;
+}
+
+.auth-card-wrapper {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.auth-card {
+    border: none;
+    border-radius: 15px;
+    background: white;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.5s ease;
+}
+
+.auth-card .card-body {
+    padding: 2.5rem 2rem;
+}
+
+/* Заголовок */
+.auth-card .card-title {
+    color: var(--primary);
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.auth-card .card-title::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--primary);
+    transform: translateX(-50%);
+}
+
+/* Поля ввода */
+.auth-card .form-control {
+    border: 2px solid var(--gray-100);
+    border-radius: 10px;
+    padding: 1.25rem;
+    transition: all 0.3s;
+}
+
+.auth-card .form-control:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Кнопка показа пароля */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #6c757d;
+    font-size: 1.2rem; /* Увеличиваем размер иконки */
+    transition: color 0.3s;
+    line-height: 1; /* Убирает лишние отступы */
+}
+
+.password-toggle:hover {
+    color: var(--primary);
+}
+
+/* Добавляем отступ справа для поля пароля */
+.auth-card .form-control[type="password"] {
+    padding-right: 40px; /* Для отступа под иконку */
+    position: relative; /* Добавлено */
+}
+
+/* Кнопка входа */
+.auth-card .btn-primary {
+    padding: 1.25rem;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: transform 0.3s;
+}
+
+.auth-card .btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Ссылки */
+.auth-link {
+    color: var(--primary);
+    transition: color 0.3s;
+}
+
+.auth-link:hover {
+    color: #2c3e50;
+}
+
+/* Анимация */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 576px) {
+    .auth-card-wrapper {
+        max-width: 300px;
+    }
+
+    .auth-card .card-body {
+        padding: 1.5rem;
+    }
+}

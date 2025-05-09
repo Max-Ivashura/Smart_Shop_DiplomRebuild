@@ -1,0 +1,130 @@
+{% extends "configurator/base.html" %}
+{% load static %}
+
+{% block configurator_content %}
+    <div class="container">
+        <!-- Прогресс-бар -->
+        <div class="progress mb-4" style="height: 20px;">
+            <div class="progress-bar bg-success"
+                 role="progressbar"
+                 style="width: {{ progress }}%">
+                Шаг {{ step }} из 3
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Блок текущей сборки -->
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">🛠 Текущая сборка</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if selected_components %}
+                            <div class="components-preview">
+                                {% for component in selected_components %}
+                                    <div class="d-flex align-items-center mb-3
+                                {% if component.has_conflict %}border border-danger{% endif %}">
+                                        <div class="flex-shrink-0">
+                                            {% if component.has_conflict %}
+                                                <span class="text-danger me-2">⚠</span>
+                                            {% else %}
+                                                <span class="text-success me-2">✓</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold">{{ component.product.name }}</div>
+                                            <small class="text-muted">{{ component.product.category.name }}</small>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info mb-0">
+                                Выберите первый компонент, чтобы начать сборку
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer text-muted small">
+                        Совместимость:
+                        <span class="badge
+                        {% if total_conflicts == 0 %}bg-success{% else %}bg-danger{% endif %}">
+                        {{ total_conflicts }} ошибок
+                    </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Блок выбора категорий -->
+            <div class="col-md-8">
+                <h4 class="mb-4">📦 Выберите компонент для добавления</h4>
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    {% for category in categories %}
+                        <div class="col">
+                            <a href="{% url 'configurator:select_component' category.slug %}"
+                               class="card category-card text-decoration-none
+                            {% if category.slug in selected_categories_slugs %}
+                                {% if category.has_conflict %}border-danger{% else %}border-success{% endif %}
+                            {% else %}border-secondary{% endif %}">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 me-3">
+                                            {% if category.image %}
+                                                <img src="{{ category.image.url }}"
+                                                     alt="{{ category.name }}"
+                                                     class="img-fluid rounded"
+                                                     style="width: 60px;">
+                                            {% else %}
+                                                <!-- Заглушка, если изображение отсутствует -->
+                                                <img src="{% static 'configurator/img/default-category.png' %}"
+                                                     alt="no-img"
+                                                     class="img-fluid rounded"
+                                                     style="width: 40px;">
+                                            {% endif %}
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h5 class="card-title mb-1">{{ category.name }}</h5>
+                                            <small class="text-muted">
+                                                {% if category.slug in selected_categories_slugs %}
+                                                    {% if category.has_conflict %}
+                                                        <span class="text-danger">Требуется исправление</span>
+                                                    {% else %}
+                                                        <span class="text-success">Выбрано</span>
+                                                    {% endif %}
+                                                {% else %}
+                                                    Не выбрано
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% empty %}
+                        <div class="col-12">
+                            <div class="alert alert-warning">Категории не настроены</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block css %}
+    <style>
+        .category-card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        .components-preview {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+{% endblock %}

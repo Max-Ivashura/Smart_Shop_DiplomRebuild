@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'accounts/css/user_builds.css' %}">
+{% endblock %}
+{% block title %}Мои сборки{% endblock %}
+
+{% block content %}
+<!-- Добавляем уникальный контейнер -->
+<div class="builds-page-container">
+    <h1>Мои сборки</h1>
+    <div class="d-flex justify-content-between mb-4">
+        <h2>Список сборок</h2>
+        <a href="{% url 'configurator' %}" class="btn btn-primary create-build-btn">
+            <i class="fas fa-plus"></i> Создать новую сборку
+        </a>
+    </div>
+
+    {% if builds %}
+    <div class="row builds-list">
+        {% for build in builds %}
+        <div class="col-md-4 mb-4">
+            <div class="card build-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ build.name }}</h5>
+                    <p class="card-text">{{ build.description|truncatewords:10 }}</p>
+                    <div class="build-card-footer">
+                        <div class="build-date">
+                            <small class="text-muted">Создано: {{ build.created_at|date:"d.m.Y" }}</small>
+                        </div>
+                        <div class="build-actions">
+                            <a href="{% url 'build_detail' build.id %}" class="btn btn-sm btn-secondary">Подробнее</a>
+                            <a href="{% url 'delete_build' build.id %}" class="btn btn-sm btn-danger">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info empty-builds-alert" role="alert">
+        <h4 class="alert-heading">У вас нет сборок!</h4>
+        <p>Начните собирать свой первый ПК прямо сейчас.</p>
+        <a href="{% url 'configurator' %}" class="btn btn-primary">Создать сборку</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

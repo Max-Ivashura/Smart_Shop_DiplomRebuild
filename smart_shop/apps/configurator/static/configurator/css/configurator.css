@@ -1,0 +1,79 @@
+/* apps/configurator/static/configurator/css/configurator.css */
+.configurator-progress {
+    text-align: center;
+}
+
+.category-card {
+    transition: transform 0.2s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.component-card {
+    height: 100%;
+}
+
+.component-card .specs {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* static/configurator/css/configurator.css */
+.component-card:hover {
+    transform: translateY(-5px);
+}
+
+.specs-highlights {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 15px 0;
+}
+
+.spec-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+}
+
+.spec-key {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.spec-value {
+    color: #212529;
+    font-weight: 600;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 5px;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    cursor: pointer;
+    font-size: 24px;
+    color: #ddd;
+}
+
+.rating input:checked ~ label {
+    color: #ffd700;
+}
+
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #ffd700;
+}

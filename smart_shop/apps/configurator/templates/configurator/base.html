@@ -1,0 +1,23 @@
+<!-- apps/configurator/templates/configurator/base.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'configurator/css/configurator.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="configurator-progress mb-4">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: {{ progress }}%"></div>
+            </div>
+            <small>Шаг {{ step }} из 3</small>
+        </div>
+        {% block configurator_content %}{% endblock %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'configurator/js/configurator.js' %}"></script>
+{% endblock %}

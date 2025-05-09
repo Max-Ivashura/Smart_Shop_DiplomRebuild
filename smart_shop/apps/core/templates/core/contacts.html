@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <h1 class="mb-4">Наши контакты</h1>
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-3">
+                                <i class="bi bi-geo-alt fs-4 text-primary me-2"></i>
+                                <strong>Адрес:</strong> г. Москва, ул. Компьютерная, д. 42
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-telephone fs-4 text-primary me-2"></i>
+                                <strong>Телефон:</strong> <a href="tel:+74951234567">+7 (495) 123-45-67</a>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-envelope fs-4 text-primary me-2"></i>
+                                <strong>Email:</strong> <a href="mailto:info@myshop.ru">info@myshop.ru</a>
+                            </li>
+                            <li class="mb-3">
+                                <i class="bi bi-clock fs-4 text-primary me-2"></i>
+                                <strong>График работы:</strong> Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

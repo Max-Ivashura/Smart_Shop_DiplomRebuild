@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Условия доставки{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <h1 class="mb-4">Условия доставки</h1>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="bi bi-truck me-2"></i>Курьерская доставка</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Доставка по городу — 1
+                                день
+                            </li>
+                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Стоимость: 300 ₽</li>
+                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Время доставки:
+                                9:00-21:00
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="h5 mb-0"><i class="bi bi-box-seam me-2"></i>Почта России</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Срок доставки: 3-7
+                                дней
+                            </li>
+                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Страхование груза</li>
+                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Отслеживание посылки
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info mt-4">
+            <h4 class="alert-heading">Важно!</h4>
+            <p class="mb-0">Перед отправкой товар тщательно проверяется и упаковывается в защитную пленку</p>
+        </div>
+    </div>
+{% endblock %}
