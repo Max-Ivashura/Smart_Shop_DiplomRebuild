@@ -1,0 +1,165 @@
+/* Изолированные стили с префиксом ts-about- */
+.ts-about {
+    isolation: isolate;
+    padding: 4rem 0;
+    background: linear-gradient(
+        45deg,
+        var(--primary-100) 0%,
+        rgba(255, 255, 255, 0.9) 100%
+    );
+}
+
+.ts-about-header {
+    position: relative;
+    padding: 3rem 0;
+}
+
+.ts-about-decorative-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 4px;
+    background: var(--primary-500);
+    border-radius: 2px;
+    opacity: 0.2;
+}
+
+.ts-about-title {
+    color: var(--primary-700);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+    z-index: 1;
+}
+
+.ts-about-subtitle {
+    color: var(--neutral-600);
+    font-size: 1.25rem;
+}
+
+.ts-about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.ts-about-image {
+    border-radius: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(103, 65, 217, 0.15);
+    transform: rotate(-2deg);
+    transition: transform 0.4s ease;
+}
+
+.ts-about-image:hover {
+    transform: rotate(0) scale(1.02);
+}
+
+.ts-about-stats-card {
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+    position: relative;
+}
+
+.ts-about-stats-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--primary-500);
+}
+
+.ts-about-stat {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.ts-stat-number {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-700);
+    line-height: 1;
+}
+
+.ts-stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--neutral-600);
+    margin-top: 0.5rem;
+}
+
+.ts-advantage-card {
+    border-radius: 1.25rem;
+    background: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.ts-advantage-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(103, 65, 217, 0.12);
+    border-color: var(--primary-300);
+}
+
+.ts-advantage-icon {
+    font-size: 2.5rem;
+    color: var(--primary-500);
+    transition: transform 0.3s ease;
+}
+
+.ts-advantage-card:hover .ts-advantage-icon {
+    transform: rotate(15deg) scale(1.1);
+}
+
+.ts-advantage-title {
+    color: var(--primary-700);
+    margin-bottom: 1rem;
+}
+
+.ts-advantage-text {
+    color: var(--neutral-600);
+    font-size: 0.95rem;
+}
+
+@media (max-width: 992px) {
+    .ts-about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .ts-about-image {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .ts-about-stats-card {
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .ts-about {
+        padding: 2rem 0;
+    }
+
+    .ts-about-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .ts-about-stat {
+        padding: 1rem;
+    }
+
+    .ts-stat-number {
+        font-size: 1.5rem;
+    }
+}

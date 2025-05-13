@@ -1,36 +1,79 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Контакты{% endblock %}
+{% block page_title %}Контакты{% endblock %}
+{% block meta_description %}Контактная информация магазина TechShop{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/contacts.css' %}">
+{% endblock %}
 
 {% block content %}
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-lg-6 mb-4">
-                <h1 class="mb-4">Наши контакты</h1>
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <ul class="list-unstyled">
-                            <li class="mb-3">
-                                <i class="bi bi-geo-alt fs-4 text-primary me-2"></i>
-                                <strong>Адрес:</strong> г. Москва, ул. Компьютерная, д. 42
-                            </li>
-                            <li class="mb-3">
-                                <i class="bi bi-telephone fs-4 text-primary me-2"></i>
-                                <strong>Телефон:</strong> <a href="tel:+74951234567">+7 (495) 123-45-67</a>
-                            </li>
-                            <li class="mb-3">
-                                <i class="bi bi-envelope fs-4 text-primary me-2"></i>
-                                <strong>Email:</strong> <a href="mailto:info@myshop.ru">info@myshop.ru</a>
-                            </li>
-                            <li class="mb-3">
-                                <i class="bi bi-clock fs-4 text-primary me-2"></i>
-                                <strong>График работы:</strong> Пн-Пт: 9:00-20:00, Сб-Вс: 10:00-18:00
-                            </li>
-                        </ul>
-                    </div>
+    <section class="ts-contacts">
+        <div class="container">
+            <div class="ts-contacts-header text-center mb-5">
+                <div class="ts-contacts-decorative-line"></div>
+                <h1 class="ts-contacts-title display-4 mb-3">Наши контакты</h1>
+                <p class="ts-contacts-subtitle lead">Мы всегда на связи!</p>
+            </div>
+
+            <div class="ts-contacts-card card border-0 shadow-lg">
+                <div class="card-body">
+                    <address class="ts-contacts-list">
+                        <div class="ts-contacts-item">
+                            <div class="ts-contacts-icon-wrapper">
+                                <i class="bi bi-geo-alt-fill ts-contacts-icon"></i>
+                            </div>
+                            <div class="ts-contacts-info">
+                                <strong class="ts-contacts-label">Адрес офиса:</strong>
+                                <p class="ts-contacts-text">г. Москва, ул. Компьютерная, 42</p>
+                            </div>
+                        </div>
+
+                        <div class="ts-contacts-item">
+                            <div class="ts-contacts-icon-wrapper">
+                                <i class="bi bi-telephone-fill ts-contacts-icon"></i>
+                            </div>
+                            <div class="ts-contacts-info">
+                                <strong class="ts-contacts-label">Телефон:</strong>
+                                <p class="ts-contacts-text">
+                                    <a href="tel:+74951234567" class="ts-contacts-link">+7 (495) 123-45-67</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="ts-contacts-item">
+                            <div class="ts-contacts-icon-wrapper">
+                                <i class="bi bi-envelope-fill ts-contacts-icon"></i>
+                            </div>
+                            <div class="ts-contacts-info">
+                                <strong class="ts-contacts-label">Email:</strong>
+                                <p class="ts-contacts-text">
+                                    <a href="mailto:info@techshop.ru" class="ts-contacts-link">info@techshop.ru</a>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="ts-contacts-item">
+                            <div class="ts-contacts-icon-wrapper">
+                                <i class="bi bi-clock-fill ts-contacts-icon"></i>
+                            </div>
+                            <div class="ts-contacts-info">
+                                <strong class="ts-contacts-label">Режим работы:</strong>
+                                <p class="ts-contacts-text">Пн-Пт: 9:00-20:00<br>Сб-Вс: 10:00-18:00</p>
+                            </div>
+                        </div>
+                    </address>
                 </div>
             </div>
+
+            <div class="ts-contacts-map mt-5 shadow-lg">
+                <iframe
+                    src="https://yandex.ru/map-widget/v1/?um=constructor..."
+                    class="ts-contacts-iframe"
+                    loading="lazy">
+                </iframe>
+            </div>
         </div>
-    </div>
+    </section>
 {% endblock %}

@@ -1,30 +1,42 @@
-<!-- apps/configurator/templates/configurator/builder/summary.html -->
 {% extends "configurator/base.html" %}
 {% load static %}
 
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'configurator/css/summary.css' %}">
+{% endblock %}
+
 {% block configurator_content %}
-<div class="build-summary">
-    <div class="d-flex justify-content-between align-items-start mb-4">
-        <h2>Ваша сборка</h2>
-        <span class="badge bg-primary fs-6">{{ build.total_price|floatformat:2 }} ₽</span>
+<div class="ts-summary-container container">
+    <!-- Заголовок -->
+    <div class="ts-summary-header d-flex justify-content-between align-items-center mb-5">
+        <h1 class="ts-summary-title text-primary-700">
+            <i class="bi bi-pc-display-horizontal me-2"></i>Ваша сборка
+        </h1>
+        <span class="ts-summary-total">
+            {{ build.total_price|floatformat:2 }} ₽
+        </span>
     </div>
 
-    <!-- Ошибки -->
+    <!-- Ошибки совместимости -->
     {% if errors %}
-    <div class="alert {% if errors.system %}alert-danger{% else %}alert-warning{% endif %} mb-4">
-        <h4 class="alert-heading">
+    <div class="ts-summary-alert alert mb-5
+        {% if errors.system %}ts-summary-critical{% else %}ts-summary-warning{% endif %}">
+        <h2 class="ts-summary-alert-title h4 mb-3">
+            <i class="bi bi-{% if errors.system %}exclamation-octagon{% else %}info-circle{% endif %}-fill me-2"></i>
             {% if errors.system %}Критические ошибки{% else %}Проблемы совместимости{% endif %}
-        </h4>
-        <ul class="mb-0">
+        </h2>
+        <ul class="ts-summary-alert-list mb-0">
             {% for key, message in errors.items %}
-            <li>
-                <strong>{{ key|capfirst }}:</strong>
-                {{ message }}
+            <li class="ts-summary-alert-item mb-2">
+                <strong class="ts-summary-alert-key">
+                    {{ key|capfirst }}:
+                </strong>
+                <span class="ts-summary-alert-message">{{ message }}</span>
                 {% if key == 'psu' and 'рекомендуется' in message %}
-                    <a href="{% url 'configurator:select_category' 'psus' %}"
-                       class="badge bg-info ms-2">
-                        Выбрать другой
-                    </a>
+                <a href="{% url 'configurator:select_category' 'psus' %}"
+                   class="ts-summary-alert-action badge">
+                    <i class="bi bi-arrow-repeat me-1"></i>Заменить
+                </a>
                 {% endif %}
             </li>
             {% endfor %}
@@ -33,32 +45,31 @@
     {% endif %}
 
     <!-- Список компонентов -->
-    <div class="components-list mb-5">
+    <div class="ts-summary-components mb-5">
         {% for component in build.buildcomponent_set.all %}
-        <div class="card mb-3
-            {% if component.product.category.slug in error_categories %}border-danger
-            {% else %}border-success{% endif %}">
-
+        <div class="ts-summary-card card
+            {% if component.product.category.slug in error_categories %}ts-summary-error
+            {% else %}ts-summary-success{% endif %}">
             <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="mb-1">{{ component.product.name }}</h5>
-                        <small class="text-muted">
-                            {{ component.product.category.name }}
+                <div class="d-flex flex-wrap justify-content-between align-items-center">
+                    <div class="ts-summary-card-info mb-2 mb-sm-0">
+                        <h3 class="ts-summary-card-title h5 text-primary-700 mb-1">{{ component.product.name }}</h3>
+                        <small class="ts-summary-card-category">
+                            <i class="bi bi-tag me-1"></i>{{ component.product.category.name }}
                             {% if component.quantity > 1 %}
                             ×{{ component.quantity }}
                             {% endif %}
                         </small>
                     </div>
-                    <div class="d-flex gap-2">
-                        <span class="h5">{{ component.product.price }} ₽</span>
+                    <div class="ts-summary-card-actions d-flex align-items-center gap-2">
+                        <span class="ts-summary-card-price h5 text-primary-700">{{ component.product.price }} ₽</span>
                         <form method="post"
                               action="{% url 'configurator:remove_component' component.id %}">
                             {% csrf_token %}
                             <button type="submit"
-                                    class="btn btn-danger btn-sm"
-                                    title="Удалить компонент">
-                                ✕
+                                    class="ts-summary-remove-btn btn btn-sm"
+                                    aria-label="Удалить компонент">
+                                <i class="bi bi-x-lg"></i>
                             </button>
                         </form>
                     </div>
@@ -69,32 +80,34 @@
     </div>
 
     <!-- Кнопки действий -->
-    <div class="d-grid gap-3">
-        <form method="post">
-            {% csrf_token %}
-            <button type="submit"
-                    name="add_to_cart"
-                    class="btn btn-primary btn-lg w-100
-                           {% if errors %}disabled{% endif %}"
-                    {% if errors %}title="Исправьте ошибки перед добавлением в корзину"{% endif %}>
-                🛒 Добавить в корзину
-            </button>
-        </form>
-
-        <div class="d-flex gap-2">
-            <a href="{% url 'configurator:select_category' %}"
-               class="btn btn-outline-secondary flex-grow-1">
-                ✎ Продолжить редактирование
-            </a>
+    <div class="ts-summary-actions">
+        <div class="d-grid gap-3">
             <form method="post">
                 {% csrf_token %}
                 <button type="submit"
-                        class="btn btn-success flex-grow-1
+                        name="add_to_cart"
+                        class="ts-summary-main-btn btn btn-lg py-3
                                {% if errors %}disabled{% endif %}"
-                        {% if errors %}title="Исправьте ошибки перед сохранением"{% endif %}>
-                    💾 Сохранить сборку
+                        {% if errors %}disabled aria-label="Доступно после исправления ошибок"{% endif %}>
+                    <i class="bi bi-cart-plus me-2"></i>Добавить в корзину
                 </button>
             </form>
+
+            <div class="ts-summary-secondary-actions d-flex gap-2 flex-wrap">
+                <a href="{% url 'configurator:select_category' %}"
+                   class="ts-summary-edit-btn btn flex-grow-1">
+                    <i class="bi bi-pencil me-2"></i>Продолжить редактирование
+                </a>
+                <form method="post" class="flex-grow-1">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="ts-summary-save-btn btn w-100
+                                   {% if errors %}disabled{% endif %}"
+                            {% if errors %}disabled aria-label="Доступно после исправления ошибок"{% endif %}>
+                        <i class="bi bi-save me-2"></i>Сохранить сборку
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 </div>

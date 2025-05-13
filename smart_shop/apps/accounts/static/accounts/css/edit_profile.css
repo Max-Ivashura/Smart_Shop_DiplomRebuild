@@ -1,167 +1,189 @@
-.edit-profile-container {
-    --primary: #3498db;
-    --danger: #e74c3c;
-    --success: #2ecc71;
-    --gray-100: #f8f9fa;
-    --gray-200: #e9ecef;
-    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+/* accounts/static/accounts/css/edit_profile.css */
+.techshop-edit-profile {
+    position: relative;
+    padding: 3rem 0;
+    background: none !important;
 }
 
-/* Основные стили формы */
-.edit-profile-form {
-    .card {
-        border: none;
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        transition: transform 0.3s;
-    }
 
-    .card:hover {
-        transform: translateY(-2px);
-    }
 
-    .card-header {
-        font-weight: 600;
-        border-radius: 12px 12px 0 0;
-        background: var(--gray-100);
-        padding: 1.5rem;
-    }
+/* Заголовок */
+.techshop-edit-profile__title h1 {
+    color: var(--primary-700) !important;
+    letter-spacing: -0.5px;
+    margin-bottom: 1.5rem;
+}
 
-    .form-control {
-        border: 1px solid var(--gray-200);
-        border-radius: 8px;
-        padding: 1rem;
-        background: white;
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
+.techshop-profile__divider {
+    height: 2px;
+    width: 120px;
+    background: var(--primary-300);
+    margin: 1rem auto;
+    opacity: 0.8;
+}
 
-    .form-control:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-        outline: none;
-    }
+/* Аватар */
+.techshop-edit-profile__avatar {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+    margin: 0 auto;
+    border: 2px solid var(--neutral-200);
+    background: var(--neutral-100);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
 
-    .form-label {
-        font-weight: 500;
-        color: #333;
-        margin-bottom: 0.5rem;
-    }
+.techshop-edit-profile__avatar-preview {
+    cursor: pointer;
+    position: relative;
+    display: block;
+    outline: none !important;
+}
 
-    .invalid-feedback {
-        color: var(--danger);
-        font-size: 0.875rem;
-        margin-top: 0.25rem;
-    }
+.techshop-edit-profile__avatar img {
+    object-fit: cover;
+    transition: filter 0.3s ease;
+    border-radius: 50%;
+}
 
-    .btn-primary {
-        padding: 1.25rem;
-        border-radius: 8px;
-        font-weight: 600;
-        transition: transform 0.3s;
-        background: var(--primary);
-        border: none;
-    }
+.techshop-edit-profile__avatar-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(103, 65, 217, 0.4);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
 
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        background: #2980b9;
-    }
+.techshop-edit-profile__avatar:hover .techshop-edit-profile__avatar-overlay {
+    opacity: 1;
+}
+
+.techshop-edit-profile__avatar:hover {
+    transform: scale(1.02);
+    border-color: var(--neutral-300);
+}
+
+/* Карточки */
+.techshop-edit-profile__card {
+    border: 1px solid var(--neutral-200);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--neutral-100);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.techshop-edit-profile__card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.techshop-edit-profile__header {
+    background: var(--primary-100) !important;
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--neutral-200);
+    color: var(--text-dark) !important; /* Новый цвет текста */
+}
+
+/* Дополнительно для заголовков внутри */
+.techshop-edit-profile__header h2 {
+    color: inherit !important; /* Наследует цвет от родителя */
+    margin-bottom: 0;
+}
+
+/* Поля ввода */
+.techshop-edit-profile__label {
+    color: var(--neutral-600);
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.techshop-edit-profile__input {
+    border: 2px solid var(--neutral-300);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+    color: var(--neutral-700);
+    background: var(--neutral-50);
+}
+
+.techshop-edit-profile__input:focus {
+    border-color: var(--primary-300);
+    box-shadow: 0 0 0 3px rgba(151, 117, 250, 0.1);
+}
+
+.input-group-text {
+    background: var(--neutral-100) !important;
+    border-color: var(--neutral-300) !important;
+    color: var(--primary-400) !important;
+    min-width: 45px;
+    justify-content: center;
+}
+
+/* Кнопка сохранения */
+.techshop-edit-profile__btn {
+    background: var(--primary-400) !important;
+    color: var(--text-light) !important;
+    border: none !important;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 1rem 2.5rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 16px rgba(103, 65, 217, 0.1);
+}
+
+.techshop-edit-profile__btn:hover {
+    background: var(--primary-500) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(103, 65, 217, 0.15);
+}
+
+.techshop-edit-profile__btn:active {
+    transform: translateY(0);
+}
+
+/* Скрываем ненужные элементы */
+#id_avatar,
+#avatar-clear_id,
+#avatar-clear_id + label {
+    display: none !important;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .edit-profile-form .card {
+    .techshop-edit-profile {
+        padding: 2rem 0;
+    }
+
+    .techshop-edit-profile__card {
         margin-bottom: 1.5rem;
     }
 
-    .edit-profile-form .form-control {
-        font-size: 0.9rem;
+    .techshop-edit-profile__avatar {
+        width: 180px;
+        height: 180px;
+    }
+
+    .techshop-edit-profile__btn {
+        width: 100%;
+        padding: 1rem;
     }
 }
 
-/* Анимация для сообщений об ошибках */
-@keyframes error-shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-}
+@media (max-width: 576px) {
+    .techshop-edit-profile__title h1 {
+        font-size: 1.75rem;
+    }
 
-.alert-danger {
-    animation: error-shake 0.5s;
-    border-left: 4px solid var(--danger);
-}
-
-#id_phone {
-    font-family: monospace;
-    letter-spacing: 1px;
-}
-
-.inputmask {
-    width: 100% !important;
-    caret-color: var(--primary);
-}
-
-/* Подсветка шаблона */
-.inputmask::placeholder {
-    color: #999;
-    opacity: 0.7;
-    font-weight: 300;
-}
-
-.edit-profile-container .form-control {
-    width: 100% !important; /* Фикс ширины */
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.edit-profile-container .form-control:focus {
-    border-color: #80bdff;
-    outline: 0;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-/* Блок аватарки */
-.avatar-preview {
-    width: 180px;
-    height: 180px;
-    margin: 0 auto 1.5rem;
-    position: relative;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    transition: transform 0.3s;
-}
-
-.avatar-preview:hover {
-    transform: scale(1.05);
-}
-
-.avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-/* Поле загрузки аватарки */
-#id_avatar {
-    display: none;
-}
-
-.custom-file-upload {
-    display: inline-block;
-    padding: 10px 20px;
-    background: var(--cfg-primary);
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.custom-file-upload:hover {
-    background: #2980b9;
+    .techshop-edit-profile__header h2 {
+        font-size: 1rem;
+    }
 }

@@ -1,0 +1,47 @@
+/* Изолированные стили шапки */
+.techshop-header.c-header {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+    padding: 0.75rem 0;
+    isolation: isolate;
+}
+
+.techshop-header__brand {
+    color: var(--primary-700) !important;
+}
+
+.techshop-header__nav .nav-link {
+    color: var(--neutral-700) !important;
+    transition: all 0.2s;
+}
+
+.techshop-header__nav .nav-link:hover,
+.techshop-header__nav .nav-link.active {
+    color: var(--primary-500) !important;
+}
+
+.techshop-header__nav .nav-link.active {
+    background: rgba(151, 117, 250, 0.1);
+}
+
+.techshop-header__icons a {
+    color: var(--neutral-700);
+    text-decoration: none;
+    border-bottom: none !important;
+}
+
+.techshop-header__search-btn {
+    border-color: var(--primary-300);
+    color: var(--primary-500);
+}
+
+/* Кастомные состояния */
+.techshop-header__cart:hover .bi-cart3,
+.techshop-header__profile:hover .bi-person-circle {
+    color: var(--primary-600) !important;
+}
+
+.techshop-header__badge {
+    background: var(--primary-500) !important;
+    font-size: 0.65rem;
+}

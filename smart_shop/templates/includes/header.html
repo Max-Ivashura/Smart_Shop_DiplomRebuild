@@ -1,52 +1,71 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
-    <div class="container">
-        <a class="navbar-brand" href="/">
-            <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+<header class="techshop-header c-header navbar navbar-expand-lg">
+    <div class="techshop-container container-lg">
+        <a class="techshop-header__brand c-header__brand navbar-brand" href="{% url 'home' %}">
+            <img src="{% static 'images/logo.png' %}"
+                 alt="Логотип TechShop"
+                 class="techshop-header__logo c-header__logo"
+                 width="38"
+                 height="38">
+            <span class="techshop-header__brand-text c-header__brand-text d-none d-lg-inline">TechShop</span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <button class="techshop-header__toggler c-header__toggler navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNav"
+                aria-controls="mainNav"
+                aria-expanded="false">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <nav class="techshop-header__nav c-header__nav collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.view_name == 'home' %}active{% endif %}"
-                       href="{% url 'home' %}">Главная</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'configurator:start' %}">
-                        🛠️ Конфигуратор
+                    <a class="nav-link techshop-header__link {% if request.resolver_match.view_name == 'home' %}active{% endif %}"
+                       href="{% url 'home' %}">
+                        Главная
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {% if request.resolver_match.view_name == 'products:catalog' %}active{% endif %}"
-                       href="{% url 'products:catalog' %}">Каталог</a>
-                </li>
-
-            </ul>
-
-            <form class="d-flex me-3 search-form">
-                <input class="form-control me-2 rounded-start" type="search" placeholder="Поиск...">
-                <button class="btn btn-outline-primary rounded-end" type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-            </form>
-
-            <ul class="navbar-nav user-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'cart:detail' %}">
-                        <i class="bi bi-cart-fill"></i>
-                        {% include 'cart/includes/cart_badge.html' %}
+                    <a class="nav-link techshop-header__link {% if request.resolver_match.view_name == 'products:catalog' %}active{% endif %}"
+                       href="{% url 'products:catalog' %}">
+                        Каталог
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'accounts:profile' %}">
-                        <i class="bi bi-person-circle"></i>
+                    <a class="nav-link techshop-header__link special-link"
+                       href="{% url 'configurator:start' %}">
+                        Конфигуратор
                     </a>
                 </li>
             </ul>
-        </div>
+
+            <div class="techshop-header__utils c-header__utils d-flex align-items-center gap-3">
+                <form class="techshop-header__search c-header__search">
+                    <div class="input-group">
+                        <input type="search"
+                               class="form-control"
+                               placeholder="Поиск товаров...">
+                        <button type="submit"
+                                class="btn btn-outline-dark techshop-header__search-btn">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="techshop-header__icons c-header__icons d-flex gap-2">
+                    <a href="{% url 'cart:detail' %}" class="position-relative techshop-header__cart">
+                        <i class="bi bi-cart3 fs-5"></i>
+                        <span class="techshop-header__badge c-header__badge position-absolute top-0 start-100 translate-middle badge rounded-pill">
+                            {{ request.user.cart.items.count|default:0 }}
+                        </span>
+                    </a>
+                    <a href="{% url 'accounts:profile' %}" class="techshop-header__profile">
+                        <i class="bi bi-person-circle fs-5"></i>
+                    </a>
+                </div>
+            </div>
+        </nav>
     </div>
-</nav>
+</header>

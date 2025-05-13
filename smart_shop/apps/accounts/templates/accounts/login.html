@@ -1,75 +1,125 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block css %}
+
+{% block page_title %}Вход в аккаунт{% endblock %}
+{% block meta_description %}Авторизуйтесь в своем аккаунте TechShop для доступа к персональным скидкам и истории заказов{% endblock %}
+
+{% block extra_styles %}
     <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
 {% endblock %}
+
 {% block content %}
-    <div class="auth-login">
-        <div class="auth-card-wrapper">
-            <div class="card shadow auth-card">
-                <div class="card-body">
-                    <h3 class="card-title text-center mb-4">Вход в аккаунт</h3>
-
-                    <!-- Общие ошибки -->
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger mb-3">
-                            {% for error in form.non_field_errors %}
-                                {{ error }}
-                            {% endfor %}
+    <main class="techshop-profile">
+        <div class="techshop-container container">
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="techshop-profile__card card">
+                        <div class="techshop-profile__card-header">
+                            <h3 class="h5 mb-0">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                Авторизация
+                            </h3>
                         </div>
-                    {% endif %}
 
-                    <form method="post">
-                        {% csrf_token %}
-
-                        <!-- Логин -->
-                        <div class="mb-3">
-                            <label for="{{ form.username.id_for_label }}" class="form-label">Логин или Email</label>
-                            {{ form.username }}
-                            {% if form.username.errors %}
-                                <div class="invalid-feedback d-block">{{ form.username.errors.0 }}</div>
+                        <div class="card-body p-4 p-md-5">
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger alert-dismissible fade show mb-4">
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
                             {% endif %}
-                        </div>
 
-                        <!-- Пароль -->
-                        <div class="mb-3 position-relative">
-                            <label for="{{ form.password.id_for_label }}" class="form-label">Пароль</label>
-                            {{ form.password }}
-                            {% if form.password.errors %}
-                                <div class="invalid-feedback d-block">{{ form.password.errors.0 }}</div>
-                            {% endif %}
-                            <div class="password-toggle" onclick="togglePassword()">
-                                <i class="fas fa-eye-slash" id="toggleIcon"></i>
-                            </div>
-                        </div>
+                            <form method="post" class="needs-validation" novalidate>
+                                {% csrf_token %}
 
-                        <!-- Кнопка -->
-                        <div class="d-grid gap-2 mb-3">
-                            <button type="submit" class="btn btn-primary btn-lg">Войти</button>
-                        </div>
+                                <!-- Поле логина -->
+                                <div class="mb-4">
+                                    <label for="{{ form.username.id_for_label }}" class="form-label">
+                                        Логин или Email
+                                    </label>
+                                    <div class="input-group">
+                                        {{ form.username }}
+                                        <span class="input-group-text techshop-profile__input-group">
+                                            <i class="bi bi-person"></i>
+                                        </span>
+                                    </div>
+                                    {% if form.username.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.username.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
 
-                        <!-- Ссылки -->
-                        <div class="d-flex justify-content-between">
-                            <a href="{% url 'accounts:password_reset' %}" class="auth-link">Забыли пароль?</a>
-                            <a href="{% url 'accounts:register' %}" class="auth-link">Регистрация</a>
+                                <!-- Поле пароля -->
+                                <div class="mb-4 position-relative">
+                                    <label for="{{ form.password.id_for_label }}" class="form-label">
+                                        Пароль
+                                    </label>
+                                    <div class="input-group">
+                                        {{ form.password }}
+                                        <button type="button"
+                                                class="input-group-text techshop-profile__toggle"
+                                                aria-label="Показать пароль"
+                                                tabindex="-1">
+                                            <i class="bi bi-eye-slash"></i>
+                                        </button>
+                                    </div>
+                                    {% if form.password.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.password.errors.0 }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Кнопка входа -->
+                                <div class="d-grid mt-4">
+                                    <button type="submit" class="btn techshop-profile__btn">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                                        Войти
+                                    </button>
+                                </div>
+
+                                <!-- Ссылки -->
+                                <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+                                    <a href="{% url 'accounts:password_reset' %}"
+                                       class="techshop-profile__link text-decoration-none">
+                                        Забыли пароль?
+                                    </a>
+                                    <a href="{% url 'accounts:register' %}"
+                                       class="techshop-profile__link text-decoration-none">
+                                        Создать аккаунт
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+{% endblock %}
 
+{% block scripts %}
     <script>
-        function togglePassword() {
-            const password = document.getElementById('{{ form.password.id_for_label }}');
-            const icon = document.getElementById('toggleIcon');
-            if (password.type === "password") {
-                password.type = "text";
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            } else {
-                password.type = "password";
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            }
-        }
+        document.addEventListener('DOMContentLoaded', function () {
+            // Добавляем классы для всех полей ввода
+            document.querySelectorAll('input').forEach(input => {
+                input.classList.add('form-control');
+            });
+
+            // Переключатель видимости пароля
+            document.querySelectorAll('.techshop-profile__toggle').forEach(button => {
+                button.addEventListener('click', function () {
+                    const input = this.closest('.input-group').querySelector('input');
+                    const isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    this.innerHTML = isPassword
+                        ? '<i class="bi bi-eye"></i>'
+                        : '<i class="bi bi-eye-slash"></i>';
+                });
+            });
+        });
     </script>
 {% endblock %}

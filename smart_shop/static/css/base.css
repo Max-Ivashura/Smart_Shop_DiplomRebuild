@@ -1,0 +1,82 @@
+/* Общие изолированные стили */
+.techshop-base {
+    isolation: isolate;
+}
+
+.techshop-base::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: var(--primary-100);
+    z-index: -2;
+}
+
+.techshop-main::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    z-index: -1;
+}
+
+.full-width-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.full-width-section::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 100vw;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.techshop-base .min-vh-100 {
+    min-height: 100vh;
+}
+
+.techshop-base .techshop-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+}
+
+/* В base.css */
+.full-width-background {
+    position: absolute;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    z-index: -1; /* Чтобы контент оставался поверх */
+    height: 100%; /* Или нужное значение */
+}
+
+
+/* Изолированные переходы */
+.techshop-base * {
+    transition: background-color 0.3s ease,
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.techshop-main {
+padding-bottom: 40px; /* Запас под градиент */
+position: relative;
+z-index: 2; /* Контент выше футера */
+}
+
+.py-3-5 {
+    padding-top: 1.3rem !important;
+    padding-bottom: 1.3rem !important;
+}
+

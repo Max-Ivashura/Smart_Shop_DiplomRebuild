@@ -89,8 +89,16 @@ def change_password(request):
             update_session_auth_hash(request, user)
             messages.success(request, "Пароль успешно изменен")
             return redirect('accounts:profile')
+        else:
+            # Добавляем сообщения об ошибках
+            for field, errors in form.errors.items():
+                for error in errors:
+                    # Замените messages.error на messages.add_message
+                    messages.add_message(request, messages.ERROR,
+                                         f"Ошибка в поле '{field}': {error}")  # Тег "ERROR" → класс "alert-danger"
     else:
         form = PasswordChangeForm(request.user)
+
     return render(request, 'accounts/change_password.html', {'form': form})
 
 
@@ -98,8 +106,20 @@ def change_password(request):
 @login_required
 def wishlist_view(request):
     wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
-    items = WishlistItem.objects.filter(wishlist=wishlist).select_related('product')
-    return render(request, 'accounts/wishlist.html', {'wishlist_items': items})
+    items = WishlistItem.objects.filter(wishlist=wishlist).prefetch_related('content_type')
+
+    # Загружаем реальные объекты продуктов
+    products = []
+    for item in items:
+        product = item.product
+        if hasattr(product, 'main_image'):
+            product.main_image = product.images.first()  # Пример для модели Product
+        products.append(product)
+
+    return render(request, 'accounts/wishlist.html', {
+        'wishlist_items': items,
+        'products': products
+    })
 
 
 @login_required
@@ -132,7 +152,6 @@ def remove_from_wishlist(request, product_id):
     except WishlistItem.DoesNotExist:
         messages.error(request, "Товар не найден")
     return redirect('accounts:wishlist')
-
 
 # # --- Сборки ---
 # @login_required

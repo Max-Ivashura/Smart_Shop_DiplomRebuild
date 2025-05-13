@@ -1,0 +1,166 @@
+/* Изолированные стили с префиксом ts-comp- */
+.ts-comp-container {
+    isolation: isolate;
+    padding: 2rem 0;
+}
+
+.ts-comp-title {
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-left: 2rem;
+}
+
+.ts-comp-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background: var(--primary-500);
+    border-radius: 2px;
+}
+
+.ts-comp-card {
+    border: 2px solid var(--neutral-200);
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.ts-comp-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(103, 65, 217, 0.15);
+    border-color: var(--primary-300);
+}
+
+.ts-comp-warning {
+    border-color: var(--danger);
+    background: rgba(255, 107, 107, 0.08);
+    animation: ts-comp-pulse 1.6s infinite;
+}
+
+@keyframes ts-comp-pulse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.ts-comp-image-wrapper {
+    background: linear-gradient(
+        145deg,
+        var(--primary-50),
+        rgba(255, 255, 255, 0.8)
+    );
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.ts-comp-image {
+    transition: transform 0.4s ease;
+}
+
+.ts-comp-card:hover .ts-comp-image {
+    transform: scale(1.08) rotate(1deg);
+}
+
+.ts-comp-specs {
+    border-top: 2px solid rgba(151, 117, 250, 0.1);
+    border-bottom: 2px solid rgba(151, 117, 250, 0.1);
+    padding: 1.5rem 0;
+    margin: 1.5rem 0;
+}
+
+.ts-comp-spec-title {
+    color: var(--primary-700);
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.ts-comp-spec-item {
+    font-size: 0.95rem;
+    padding: 0.3rem 0;
+}
+
+.ts-comp-price {
+    background: var(--primary-100);
+    padding: 0.8rem 1.2rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+.ts-comp-select-btn {
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.ts-comp-select-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 25%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 75%
+    );
+    animation: ts-comp-shine 3s infinite;
+}
+
+@keyframes ts-comp-shine {
+    100% { transform: translateX(200%); }
+}
+
+.ts-comp-alert {
+    border: 2px solid var(--danger);
+    border-radius: 1rem;
+    background: rgba(255, 107, 107, 0.08);
+    backdrop-filter: blur(2px);
+}
+
+/* Адаптивность */
+@media (max-width: 991.98px) {
+    .ts-comp-title {
+        font-size: 1.8rem;
+    }
+
+    .ts-comp-card {
+        border-radius: 1.2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ts-comp-container {
+        padding: 1.5rem;
+    }
+
+    .ts-comp-price {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .ts-comp-select-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ts-comp-title {
+        font-size: 1.6rem;
+        padding-left: 1.2rem;
+    }
+
+    .ts-comp-spec-item {
+        font-size: 0.9rem;
+    }
+}

@@ -1,97 +1,154 @@
 {% extends "base.html" %}
 {% load static %}
-{% block css %}
-<link rel="stylesheet" href="{% static 'products/css/search.css' %}">
+
+{% block page_title %}Поиск: "{{ query }}"{% endblock %}
+{% block meta_description %}Результаты поиска по запросу "{{ query }}" в магазине TechShop{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'products/css/search.css' %}">
 {% endblock %}
+
 {% block content %}
-    <div class="container">
-        <!-- Заголовок и форма поиска -->
-        <div class="row mb-5">
-            <div class="col-md-8 mx-auto">
-                <h1 class="text-center mb-4">Поиск товаров</h1>
-                <form action="{% url 'products:search' %}" method="GET">
-                    <div class="input-group">
-                        <input
-                                type="text"
-                                name="q"
-                                class="form-control form-control-lg"
-                                placeholder="Например: Intel Core i9"
-                                value="{{ query }}"
-                        >
-                        <button class="btn btn-primary btn-lg" type="submit">
-                            <i class="bi bi-search"></i>
+    <main class="ts-search-page">
+        <div class="techshop-container container">
+            <!-- Поисковая форма -->
+            <div class="ts-search-header">
+                <h1 class="ts-search-title">Поиск товаров</h1>
+                <form action="{% url 'products:search' %}" method="GET" class="ts-search-form">
+                    <div class="ts-search-input-group input-group">
+                        <input type="text" name="q" class="ts-search-input form-control"
+                               placeholder="Введите название или артикул..." value="{{ query }}" autocomplete="off">
+                        <button type="submit" class="ts-search-button btn btn-primary">
+                            <i class="bi bi-search me-2"></i><span>Найти</span>
                         </button>
                     </div>
+                    <p class="ts-results-count text-muted">
+                        Найдено: <span class="fw-bold">{{ paginator.count }}</span> товаров
+                    </p>
                 </form>
-                <p class="text-muted mt-2 text-center">
-                    Найдено товаров: {{ paginator.count }}
-                </p>
             </div>
-        </div>
 
-        <!-- Результаты поиска -->
-        {% if object_list %}
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                {% for product in object_list %}
-                    <div class="col">
-                        <div class="card h-100 product-card">
-                            <img
-                                    src="{{ product.images.first.image.url }}"
-                                    class="card-img-top"
-                                    alt="{{ product.name }}"
-                            >
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a href="{% url 'products:detail' product.category.slug product.slug %}">
-                                        {{ product.name }}
+            <!-- Результаты -->
+            {% if object_list %}
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4">
+                    {% for product in object_list %}
+                        <div class="col">
+                            <div class="ts-product-card card h-100">
+                                <div class="position-relative">
+                                    <a href="{{ product.get_absolute_url }}">
+                                        {% if product.images.exists %}
+                                            <img src="{{ product.images.first.image.url }}"
+                                                 class="ts-product-image w-100"
+                                                 alt="{{ product.name }}"
+                                                 loading="lazy">
+                                        {% else %}
+                                            <div class="ts-product-image bg-light d-flex align-items-center justify-content-center">
+                                                <i class="bi bi-image text-muted fs-1"></i>
+                                            </div>
+                                        {% endif %}
                                     </a>
-                                </h5>
-                                <p class="card-text text-muted">{{ product.sku }}</p>
-                                <div class="d-flex justify-content-between">
-                                    <p class="fw-bold">{{ product.price }} руб.</p>
-                                    <span class="badge bg-secondary">{{ product.category.name }}</span>
+
+                                    <div class="ts-product-badges">
+                                        {% if product.is_new %}
+                                            <span class="ts-product-badge bg-danger text-white">NEW</span>
+                                        {% endif %}
+                                        {% if product.stock <= 0 %}
+                                            <span class="ts-product-badge bg-dark text-white">Нет в наличии</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="ts-product-body card-body">
+                                    <h2 class="ts-product-title">
+                                        <a href="{{ product.get_absolute_url }}" class="text-decoration-none">
+                                            {{ product.name|truncatechars:50 }}
+                                        </a>
+                                    </h2>
+                                    <div class="ts-product-specs">
+                                        {% for spec in product.key_specs|slice:":2" %}
+                                            <div>{{ spec }}</div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="ts-product-price text-primary">
+                                            {{ product.price|intcomma }} ₽
+                                            {% if product.old_price %}
+                                                <del class="text-muted d-block fs-6">{{ product.old_price|intcomma }}
+                                                    ₽
+                                                </del>
+                                            {% endif %}
+                                        </div>
+                                        <span class="ts-product-category small">
+                                        {{ product.category.name }}
+                                    </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Пагинация -->
+                {% if is_paginated %}
+                    <nav class="ts-pagination mt-5">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?q={{ query }}&page={{ page_obj.previous_page_number }}">
+                                        <i class="bi bi-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in page_obj.paginator.page_range %}
+                                {% if num == page_obj.number %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if page_obj.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="?q={{ query }}&page={{ page_obj.next_page_number }}">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <!-- Нет результатов -->
+                <div class="ts-empty-results">
+                    <div class="ts-empty-icon">
+                        <i class="bi bi-search-x"></i>
                     </div>
-                {% endfor %}
-            </div>
-
-            <!-- Пагинация -->
-            {% if page_obj.paginator.num_pages > 1 %}
-                <nav class="mt-5">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                            <li class="page-item">
-                                <a class="page-link" href="?q={{ query }}&page=1">&laquo;</a>
+                    <h3 class="h4 mb-4">По запросу "{{ query }}" ничего не найдено</h3>
+                    <div class="ts-suggestions">
+                        <ul class="ts-suggestions-list list-unstyled">
+                            <li>
+                                <i class="bi bi-check2-circle me-2 text-primary"></i>
+                                Проверьте орфографию
                             </li>
-                        {% endif %}
-
-                        {% for num in page_obj.paginator.page_range %}
-                            <li class="page-item {% if num == page_obj.number %}active{% endif %}">
-                                <a class="page-link" href="?q={{ query }}&page={{ num }}">{{ num }}</a>
+                            <li>
+                                <i class="bi bi-tags me-2 text-primary"></i>
+                                Используйте другие ключевые слова
                             </li>
-                        {% endfor %}
-
-                        {% if page_obj.has_next %}
-                            <li class="page-item">
-                                <a class="page-link" href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                            <li>
+                                <i class="bi bi-folder2-open me-2 text-primary"></i>
+                                Посмотрите <a href="{% url 'products:catalog' %}" class="text-primary">весь каталог</a>
                             </li>
-                        {% endif %}
-                    </ul>
-                </nav>
+                        </ul>
+                    </div>
+                </div>
             {% endif %}
-        {% else %}
-            <!-- Если результатов нет -->
-            <div class="text-center py-5">
-                <h3 class="text-muted mb-4">По запросу "{{ query }}" ничего не найдено</h3>
-                <p>Попробуйте:</p>
-                <ul class="list-unstyled">
-                    <li>Проверить орфографию</li>
-                    <li>Использовать более общие ключевые слова</li>
-                    <li>Ознакомиться с <a href="{% url 'products:category' 'processor' %}">каталогом</a></li>
-                </ul>
-            </div>
-        {% endif %}
-    </div>
+        </div>
+    </main>
 {% endblock %}

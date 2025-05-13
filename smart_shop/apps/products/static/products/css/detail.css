@@ -1,27 +1,117 @@
-/* Галерея изображений */
-.main-image {
-    border: 1px solid #dee2e6;
-    border-radius: 0.5rem;
+/* products/static/products/css/detail.css */
+
+/* Изолированные классы с префиксом ts- */
+.ts-gallery {
+    position: sticky;
+    top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.ts-gallery__main-image {
+    border: 2px solid var(--neutral-300);
+    border-radius: 16px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.thumbnails img {
-    height: 80px;
-    object-fit: contain;
-    cursor: pointer;
-    transition: all 0.2s;
+.ts-gallery__thumbnails-scroller {
+    overflow-x: auto;
+    padding: 8px 0;
+    scrollbar-width: thin;
 }
 
-.thumbnails img.active {
-    border-color: #0d6efd;
-    transform: scale(0.95);
+.ts-gallery__thumbnail-btn {
+    width: 88px;
+    height: 88px;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    opacity: 0.8;
+    border: 2px solid transparent;
+    flex-shrink: 0;
 }
 
-/* Аккордеон характеристик */
-.specs-accordion .accordion-button:not(.collapsed) {
-    background-color: #f8f9fa;
+.ts-gallery__thumbnail-btn:hover,
+.ts-gallery__thumbnail-btn--active {
+    opacity: 1;
+    border-color: var(--primary-500);
+    transform: scale(0.98);
 }
 
-.specs-accordion dt {
+/* Характеристики */
+.ts-specs-accordion .accordion-button {
+    background: var(--neutral-100);
+    font-weight: 600;
+    border-radius: 8px !important;
+    margin: 4px 0;
+}
+
+.ts-specs-accordion .accordion-button:not(.collapsed) {
+    color: var(--primary-700);
+    background: var(--primary-50);
+    box-shadow: none;
+}
+
+.ts-specs-accordion .accordion-body {
+    padding: 1rem 0;
+}
+
+.ts-specs-param {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--neutral-300);
+}
+
+/* Кнопки действий */
+.ts-action-buttons {
+    gap: 12px;
+    margin-top: 2rem;
+}
+
+.ts-action-buttons .btn {
+    border-radius: 12px;
     font-weight: 500;
+    padding: 1rem 2rem;
 }
+
+.ts-wishlist-btn {
+    width: 56px;
+    border: 2px solid var(--danger) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ts-wishlist-btn:hover {
+    background: var(--danger) !important;
+    transform: translateY(-2px);
+}
+
+/* Связанные товары */
+.ts-related-products {
+    scroll-margin-top: 2rem;
+    padding-top: 3rem;
+}
+
+.ts-related-products__title {
+    font-size: 1.5rem;
+    border-left: 4px solid var(--primary-500);
+    padding-left: 1rem;
+}
+
+@media (max-width: 768px) {
+    .ts-gallery {
+        position: static;
+        margin-bottom: 1rem;
+    }
+
+    .ts-product-title {
+        font-size: 1.75rem;
+    }
+
+    .ts-action-buttons {
+        flex-direction: column;
+    }
+
+    .ts-action-buttons .btn {
+        width: 100%;
+    }
+}
+

@@ -1,0 +1,192 @@
+/* Изолированные стили с префиксом techshop-returns- */
+.techshop-returns {
+    isolation: isolate;
+    padding-bottom: 3rem;
+}
+
+.techshop-returns__header {
+    text-align: center;
+    padding: 5rem 0 3rem;
+    background: linear-gradient(to right,
+        var(--primary-100) 0%,
+        rgba(255, 255, 255, 0.9) 100%);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--neutral-300);
+}
+
+.techshop-returns__title {
+    font-size: 2.75rem;
+    color: var(--primary-700);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.techshop-returns__subtitle {
+    font-size: 1.25rem;
+    color: var(--neutral-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Политика возвратов */
+.techshop-returns-policy {
+    background: var(--neutral-100);
+    border-radius: 1.5rem;
+    padding: 3rem;
+    margin: 3rem 0;
+    border: 1px solid var(--neutral-300);
+    box-shadow: 0 8px 32px rgba(151, 117, 250, 0.05);
+}
+
+.techshop-returns-policy__title {
+    font-size: 1.75rem;
+    color: var(--neutral-700);
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.techshop-returns-policy__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+.techshop-returns-policy__item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid var(--neutral-300);
+    transition: all 0.3s ease;
+}
+
+.techshop-returns-policy__item:hover {
+    border-color: var(--primary-300);
+    box-shadow: 0 4px 16px rgba(151, 117, 250, 0.1);
+}
+
+.techshop-returns-policy__icon {
+    color: var(--success);
+    font-size: 1.75rem;
+    flex-shrink: 0;
+}
+
+/* Шаги возврата */
+.techshop-returns-steps {
+    margin: 4rem 0;
+}
+
+.techshop-returns-steps__title {
+    text-align: center;
+    font-size: 2rem;
+    color: var(--primary-700);
+    margin-bottom: 3rem;
+    font-weight: 500;
+}
+
+.techshop-returns-steps__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+}
+
+.techshop-return-step {
+    text-align: center;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--neutral-300);
+    position: relative;
+    overflow: hidden;
+}
+
+.techshop-return-step:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(151, 117, 250, 0.1);
+}
+
+.techshop-return-step__icon {
+    font-size: 2.75rem;
+    color: var(--primary-500);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s;
+}
+
+.techshop-return-step:hover .techshop-return-step__icon {
+    transform: scale(1.15);
+}
+
+.techshop-return-step__title {
+    font-size: 1.3rem;
+    color: var(--neutral-700);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.techshop-return-step__text {
+    color: var(--neutral-600);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Уведомление */
+.techshop-returns-notice {
+    background: rgba(255, 193, 7, 0.1);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.techshop-returns-notice__icon {
+    font-size: 2rem;
+    color: var(--warning);
+    flex-shrink: 0;
+}
+
+.techshop-returns-notice__text {
+    color: var(--neutral-700);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Адаптив */
+@media (max-width: 992px) {
+    .techshop-returns__title {
+        font-size: 2.25rem;
+    }
+
+    .techshop-returns-policy {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .techshop-returns-steps__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .techshop-returns-notice {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .techshop-returns__title {
+        font-size: 2rem;
+    }
+
+    .techshop-return-step {
+        padding: 2rem;
+    }
+}

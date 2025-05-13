@@ -1,54 +1,52 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Условия доставки{% endblock %}
+{% block page_title %}Доставка{% endblock %}
+{% block meta_description %}Условия и способы доставки TechShop{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/delivery.css' %}">
+{% endblock %}
 
 {% block content %}
-    <div class="container py-5">
-        <h1 class="mb-4">Условия доставки</h1>
-
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="h5 mb-0"><i class="bi bi-truck me-2"></i>Курьерская доставка</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled">
-                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Доставка по городу — 1
-                                день
-                            </li>
-                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Стоимость: 300 ₽</li>
-                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Время доставки:
-                                9:00-21:00
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+    <section class="ts-delivery">
+        <div class="container">
+            <div class="ts-delivery-header text-center">
+                <div class="ts-delivery-decorative-line"></div>
+                <h1 class="ts-delivery-title display-4 mb-3">Способы доставки</h1>
+                <p class="ts-delivery-subtitle lead">Быстро и надежно по всей России</p>
             </div>
 
-            <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="h5 mb-0"><i class="bi bi-box-seam me-2"></i>Почта России</h3>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-unstyled">
-                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Срок доставки: 3-7
-                                дней
-                            </li>
-                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Страхование груза</li>
-                            <li class="mb-3"><i class="bi bi-check2-circle text-success me-2"></i>Отслеживание посылки
-                            </li>
-                        </ul>
-                    </div>
+            <div class="ts-delivery-methods">
+                {% for method in delivery_methods %}
+                    <article class="ts-delivery-method card border-0">
+                        <div class="ts-delivery-method-header card-header bg-transparent border-0">
+                            <div class="d-flex align-items-center gap-3">
+                                <i class="{{ method.icon }} ts-delivery-method-icon"></i>
+                                <h3 class="ts-delivery-method-title mb-0">{{ method.title }}</h3>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <ul class="ts-delivery-features list-unstyled">
+                                {% for feature in method.features %}
+                                    <li class="ts-delivery-feature">
+                                        <i class="bi bi-check2-circle ts-delivery-feature-icon"></i>
+                                        <span class="ts-delivery-feature-text">{{ feature }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+
+            <div class="ts-delivery-notice card border-0 shadow-sm mt-5">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <i class="bi bi-info-circle ts-delivery-notice-icon"></i>
+                    <p class="ts-delivery-notice-text mb-0">Все посылки страхуются на полную стоимость заказа</p>
                 </div>
             </div>
         </div>
-
-        <div class="alert alert-info mt-4">
-            <h4 class="alert-heading">Важно!</h4>
-            <p class="mb-0">Перед отправкой товар тщательно проверяется и упаковывается в защитную пленку</p>
-        </div>
-    </div>
+    </section>
 {% endblock %}

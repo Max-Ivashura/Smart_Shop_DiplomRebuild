@@ -1,33 +1,106 @@
-.product-card {
-    transition: transform 0.2s ease;
-    border-radius: 0.75rem;
+/* Изолированные стили с префиксом techshop-catalog- */
+.techshop-catalog-product-card {
+    transition:
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        box-shadow 0.3s ease;
+    border-radius: 16px;
     overflow: hidden;
+    border: 1px solid var(--neutral-300);
+    background: var(--neutral-100);
 }
 
-.product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+.techshop-catalog-product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(151, 117, 250, 0.15) !important;
 }
 
-.product-image {
-    position: relative;
-    height: 200px;
-    overflow: hidden;
-    background: #f8f9fa;
+.techshop-catalog-placeholder-image {
+    height: 240px;
+    border-radius: 12px 12px 0 0;
+    background: var(--primary-50);
+    opacity: 0.8;
 }
 
-.product-image img {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-    padding: 15px;
+.techshop-catalog-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 1.5rem;
+    font-size: 0.85rem;
+    border: 2px solid transparent;
 }
 
-.badge.position-absolute {
-    font-size: 0.8rem;
-    padding: 0.35rem 0.65rem;
+.techshop-catalog-badge-new {
+    background: rgba(var(--danger-rgb), 0.15) !important;
+    color: var(--danger) !important;
+    border-color: rgba(var(--danger-rgb), 0.3);
 }
 
-.add-to-cart {
-    transition: all 0.3s ease;
+.techshop-catalog-badge-out-of-stock {
+    background: rgba(var(--neutral-700), 0.15) !important;
+    color: var(--neutral-700) !important;
+    border-color: var(--neutral-500);
+}
+
+.techshop-catalog-cart-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+    border: 2px solid var(--neutral-300);
+}
+
+.techshop-catalog-cart-btn:hover {
+    background: var(--primary-500) !important;
+    border-color: var(--primary-500) !important;
+    transform: scale(1.1);
+}
+
+/* Фильтры */
+.techshop-catalog-filter-card {
+    border-radius: 20px;
+    border: 1px solid var(--neutral-300);
+    background: var(--neutral-100);
+    box-shadow: 0 4px 24px rgba(151, 117, 250, 0.05);
+}
+
+.techshop-catalog-filter-link {
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.techshop-catalog-filter-link.active {
+    background: rgba(151, 117, 250, 0.08) !important;
+    color: var(--primary-700) !important;
+}
+
+/* Пагинация */
+.techshop-catalog-page-link {
+    border-radius: 12px !important;
+    border: 2px solid var(--neutral-300);
+    margin: 0 6px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.techshop-catalog-page-item.active .techshop-catalog-page-link {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .techshop-catalog-product-card {
+        border-radius: 14px;
+    }
+
+    .techshop-catalog-filter-card {
+        margin-top: 2rem;
+        order: 2;
+    }
+}
+
+@media (max-width: 576px) {
+    .techshop-catalog-placeholder-image {
+        height: 180px;
+    }
 }

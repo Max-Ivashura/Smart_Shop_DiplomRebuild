@@ -1,72 +1,83 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block css %}
-    <link rel="stylesheet" href="{% static 'accounts/css/wishlist.css' %}">
-{% endblock %}
 {% block title %}Список желаемого{% endblock %}
 
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'accounts/css/wishlist.css' %}">
+{% endblock %}
+
 {% block content %}
-    <div class="wishlist-page-container">
-        <h1 class="wishlist-heading">Мой список желаний</h1>
+<section class="techshop-profile container py-5">
+    <div class="techshop-profile__card-header d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+        <h1 class="h5 mb-0 text-primary-700">
+            <i class="bi bi-heart-fill me-2"></i>Мой список желаний
+        </h1>
+        <a href="{% url 'products:catalog' %}" class="btn techshop-profile__btn btn-outline-primary">
+            <i class="bi bi-arrow-right-circle me-2"></i>Вернуться в каталог
+        </a>
+    </div>
 
-        {% if wishlist_items %}
-            <div class="wishlist-grid">
-                {% for item in wishlist_items %}
-                    <div class="wishlist-item">
-                        <div class="card product-card mx-auto">
-                            <!-- Блок изображения -->
-                            <div class="product-image-wrapper">
-                                {% with main_image=item.product.main_image %}
-                                    {% if main_image %}
-                                        <img src="{{ main_image.image.url }}"
-                                             class="card-img-top product-image"
-                                             alt="{{ item.product.name }}">
-                                    {% else %}
-                                        <img src="{% static 'images/placeholder.png' %}"
-                                             class="card-img-top product-image"
-                                             alt="Заглушка">
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
+    {% if wishlist_items %}
+    <div class="row g-4">
+        {% for item in wishlist_items %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="techshop-profile__card card shadow-sm h-100">
+                <!-- Изображение товара -->
+                <div class="position-relative overflow-hidden">
+                    {% with product=item.product %}
+                    <img src="{% if product.main_image %}{{ product.main_image.image.url }}{% else %}{% static 'images/placeholder.png' %}{% endif %}"
+                         class="card-img-top object-fit-cover"
+                         alt="{{ product.name }}"
+                         style="height: 240px">
+                    {% endwith %}
+                </div>
 
-                            <!-- Информация о товаре -->
-                            <div class="card-body">
-                                <h5 class="card-title product-name">
-                                    {{ item.product.name }}
-                                </h5>
-                                <p class="card-text product-price">{{ item.product.price }} ₽</p>
+                <!-- Тело карточки -->
+                <div class="card-body d-flex flex-column">
+                    <h3 class="h5 card-title text-primary-700 mb-3">
+                        {{ item.product.name|truncatechars:40 }}
+                    </h3>
+                    <p class="text-primary-500 fw-bold mb-4">
+                        {{ item.product.price }} ₽
+                    </p>
 
-                                <!-- Дата добавления -->
-                                <small class="text-muted added-date">
-                                    Добавлено: {{ item.added_at|date:"d.m.Y H:i" }}
-                                </small>
-
-                                <!-- Кнопки действий -->
-                                <div class="product-actions">
-                                    <a href="{% url 'accounts:remove_from_wishlist' item.product.id %}"
-                                       class="btn btn-remove"
-                                       onclick="return confirm('Удалить товар из списка желаний?')">
-                                        <i class="fas fa-trash-alt"></i> Удалить
-                                    </a>
-                                    <a href="{% url 'product_detail' item.product.slug %}"
-                                       class="btn btn-view">
-                                        <i class="fas fa-eye"></i> Посмотреть
-                                    </a>
-                                </div>
+                    <!-- Футер карточки -->
+                    <div class="mt-auto border-top pt-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-neutral-500">
+                                <i class="bi bi-calendar me-1"></i>{{ item.added_at|date:"d.m.Y H:i" }}
+                            </small>
+                            <div class="btn-group">
+                                <a href="{% url 'products:detail' item.product.category.slug item.product.slug %}"
+                                   class="btn btn-sm techshop-profile__btn btn-primary">
+                                    <i class="bi bi-eye me-1"></i>Подробнее
+                                </a>
+                                <a href="{% url 'accounts:remove_from_wishlist' item.product.id %}"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Удалить товар из списка желаний?')">
+                                    <i class="bi bi-trash"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-
-        {% else %}
-            <div class="empty-wishlist">
-                <i class="fas fa-heart-broken empty-icon"></i>
-                <p class="empty-message">Ваш список желаний пуст</p>
-                <a href="{% url 'product_list' %}" class="btn btn-primary btn-explore">
-                    <i class="fas fa-store"></i> Перейти в каталог
-                </a>
-            </div>
-        {% endif %}
+        </div>
+        {% endfor %}
     </div>
+    {% else %}
+    <div class="techshop-profile__card card border-2 border-dashed text-center py-5">
+        <div class="card-body">
+            <div class="text-primary-500 mb-4">
+                <i class="bi bi-heartbreak fs-1"></i>
+            </div>
+            <h2 class="text-primary-700 mb-3">Список желаний пуст</h2>
+            <p class="text-neutral-600 mb-4">Начните добавлять товары из каталога</p>
+            <a href="{% url 'products:catalog' %}" class="btn techshop-profile__btn btn-primary px-5">
+                <i class="bi bi-search me-2"></i>Найти товары
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</section>
 {% endblock %}

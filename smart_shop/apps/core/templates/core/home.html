@@ -1,54 +1,78 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block css %}
-    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% block page_title %}Главная{% endblock %}
+{% block meta_description %}Соберите идеальный компьютер с TechShop - лидером в продаже компьютерных комплектующих{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
-{% block title %}Главная страница{% endblock %}
-
 {% block content %}
-<section class="hero-section position-relative">
-    <div class="container h-100">
-        <div class="row align-items-center justify-content-center text-center h-100">
-            <div class="col-lg-8">
-                <h1 class="display-3 fw-bold mb-4 text-white">Добро пожаловать в SmartShop!</h1>
-                <p class="lead text-white-50 mb-5">Лучшие компьютерные комплектующие и готовые сборки</p>
-                <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-                    <a href="/catalog" class="btn btn-primary btn-lg rounded-pill px-5">Каталог</a>
-                    <a href="/configurator" class="btn btn-outline-light btn-lg rounded-pill px-5">Собрать ПК</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="background-pattern" style="background-size: contain;"></div>
-</section>
+    <!-- Герой-секция -->
+    <section class="techshop-home-hero">
+        <div class="techshop-container container">
+            <div class="techshop-home-hero__content">
+                <div class="techshop-home-hero__text">
+                    <h1 class="techshop-home-hero__title">Соберите<br>свой идеальный компьютер</h1>
 
-<section class="features-section py-5">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="feature-card p-4 text-center">
-                    <i class="bi bi-truck fs-1 text-primary mb-3"></i>
-                    <h5 class="fw-bold">Быстрая доставка</h5>
-                    <p>Доставим ваш заказ в течение 2-х дней</p>
+                    <ul class="techshop-home-hero__features">
+                        <li class="techshop-home-hero__feature-item">Более 5000 компонентов</li>
+                        <li class="techshop-home-hero__feature-item">Гарантия 3 года</li>
+                        <li class="techshop-home-hero__feature-item">Бесплатная сборка</li>
+                    </ul>
+
+                    <div class="techshop-home-hero__cta">
+                        <a href="{% url 'configurator:start' %}" class="techshop-home-btn techshop-home-btn-primary">
+                            Конфигуратор
+                            <i class="bi bi-magic"></i>
+                        </a>
+                        <a href="{% url 'products:catalog' %}" class="techshop-home-btn techshop-home-btn-secondary">
+                            Смотреть каталог
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card p-4 text-center">
-                    <i class="bi bi-shield-check fs-1 text-success mb-3"></i>
-                    <h5 class="fw-bold">Гарантия 2 года</h5>
-                    <p>Официальная гарантия на все товары</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card p-4 text-center">
-                    <i class="bi bi-currency-dollar fs-1 text-warning mb-3"></i>
-                    <h5 class="fw-bold">Лучшая цена</h5>
-                    <p>Цены ниже рыночных каждый день</p>
+                <div class="techshop-home-hero__visual">
+                    <div class="techshop-home-hero__image-wrapper">
+                        <img src="{% static 'images/hero-pc.png' %}"
+                             alt="Кастомный компьютер"
+                             class="techshop-home-hero__image">
+                        <div class="techshop-home-hero__glow"></div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <!-- Преимущества -->
+    <section class="techshop-home-features">
+        <div class="techshop-container container">
+            <div class="techshop-home-features__grid">
+                <article class="techshop-home-feature-card">
+                    <div class="techshop-home-feature-card__icon">
+                        <i class="bi bi-lightning-charge"></i>
+                    </div>
+                    <h3 class="techshop-home-feature-card__title">Экспертная сборка</h3>
+                    <p class="techshop-home-feature-card__text">Профессиональная сборка за 24 часа</p>
+                </article>
+
+                <article class="techshop-home-feature-card">
+                    <div class="techshop-home-feature-card__icon">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h3 class="techshop-home-feature-card__title">Гарантия 3 года</h3>
+                    <p class="techshop-home-feature-card__text">На все компоненты и работу</p>
+                </article>
+
+                <article class="techshop-home-feature-card">
+                    <div class="techshop-home-feature-card__icon">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h3 class="techshop-home-feature-card__title">Бесплатная доставка</h3>
+                    <p class="techshop-home-feature-card__text">При заказе от 20 000 ₽</p>
+                </article>
+            </div>
+        </div>
+    </section>
 {% endblock %}

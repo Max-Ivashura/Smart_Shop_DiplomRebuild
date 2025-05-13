@@ -1,0 +1,182 @@
+/* Изолированные стили с префиксом ts-compare */
+.ts-compare-container {
+    isolation: isolate;
+    position: relative;
+}
+
+.ts-compare-title {
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-left: 2rem;
+}
+
+.ts-compare-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background: var(--primary-500);
+    border-radius: 2px;
+}
+
+.ts-compare-table {
+    --border-color: rgba(151, 117, 250, 0.15);
+    --header-bg: var(--primary-100);
+    --diff-bg: rgba(255, 193, 7, 0.1);
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    box-shadow: 0 8px 32px rgba(103, 65, 217, 0.08);
+    border-radius: 1.5rem;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.ts-compare-table:hover {
+    box-shadow: 0 12px 40px rgba(103, 65, 217, 0.12);
+}
+
+.ts-compare-table th,
+.ts-compare-table td {
+    padding: 1.5rem;
+    vertical-align: middle;
+    border: 1px solid var(--border-color);
+    background: white;
+}
+
+.ts-compare-param-header {
+    background: var(--header-bg) !important;
+    border-bottom: 3px solid var(--primary-300) !important;
+    font-size: 1.1rem;
+}
+
+.ts-compare-product-header {
+    vertical-align: bottom !important;
+    border-left: 2px solid var(--border-color) !important;
+}
+
+.ts-compare-product-card {
+    position: relative;
+    padding: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.ts-compare-product-card:hover {
+    transform: translateY(-5px);
+}
+
+.ts-compare-product-img {
+    max-height: 140px;
+    width: auto;
+    margin: 0 auto 1.5rem;
+    padding: 15px;
+    transition: transform 0.3s ease;
+}
+
+.ts-compare-product-card:hover .ts-compare-product-img {
+    transform: scale(1.05);
+}
+
+.ts-compare-remove-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.ts-compare-remove-btn:hover {
+    transform: scale(1.1);
+    opacity: 0.9;
+}
+
+.ts-compare-group-header td {
+    background: rgba(243, 240, 255, 0.6);
+    font-weight: 600;
+    color: var(--primary-700);
+    border-left: 4px solid var(--primary-500);
+    backdrop-filter: blur(2px);
+}
+
+.ts-compare-diff {
+    background: var(--diff-bg) !important;
+    position: relative;
+}
+
+.ts-compare-diff::after {
+    content: "★";
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--primary-500);
+    font-size: 1.2rem;
+}
+
+.ts-compare-empty {
+    border-radius: 24px;
+    background: linear-gradient(
+        145deg,
+        rgba(243, 240, 255, 0.6),
+        rgba(255, 255, 255, 0.9)
+    );
+    backdrop-filter: blur(4px);
+}
+
+.ts-compare-empty-icon {
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.ts-compare-empty:hover .ts-compare-empty-icon {
+    transform: rotate(-8deg) scale(1.1);
+}
+
+/* Адаптивность */
+@media (max-width: 991.98px) {
+    .ts-compare-table {
+        min-width: 800px;
+    }
+
+    .ts-compare-product-img {
+        max-height: 120px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ts-compare-title {
+        font-size: 1.8rem;
+        padding-left: 1.5rem;
+    }
+
+    .ts-compare-add-btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ts-compare-product-title {
+        font-size: 0.95rem;
+    }
+
+    .ts-compare-product-price {
+        font-size: 0.9rem;
+    }
+
+    .ts-compare-table td {
+        padding: 1rem;
+    }
+}

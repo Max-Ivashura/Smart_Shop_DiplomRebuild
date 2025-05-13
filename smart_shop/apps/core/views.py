@@ -12,3 +12,12 @@ def delivery(request):
 
 def contacts(request):
     return render(request, 'core/contacts.html')
+
+def payment(request):
+    return render(request, 'core/payment.html')
+
+def returns(request):
+    return render(request, 'core/returns.html')
+
+def faq(request):
+    return render(request, 'core/faq.html')

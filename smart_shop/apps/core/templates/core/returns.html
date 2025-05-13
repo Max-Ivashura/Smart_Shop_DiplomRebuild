@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Возврат{% endblock %}
+{% block meta_description %}Условия возврата товаров в интернет-магазине TechShop{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/returns.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="techshop-returns">
+        <div class="techshop-container container">
+            <div class="techshop-returns__header">
+                <h1 class="techshop-returns__title">Условия возврата</h1>
+                <p class="techshop-returns__subtitle">Простая и прозрачная процедура</p>
+            </div>
+
+            <div class="techshop-returns__main">
+                <article class="techshop-returns-policy">
+                    <div class="techshop-returns-policy__body">
+                        <h2 class="techshop-returns-policy__title">Основные условия</h2>
+                        <ul class="techshop-returns-policy__list">
+                            <li class="techshop-returns-policy__item">
+                                <i class="bi bi-check2-circle techshop-returns-policy__icon"></i>
+                                Возврат в течение 14 дней с момента получения
+                            </li>
+                            <li class="techshop-returns-policy__item">
+                                <i class="bi bi-check2-circle techshop-returns-policy__icon"></i>
+                                Сохранение оригинальной упаковки
+                            </li>
+                            <li class="techshop-returns-policy__item">
+                                <i class="bi bi-check2-circle techshop-returns-policy__icon"></i>
+                                Наличие товарного чека
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+
+                <div class="techshop-returns-steps">
+                    <h2 class="techshop-returns-steps__title">Процесс возврата</h2>
+                    <div class="techshop-returns-steps__grid">
+                        <article class="techshop-return-step">
+                            <div class="techshop-return-step__icon">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+                            <h3 class="techshop-return-step__title">1. Подача заявки</h3>
+                            <p class="techshop-return-step__text">Оформите запрос в личном кабинете</p>
+                        </article>
+
+                        <article class="techshop-return-step">
+                            <div class="techshop-return-step__icon">
+                                <i class="bi bi-truck"></i>
+                            </div>
+                            <h3 class="techshop-return-step__title">2. Отправка товара</h3>
+                            <p class="techshop-return-step__text">Бесплатный вызов курьера</p>
+                        </article>
+
+                        <article class="techshop-return-step">
+                            <div class="techshop-return-step__icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+                            <h3 class="techshop-return-step__title">3. Получение средств</h3>
+                            <p class="techshop-return-step__text">Возврат в течение 3 рабочих дней</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="techshop-returns-notice">
+                    <i class="bi bi-exclamation-triangle techshop-returns-notice__icon"></i>
+                    <p class="techshop-returns-notice__text">
+                        Технически сложные товары возвращаются только при наличии заводского брака
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

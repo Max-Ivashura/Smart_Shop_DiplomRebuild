@@ -1,37 +1,54 @@
-<!-- apps/configurator/templates/configurator/public/list.html -->
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'configurator/css/list.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-4">
-    <h2>Публичные сборки</h2>
+<div class="ts-build-list-container container">
+    <div class="ts-build-list-header d-flex justify-content-between align-items-center mb-5">
+        <h1 class="ts-build-list-title text-primary-700">
+            <i class="bi bi-pc-display-horizontal me-2"></i>Публичные сборки
+        </h1>
+        <a href="{% url 'configurator:start' %}" class="ts-build-list-create-btn btn btn-outline-primary">
+            <i class="bi bi-plus-circle me-2"></i>Создать свою
+        </a>
+    </div>
 
-    <div class="row">
+    <div class="row g-4">
         {% for build in public_builds %}
-        <div class="col-md-6 mb-4">
-            <div class="card">
+        <div class="col-12 col-lg-6">
+            <div class="ts-build-card card">
                 <div class="card-body">
-                    <h5 class="card-title">
-                        Сборка от {{ build.user.username }}
-                        <span class="badge bg-primary">{{ build.total_price }} руб.</span>
-                    </h5>
-
-                    <div class="components-list mb-3">
-                        <h6>Компоненты:</h6>
-                        <ul class="list-group">
-                            {% for component in build.components.all %}
-                            <li class="list-group-item d-flex justify-content-between">
-                                <span>{{ component.name }}</span>
-                                <small>{{ component.category.name }}</small>
-                            </li>
-                            {% endfor %}
-                        </ul>
+                    <div class="ts-build-card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-person-circle ts-build-author-icon"></i>
+                            <h2 class="ts-build-card-title h5 mb-0">{{ build.title|default:"Без названия" }}</h2>
+                        </div>
+                        <span class="ts-build-price-badge badge">
+                            {{ build.total_price }} ₽
+                        </span>
                     </div>
 
-                    <div class="d-flex gap-2">
+                    <div class="ts-build-components mb-4">
+                        <h3 class="ts-build-components-title h6 mb-3">
+                            <i class="bi bi-motherboard me-2"></i>Компоненты
+                        </h3>
+                        <div class="ts-build-components-grid d-flex flex-wrap gap-2">
+                            {% for component in build.components.all %}
+                            <div class="ts-build-component-tag">
+                                <span class="ts-build-component-name">{{ component.name }}</span>
+                                <small class="ts-build-component-category">{{ component.category.name }}</small>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="ts-build-actions d-flex justify-content-end">
                         <a href="{% url 'configurator:clone_build' build.id %}"
-                           class="btn btn-sm btn-success">
-                            Клонировать
+                           class="ts-build-clone-btn btn">
+                            <i class="bi bi-files me-2"></i>Клонировать сборку
                         </a>
                     </div>
                 </div>
@@ -39,7 +56,13 @@
         </div>
         {% empty %}
         <div class="col-12">
-            <div class="alert alert-info">Публичных сборок пока нет.</div>
+            <div class="ts-build-empty alert text-center py-5">
+                <div class="ts-build-empty-icon text-primary-500 mb-3">
+                    <i class="bi bi-pc-display fs-1"></i>
+                </div>
+                <h2 class="ts-build-empty-title text-primary-700 mb-3">Публичных сборок пока нет</h2>
+                <p class="ts-build-empty-text text-neutral-600">Станьте первым, кто поделится своей конфигурацией</p>
+            </div>
         </div>
         {% endfor %}
     </div>

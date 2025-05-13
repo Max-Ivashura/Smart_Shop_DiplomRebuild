@@ -1,0 +1,237 @@
+/* Изолированные стили с префиксом techshop-home- */
+.techshop-home-hero {
+    position: relative;
+    padding: 6rem 2rem 4rem;
+    background: linear-gradient(45deg,
+        var(--primary-700) 0%,
+        var(--primary-500) 100%);
+    isolation: isolate;
+    overflow: hidden;
+}
+
+.techshop-home-hero__content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.techshop-home-hero__text {
+    max-width: 1200px;
+    padding-right: 1rem;
+}
+
+.techshop-home-hero__title {
+    font-size: 3rem;
+    line-height: 1.15;
+    color: var(--text-light);
+    margin-bottom: 1.75rem;
+    letter-spacing: -0.02em;
+}
+
+.techshop-home-hero__features {
+    list-style: none;
+    padding: 0;
+    margin: 2.5rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.techshop-home-hero__feature-item {
+    position: relative;
+    padding-left: 2.5rem;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.techshop-home-hero__feature-item::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--primary-300);
+    font-size: 1.4rem;
+    top: -0.1em;
+}
+
+.techshop-home-hero__cta {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+/* Кнопки */
+.techshop-home-btn {
+    padding: 1.1rem 2.75rem;
+    border-radius: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 2px solid transparent;
+}
+
+.techshop-home-btn-primary {
+    background: var(--primary-500);
+    color: var(--text-light);
+    box-shadow: 0 4px 24px rgba(151, 117, 250, 0.3);
+}
+
+.techshop-home-btn-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-light);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.techshop-home-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.techshop-home-btn-primary:hover {
+    background: var(--primary-600);
+}
+
+/* Изображение */
+.techshop-home-hero__visual {
+    position: relative;
+    perspective: 1200px;
+}
+
+.techshop-home-hero__image-wrapper {
+    position: relative;
+    transform: rotate(-2deg);
+    animation: techshop-float 6s ease-in-out infinite;
+}
+
+.techshop-home-hero__image {
+    max-width: 400px;
+    height: auto;
+    filter: drop-shadow(0 16px 32px rgba(0, 0, 0, 0.25));
+}
+
+.techshop-home-hero__glow {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle at 50% 50%,
+        rgba(151, 117, 250, 0.25) 0%,
+        rgba(151, 117, 250, 0) 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+/* Преимущества */
+.techshop-home-features {
+    padding: 2rem 0;
+    margin-top: -4rem;
+}
+
+.techshop-home-features__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    position: relative;
+    z-index: 2;
+}
+
+.techshop-home-feature-card {
+    background: var(--neutral-100);
+    padding: 2.5rem;
+    border-radius: 1.25rem;
+    text-align: center;
+    border: 1px solid var(--neutral-300);
+    transition: all 0.3s ease;
+}
+
+.techshop-home-feature-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--primary-300);
+    box-shadow: 0 12px 40px rgba(151, 117, 250, 0.1);
+}
+
+.techshop-home-feature-card__icon {
+    font-size: 2.75rem;
+    color: var(--primary-500);
+    margin-bottom: 1.25rem;
+    transition: transform 0.3s;
+}
+
+.techshop-home-feature-card:hover .techshop-home-feature-card__icon {
+    transform: scale(1.1);
+}
+
+.techshop-home-feature-card__title {
+    font-size: 1.3rem;
+    color: var(--neutral-700);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.techshop-home-feature-card__text {
+    color: var(--neutral-600);
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+/* Анимации */
+@keyframes techshop-float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-24px) rotate(2deg); }
+}
+
+/* Адаптив */
+@media (max-width: 992px) {
+    .techshop-home-hero__content {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+    }
+
+    .techshop-home-hero__text {
+        padding-right: 0;
+        margin: 0 auto;
+    }
+
+    .techshop-home-hero__features {
+        justify-content: center;
+    }
+
+    .techshop-home-hero__cta {
+        justify-content: center;
+    }
+
+    .techshop-home-hero__image {
+        max-width: 380px;
+    }
+}
+
+@media (max-width: 768px) {
+    .techshop-home-hero__title {
+        font-size: 2.25rem;
+    }
+
+    .techshop-home-feature-card {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .techshop-home-hero {
+        padding: 4rem 0;
+    }
+
+    .techshop-home-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .techshop-home-features__grid {
+        grid-template-columns: 1fr;
+    }
+}

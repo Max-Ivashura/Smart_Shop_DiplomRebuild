@@ -1,0 +1,73 @@
+/* Базовые стили футера */
+.techshop-footer.c-footer {
+    background: var(--primary-700);
+    color: var(--text-light);
+    position: relative;
+    margin-top: 60px;
+    z-index: 3;
+}
+
+/* Градиентная маска */
+.techshop-footer.c-footer:before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(
+            to top,
+            var(--primary-700) 0%,
+            rgba(103, 65, 217, 0.2) 80%,
+            rgba(103, 65, 217, 0) 100%
+    );
+    backdrop-filter: blur(1px);
+}
+
+.techshop-footer:after {
+    background: linear-gradient(
+            to top,
+            rgba(103, 65, 217, 0.15) 0%,
+            rgba(103, 65, 217, 0) 100%
+    ) !important;
+}
+
+@supports (backdrop-filter: blur(4px)) {
+    .techshop-footer:after {
+        background: none !important;
+    }
+}
+
+/* Фоллбек для браузеров без поддержки backdrop-filter */
+@supports not (backdrop-filter: blur(1px)) {
+    .techshop-footer.c-footer:before {
+        background: linear-gradient(
+                to top,
+                var(--primary-700) 0%,
+                rgba(103, 65, 217, 0.15) 80%,
+                rgba(103, 65, 217, 0) 100%
+        );
+    }
+}
+
+/* Ссылки */
+.techshop-footer a {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Кнопка подписки */
+.techshop-footer__subscribe .btn {
+    background: var(--primary-500);
+    border-color: var(--primary-500);
+}
+
+/* Социальные иконки */
+.techshop-footer__social-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    border-bottom: none !important;
+}
+
+.techshop-footer__social-link:hover {
+    color: var(--text-light);
+}

@@ -1,79 +1,105 @@
-/* apps/configurator/static/configurator/css/configurator.css */
-.configurator-progress {
-    text-align: center;
+/* Изолированные стили с префиксом ts-config- */
+.ts-config-base {
+    --progress-height: 1.5rem;
+    --progress-radius: 1.5rem;
+    --progress-bg: rgba(151, 117, 250, 0.1);
+    padding: 2rem 0;
+    isolation: isolate;
 }
 
-.category-card {
-    transition: transform 0.2s;
+.ts-config-progress-container {
+    height: var(--progress-height);
+    background: var(--progress-bg);
+    border-radius: var(--progress-radius);
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.category-card:hover {
-    transform: translateY(-5px);
-}
-
-.component-card {
+.ts-config-progress-bar {
     height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--primary-500) 0%,
+        var(--primary-700) 100%
+    );
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    border-radius: var(--progress-radius);
 }
 
-.component-card .specs {
-    max-height: 300px;
-    overflow-y: auto;
+.ts-config-progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: ts-config-progress-shine 2s infinite;
 }
 
-/* static/configurator/css/configurator.css */
-.component-card:hover {
-    transform: translateY(-5px);
+@keyframes ts-config-progress-shine {
+    100% { left: 200%; }
 }
 
-.specs-highlights {
-    background: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    margin: 15px 0;
-}
-
-.spec-item {
-    display: flex;
-    justify-content: space-between;
-    margin: 8px 0;
-}
-
-.spec-key {
-    color: #6c757d;
-    font-weight: 500;
-}
-
-.spec-value {
-    color: #212529;
+.ts-config-progress-label {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-light);
+    font-size: 0.875rem;
     font-weight: 600;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
-.card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
+.ts-config-content {
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.95),
+        rgba(243, 240, 255, 0.8)
+    );
+    border-radius: 2rem;
+    padding: 2.5rem;
+    box-shadow: 0 12px 40px rgba(103, 65, 217, 0.12);
+    backdrop-filter: blur(6px);
 }
 
-.rating {
-    display: flex;
-    flex-direction: row-reverse;
-    gap: 5px;
+/* Адаптивность */
+@media (max-width: 767.98px) {
+    .ts-config-base {
+        padding: 1.5rem 0;
+    }
+
+    .ts-config-content {
+        padding: 1.8rem;
+        border-radius: 1.5rem;
+    }
+
+    .ts-config-progress-label {
+        font-size: 0.75rem;
+        right: 1rem;
+    }
 }
 
-.rating input {
-    display: none;
-}
+@media (max-width: 575.98px) {
+    .ts-config-base {
+        padding: 1rem 0;
+    }
 
-.rating label {
-    cursor: pointer;
-    font-size: 24px;
-    color: #ddd;
-}
+    .ts-config-content {
+        padding: 1.2rem;
+        border-radius: 1rem;
+    }
 
-.rating input:checked ~ label {
-    color: #ffd700;
-}
-
-.rating label:hover,
-.rating label:hover ~ label {
-    color: #ffd700;
+    .ts-config-progress-container {
+        height: 1.3rem;
+    }
 }

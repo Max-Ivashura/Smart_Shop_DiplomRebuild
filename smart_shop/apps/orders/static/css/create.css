@@ -1,0 +1,119 @@
+/* Изолированные стили с префиксом techshop-order- */
+.techshop-order-create-container {
+    --input-focus: var(--primary-300);
+    --card-radius: 1.75rem;
+    padding: 3rem 0;
+    isolation: isolate;
+}
+
+.techshop-order-cart-summary,
+.techshop-order-form-card {
+    border-radius: var(--card-radius);
+    background: var(--neutral-100);
+    border: 1px solid var(--neutral-300);
+    box-shadow: 0 8px 32px rgba(151, 117, 250, 0.05);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.techshop-order-cart-summary:hover,
+.techshop-order-form-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(151, 117, 250, 0.1);
+}
+
+.techshop-order-cart-item {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--neutral-300);
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.techshop-order-cart-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(151, 117, 250, 0.1);
+}
+
+.techshop-order-total-price {
+    border-top: 2px solid var(--primary-200);
+    padding-top: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Форма */
+.techshop-order-form .techshop-form-control {
+    border: 2px solid var(--neutral-300);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+    background: white;
+}
+
+.techshop-order-form .techshop-form-control:focus {
+    border-color: var(--primary-500);
+    box-shadow: 0 0 0 3px rgba(151, 117, 250, 0.15);
+}
+
+.techshop-order-form-label {
+    color: var(--neutral-700);
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+}
+
+.techshop-order-btn-primary {
+    background: var(--primary-500);
+    color: var(--text-light);
+    padding: 1.25rem;
+    border-radius: 1rem;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+    width: 100%;
+    font-weight: 500;
+    border: none;
+}
+
+.techshop-order-btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(151, 117, 250, 0.3);
+    background: var(--primary-600);
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .techshop-order-create-container {
+        padding: 2rem 0;
+    }
+
+    .techshop-order-cart-item {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .techshop-order-cart-summary,
+    .techshop-order-form-card {
+        border-radius: 1.25rem;
+    }
+
+    .techshop-order-form .techshop-form-control {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .techshop-order-cart-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .techshop-order-btn-primary {
+        padding: 1rem;
+    }
+}

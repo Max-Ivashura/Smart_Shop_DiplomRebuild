@@ -1,65 +1,93 @@
 {% extends "base.html" %}
-{% block title %}Оформление заказа{% endblock %}
+{% load static %}
+
+{% block page_title %}Оформление заказа{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/create.css' %}">
+{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h1 class="mb-4">Оформление заказа</h1>
+<div class="techshop-order-create-container">
+    <div class="techshop-flex-header d-flex justify-content-between align-items-center mb-5">
+        <h1 class="techshop-order-title">
+            <i class="bi bi-cart-check me-2"></i>Оформление заказа
+        </h1>
+        <a href="{% url 'cart:detail' %}" class="techshop-order-back-btn">
+            <i class="bi bi-arrow-left me-2"></i>Вернуться в корзину
+        </a>
+    </div>
 
-    <div class="row">
+    <div class="row g-4">
         <!-- Товары в корзине -->
-        <div class="col-md-7">
-            <div class="card shadow mb-4">
+        <div class="col-lg-7">
+            <div class="techshop-order-cart-summary">
                 <div class="card-body">
-                    <h5 class="card-title">Ваши товары</h5>
-                    {% for item in request.user.cart.items.all %}
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div>
-                                <h6>{{ item.product.name }}</h6>
-                                <small class="text-muted">{{ item.quantity }} × {{ item.product.price }} руб.</small>
+                    <h2 class="techshop-order-section-title">
+                        <i class="bi bi-basket me-2"></i>Состав заказа
+                    </h2>
+
+                    <div class="techshop-order-cart-items">
+                        {% for item in request.user.cart.items.all %}
+                        <div class="techshop-order-cart-item d-flex justify-content-between align-items-center">
+                            <div class="flex-grow-1">
+                                <h3 class="techshop-order-product-title">{{ item.product.name }}</h3>
+                                <small class="techshop-order-product-meta">
+                                    {{ item.quantity }} × {{ item.product.price }} ₽
+                                </small>
                             </div>
-                            <span class="fw-bold">{{ item.total_price }} руб.</span>
+                            <span class="techshop-order-product-price">{{ item.total_price }} ₽</span>
                         </div>
-                    {% endfor %}
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <h5>Итого:</h5>
-                        <h5>{{ request.user.cart.total_price }} руб.</h5>
+                        {% endfor %}
+                    </div>
+
+                    <div class="techshop-order-total-price">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="techshop-order-total-label">Итого к оплате:</h3>
+                            <h3 class="techshop-order-total-value">{{ request.user.cart.total_price }} ₽</h3>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Форма заказа -->
-        <div class="col-md-5">
-            <div class="card shadow">
+        <div class="col-lg-5">
+            <div class="techshop-order-form-card">
                 <div class="card-body">
-                    <form method="post">
+                    <h2 class="techshop-order-section-title">
+                        <i class="bi bi-truck me-2"></i>Данные доставки
+                    </h2>
+
+                    <form method="post" class="techshop-order-form">
                         {% csrf_token %}
 
-                        <div class="mb-3">
-                            <label class="form-label">Адрес доставки</label>
+                        <div class="mb-4">
+                            <label class="techshop-order-form-label">Адрес доставки</label>
                             <input
                                 type="text"
                                 name="address"
-                                class="form-control"
+                                class="techshop-form-control"
                                 value="{{ request.user.address }}"
                                 placeholder="Укажите адрес"
                             >
-                            <div class="form-text">Оставьте пустым, чтобы использовать адрес из профиля</div>
+                            <small class="techshop-order-form-hint">
+                                Оставьте пустым для использования адреса из профиля
+                            </small>
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label">Комментарий</label>
+                        <div class="mb-4">
+                            <label class="techshop-order-form-label">Комментарий</label>
                             <textarea
                                 name="comment"
-                                class="form-control"
+                                class="techshop-form-control"
                                 rows="3"
-                                placeholder="Дополнительные пожелания"
+                                placeholder="Ваши пожелания к заказу..."
                             ></textarea>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 btn-lg">
-                            Подтвердить заказ
+                        <button type="submit" class="techshop-order-btn-primary">
+                            <i class="bi bi-credit-card me-2"></i>Подтвердить заказ
                         </button>
                     </form>
                 </div>

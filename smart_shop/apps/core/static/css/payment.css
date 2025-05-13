@@ -1,0 +1,243 @@
+/* Изолированные стили с префиксом techshop-payment- */
+.techshop-payment {
+    isolation: isolate;
+}
+
+.techshop-payment__header {
+    text-align: center;
+    padding: 5rem 0 3rem;
+    border-bottom: 1px solid var(--neutral-300);
+    margin-bottom: 3rem;
+}
+
+.techshop-payment__title {
+    font-size: 2.5rem;
+    color: var(--primary-700);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+}
+
+.techshop-payment__subtitle {
+    font-size: 1.2rem;
+    color: var(--neutral-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Основной блок */
+.techshop-payment__main {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 3rem;
+    margin: 4rem 0;
+}
+
+/* Методы оплаты */
+.techshop-payment-methods {
+    background: var(--neutral-100);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--neutral-300);
+    box-shadow: 0 8px 32px rgba(151, 117, 250, 0.05);
+}
+
+.techshop-payment-methods__title {
+    font-size: 1.75rem;
+    color: var(--neutral-700);
+    margin-bottom: 2.5rem;
+    font-weight: 500;
+}
+
+/* Варианты оплаты */
+.techshop-payment-option {
+    margin-bottom: 1.25rem;
+}
+
+.techshop-payment-option__input {
+    display: none;
+}
+
+.techshop-payment-option__label {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    padding: 1.75rem;
+    border: 2px solid var(--neutral-300);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+}
+
+.techshop-payment-option__input:checked + .techshop-payment-option__label {
+    border-color: var(--primary-500);
+    background: rgba(151, 117, 250, 0.03);
+    box-shadow: 0 4px 16px rgba(151, 117, 250, 0.1);
+}
+
+.techshop-payment-option__icon {
+    font-size: 2.25rem;
+    color: var(--primary-500);
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.techshop-payment-option__input:checked + .techshop-payment-option__label .techshop-payment-option__icon {
+    color: var(--primary-700);
+}
+
+.techshop-payment-option__info {
+    flex-grow: 1;
+}
+
+.techshop-payment-option__title {
+    font-size: 1.15rem;
+    color: var(--neutral-700);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.techshop-payment-option__desc {
+    font-size: 0.95rem;
+    color: var(--neutral-600);
+    line-height: 1.5;
+}
+
+.techshop-payment-option__check {
+    color: var(--primary-500);
+    font-size: 1.5rem;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.techshop-payment-option__input:checked + .techshop-payment-option__label .techshop-payment-option__check {
+    opacity: 1;
+}
+
+/* Сумма заказа */
+.techshop-order-summary {
+    background: var(--neutral-100);
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    border: 1px solid var(--neutral-300);
+    box-shadow: 0 8px 32px rgba(151, 117, 250, 0.05);
+}
+
+.techshop-order-summary__title {
+    font-size: 1.75rem;
+    color: var(--neutral-700);
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.techshop-order-details__item {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--neutral-300);
+    color: var(--neutral-600);
+}
+
+.techshop-order-details__item--total {
+    font-weight: 600;
+    color: var(--primary-700);
+    border-bottom: none;
+    font-size: 1.3rem;
+    margin-top: 1.5rem;
+}
+
+.techshop-order-summary__submit {
+    width: 100%;
+    padding: 1.25rem;
+    background: var(--primary-500);
+    color: var(--text-light);
+    border: none;
+    border-radius: 0.75rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 24px rgba(151, 117, 250, 0.25);
+}
+
+.techshop-order-summary__submit:hover {
+    transform: translateY(-3px);
+    background: var(--primary-600);
+    box-shadow: 0 8px 32px rgba(151, 117, 250, 0.35);
+}
+
+/* Блок безопасности */
+.techshop-payment-security {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2.5rem;
+    margin: 5rem 0 3rem;
+}
+
+.techshop-security-card {
+    text-align: center;
+    padding: 2.5rem;
+    background: var(--neutral-100);
+    border-radius: 1.5rem;
+    border: 1px solid var(--neutral-300);
+    transition: transform 0.3s;
+}
+
+.techshop-security-card:hover {
+    transform: translateY(-5px);
+}
+
+.techshop-security-card__icon {
+    font-size: 2.75rem;
+    color: var(--primary-500);
+    margin-bottom: 1.5rem;
+}
+
+.techshop-security-card__title {
+    font-size: 1.25rem;
+    color: var(--neutral-700);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+/* Адаптив */
+@media (max-width: 992px) {
+    .techshop-payment__main {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+
+    .techshop-order-summary {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .techshop-payment__title {
+        font-size: 2rem;
+    }
+
+    .techshop-payment-methods {
+        padding: 2rem;
+    }
+
+    .techshop-payment-option__label {
+        padding: 1.5rem;
+        gap: 1.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .techshop-payment-option__label {
+        flex-wrap: wrap;
+    }
+
+    .techshop-payment-option__icon {
+        font-size: 2rem;
+    }
+}

@@ -23,6 +23,7 @@ INSTALLED_APPS = [
 
     # PLUGINS
     'mptt',
+    'django.contrib.humanize',
 
     # CUSTOM APPS
     'apps.core.apps.CoreConfig',
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'apps.cart.apps.CartConfig',
     'apps.orders.apps.OrdersConfig',
     'apps.configurator.apps.ConfiguratorConfig',
+    'apps.compare.apps.CompareConfig',
 
 ]
 

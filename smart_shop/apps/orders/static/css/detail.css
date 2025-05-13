@@ -1,0 +1,111 @@
+/* Изолированные стили с префиксом techshop-order-detail- */
+.techshop-order-detail {
+    --shadow-primary: 0 8px 32px rgba(151, 117, 250, 0.1);
+    --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    isolation: isolate;
+    padding: 4rem 0;
+}
+
+.techshop-order-main-card {
+    border-radius: 2rem;
+    background: var(--neutral-100);
+    border: 1px solid var(--neutral-300);
+    box-shadow: var(--shadow-primary);
+    overflow: hidden;
+    transition: var(--transition-base);
+}
+
+.techshop-order-product-card {
+    border-radius: 1.25rem;
+    background: white;
+    border: 1px solid var(--neutral-300);
+    transition: var(--transition-base);
+}
+
+.techshop-order-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-primary);
+}
+
+.techshop-order-status-badge {
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.techshop-order-product-image {
+    background: var(--primary-50);
+    border-radius: 1rem 0 0 1rem;
+    overflow: hidden;
+}
+
+.techshop-order-product-price {
+    font-size: 1.25rem;
+    color: var(--primary-700);
+}
+
+.techshop-order-modal {
+    border: 2px solid var(--neutral-300);
+    border-radius: 1.5rem;
+}
+
+/* Типографика */
+.techshop-order-title {
+    font-size: 2.5rem;
+    color: var(--primary-700);
+    letter-spacing: -0.015em;
+}
+
+.techshop-order-section-title {
+    font-size: 1.5rem;
+    color: var(--neutral-700);
+    margin-bottom: 2rem;
+}
+
+/* Кнопки */
+.techshop-order-back-btn {
+    border: 2px solid var(--neutral-300);
+    border-radius: 1rem;
+    padding: 0.75rem 1.5rem;
+    transition: var(--transition-base);
+}
+
+.techshop-order-back-btn:hover {
+    border-color: var(--primary-300);
+    background: var(--primary-50);
+}
+
+.techshop-order-cancel-btn {
+    background: var(--danger);
+    color: white;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .techshop-order-title {
+        font-size: 2rem;
+    }
+
+    .techshop-order-product-card {
+        flex-direction: column;
+    }
+
+    .techshop-order-product-image {
+        border-radius: 1rem 1rem 0 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .techshop-order-main-card {
+        border-radius: 1.5rem;
+    }
+
+    .techshop-order-status-badge {
+        font-size: 0.875rem;
+    }
+}

@@ -1,5 +1,7 @@
 {% load orders_extras %}
 
-<span class="badge bg-{{ order.status_color }}">
+<span class="techshop-status-badge techshop-status-{{ order.status_color }} rounded-pill text-uppercase">
+    <i class="bi {% get_order_status_icon order.status %} me-2"></i>
     {{ order.get_status_display }}
+    <span class="visually-hidden">Статус заказа: {{ order.get_status_display }}</span>
 </span>

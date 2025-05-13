@@ -4,6 +4,18 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, UserCreationForm
 from apps.accounts.models import CustomUser
 
+from django.contrib.auth.forms import PasswordResetForm
+
+
+class CustomPasswordResetForm(PasswordResetForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Добавляем классы для всех полей формы
+        self.fields['email'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Ваш email'
+        })
+
 
 class LoginForm(AuthenticationForm):
     """Форма входа с кастомизацией под новую модель"""

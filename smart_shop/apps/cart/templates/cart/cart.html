@@ -1,90 +1,111 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Корзина{% endblock %}
-
-{% block css %}
-<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'cart/css/cart.css' %}">
 {% endblock %}
 
+{% block title %}Корзина{% endblock %}
+
 {% block content %}
-<div class="cart-container">
-    <h1 class="cart-title">Ваша корзина</h1>
+<div class="ts-cart-container container py-5">
+    <h1 class="ts-cart-title text-primary-700 mb-5">
+        <i class="bi bi-cart3 me-2"></i>Ваша корзина
+    </h1>
 
     {% if object.items.all %}
-        <div class="cart-items">
-            {% for item in object.items.all %}
-                <div class="cart-item card mb-3">
-                    <div class="row g-0">
-                        <div class="col-md-2">
+    <div class="ts-cart-items row g-4">
+        {% for item in object.items.all %}
+        <div class="ts-cart-item col-12">
+            <div class="ts-cart-card card border-0 shadow-sm">
+                <div class="row g-0">
+                    <!-- Изображение товара -->
+                    <div class="ts-cart-media col-md-3 col-lg-2">
+                        <div class="ts-cart-image-wrapper ratio ratio-1x1">
                             <img src="{{ item.product.get_first_image.image.url }}"
-                                 class="img-fluid rounded-start"
+                                 class="ts-cart-image img-fluid object-fit-contain"
                                  alt="{{ item.product.name }}">
                         </div>
+                    </div>
 
-                        <div class="col-md-6">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ item.product.name }}</h5>
-                                <p class="text-muted mb-1">Артикул: {{ item.product.sku }}</p>
-                                <p class="text-success mb-0">В наличии: {{ item.product.stock }} шт.</p>
+                    <!-- Информация о товаре -->
+                    <div class="ts-cart-info col-md-5 col-lg-6">
+                        <div class="card-body h-100 d-flex flex-column">
+                            <h3 class="ts-cart-product-title h5 card-title text-primary-700 mb-3">{{ item.product.name }}</h3>
+                            <div class="mt-auto">
+                                <small class="ts-cart-sku text-neutral-500 d-block">Артикул: {{ item.product.sku }}</small>
+                                <small class="ts-cart-stock text-success">
+                                    <i class="bi bi-box-seam me-1"></i>В наличии: {{ item.product.stock }} шт.
+                                </small>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-md-4">
-                            <div class="card-body h-100 d-flex flex-column justify-content-between">
-                                <div class="quantity-controls">
-                                    <form method="post" action="{% url 'cart:update' item.id %}">
-                                        {% csrf_token %}
-                                        <div class="input-group">
-                                            <button class="btn btn-outline-secondary minus-btn" type="button">−</button>
-                                            <input type="number"
-                                                   name="quantity"
-                                                   value="{{ item.quantity }}"
-                                                   min="1"
-                                                   max="{{ item.product.stock }}"
-                                                   class="form-control text-center quantity-input">
-                                            <button class="btn btn-outline-secondary plus-btn" type="button">+</button>
-                                        </div>
-                                    </form>
+                    <!-- Управление -->
+                    <div class="ts-cart-controls col-md-4 col-lg-4">
+                        <div class="card-body h-100 d-flex flex-column justify-content-between">
+                            <form method="post" action="{% url 'cart:update' item.id %}" class="ts-cart-form mb-4">
+                                {% csrf_token %}
+                                <div class="ts-cart-quantity input-group border rounded-pill">
+                                    <button class="ts-cart-btn-minus btn btn-link text-primary-500 px-3" type="button">
+                                        <i class="bi bi-dash-lg"></i>
+                                    </button>
+                                    <input type="number"
+                                           name="quantity"
+                                           value="{{ item.quantity }}"
+                                           min="1"
+                                           max="{{ item.product.stock }}"
+                                           class="ts-cart-quantity-input form-control border-0 text-center shadow-none">
+                                    <button class="ts-cart-btn-plus btn btn-link text-primary-500 px-3" type="button">
+                                        <i class="bi bi-plus-lg"></i>
+                                    </button>
                                 </div>
+                            </form>
 
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="price">{{ item.product.price }} ₽ × {{ item.quantity }}</span>
-                                    <a href="{% url 'cart:remove' item.id %}"
-                                       class="btn btn-danger btn-sm delete-btn">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </div>
+                            <div class="ts-cart-footer d-flex justify-content-between align-items-center border-top pt-3">
+                                <span class="ts-cart-price text-primary-700 fw-bold">
+                                    {{ item.product.price }} ₽ × {{ item.quantity }}
+                                </span>
+                                <a href="{% url 'cart:remove' item.id %}"
+                                   class="ts-cart-remove btn btn-link text-danger p-0"
+                                   onclick="return confirm('Удалить товар из корзины?')">
+                                    <i class="bi bi-trash fs-5"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
-
-        <div class="cart-summary card">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">Итого:</h4>
-                    <h4 class="mb-0 total-price">{{ object.total_price }} ₽</h4>
-                </div>
-                <a href="{% url 'orders:create' %}" class="btn btn-primary btn-lg w-100">
-                    Перейти к оформлению
-                </a>
             </div>
         </div>
-    {% else %}
-        <div class="empty-cart alert alert-info">
-            <i class="bi bi-cart-x fs-4"></i>
-            <p class="mb-0">Ваша корзина пуста</p>
-            <a href="{% url 'products:catalog' %}" class="btn btn-outline-primary mt-3">
-                Начать покупки
+        {% endfor %}
+    </div>
+
+    <!-- Итоговая сумма -->
+    <div class="ts-cart-total card border-0 shadow-sm mt-4">
+        <div class="card-body py-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="ts-cart-total-title h5 mb-0 text-primary-700">Итого к оплате:</h3>
+                <div class="ts-cart-total-price h4 mb-0 text-primary-700">{{ object.total_price }} ₽</div>
+            </div>
+            <a href="{% url 'orders:create' %}" class="ts-cart-checkout btn btn-primary w-100 py-3">
+                <i class="bi bi-wallet2 me-2"></i>Перейти к оформлению
             </a>
         </div>
+    </div>
+    {% else %}
+    <!-- Пустая корзина -->
+    <div class="ts-cart-empty card border-2 border-dashed border-primary-200 text-center py-5">
+        <div class="card-body">
+            <div class="ts-cart-empty-icon text-primary-500 mb-4">
+                <i class="bi bi-cart-x fs-1"></i>
+            </div>
+            <h2 class="ts-cart-empty-title text-primary-700 mb-3">Корзина пуста</h2>
+            <p class="ts-cart-empty-text text-neutral-600 mb-4">Начните добавлять товары из каталога</p>
+            <a href="{% url 'products:catalog' %}" class="ts-cart-empty-btn btn btn-primary px-5">
+                <i class="bi bi-arrow-right-circle me-2"></i>К покупкам
+            </a>
+        </div>
+    </div>
     {% endif %}
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script src="{% static 'js/cart.js' %}"></script>
 {% endblock %}

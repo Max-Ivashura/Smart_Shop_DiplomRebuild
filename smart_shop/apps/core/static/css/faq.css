@@ -1,0 +1,125 @@
+/* Изолированные стили FAQ с префиксом techshop- */
+.techshop-faq__header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--neutral-300);
+}
+
+.techshop-faq__title {
+    font-size: 2.25rem;
+    color: var(--primary-700);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.techshop-faq__subtitle {
+    font-size: 1.1rem;
+    color: var(--neutral-700);
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.techshop-faq__subtitle a {
+    color: var(--primary-500);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--primary-300);
+    transition: opacity 0.2s;
+}
+
+.techshop-faq__subtitle a:hover {
+    opacity: 0.8;
+}
+
+/* Аккордеон */
+.techshop-faq-item {
+    background: var(--neutral-100);
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--neutral-300);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.techshop-faq-item:hover {
+    border-color: var(--primary-300);
+    box-shadow: 0 8px 24px rgba(151, 117, 250, 0.08);
+}
+
+.techshop-faq-item__header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    gap: 1rem;
+    transition: background 0.2s;
+}
+
+.techshop-faq-item__header:hover {
+    background: rgba(151, 117, 250, 0.03);
+}
+
+.techshop-faq-item__title {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--neutral-700);
+    text-align: left;
+    line-height: 1.4;
+}
+
+.techshop-faq-item__icon {
+    font-size: 1.25rem;
+    color: var(--primary-500);
+    transition: transform 0.3s ease, color 0.2s;
+    flex-shrink: 0;
+}
+
+.techshop-faq-item__header[aria-expanded="true"] {
+    background: rgba(151, 117, 250, 0.05);
+}
+
+.techshop-faq-item__header[aria-expanded="true"] .techshop-faq-item__icon {
+    transform: rotate(180deg);
+    color: var(--primary-700);
+}
+
+.techshop-faq-item__content {
+    border-top: 1px solid var(--neutral-300);
+}
+
+.techshop-faq-item__body {
+    padding: 1.5rem;
+    color: var(--neutral-600);
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.techshop-faq-item__body p:last-child {
+    margin-bottom: 0;
+}
+
+/* Адаптив */
+@media (max-width: 768px) {
+    .techshop-faq__title {
+        font-size: 1.75rem;
+    }
+
+    .techshop-faq-item__header {
+        padding: 1.25rem;
+    }
+
+    .techshop-faq-item__title {
+        font-size: 1rem;
+    }
+
+    .techshop-faq-item__body {
+        padding: 1.25rem;
+        font-size: 0.9rem;
+    }
+}

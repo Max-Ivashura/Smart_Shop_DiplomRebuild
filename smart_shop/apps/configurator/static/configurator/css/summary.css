@@ -1,0 +1,157 @@
+/* Изолированные стили с префиксом ts-summary- */
+.ts-summary-container {
+    isolation: isolate;
+    padding: 2rem 0;
+    position: relative;
+}
+
+.ts-summary-title {
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-left: 2rem;
+}
+
+.ts-summary-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background: var(--primary-500);
+    border-radius: 2px;
+}
+
+.ts-summary-total {
+    background: linear-gradient(145deg, var(--primary-100), rgba(243, 240, 255, 0.8));
+    padding: 0.8rem 1.5rem;
+    border-radius: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(103, 65, 217, 0.1);
+}
+
+.ts-summary-alert {
+    border: 2px solid;
+    border-radius: 1.5rem;
+    padding: 2rem;
+    backdrop-filter: blur(4px);
+}
+
+.ts-summary-critical {
+    border-color: var(--danger);
+    background: linear-gradient(145deg, rgba(255, 107, 107, 0.08), rgba(255, 255, 255, 0.9));
+    animation: ts-summary-pulse 1.8s infinite;
+}
+
+.ts-summary-warning {
+    border-color: var(--warning);
+    background: linear-gradient(145deg, rgba(255, 193, 7, 0.08), rgba(255, 255, 255, 0.9));
+}
+
+@keyframes ts-summary-pulse {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.ts-summary-card {
+    border: 2px solid var(--neutral-200);
+    border-radius: 1.2rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.ts-summary-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 32px rgba(103, 65, 217, 0.12);
+}
+
+.ts-summary-error {
+    border-color: var(--danger);
+    background: rgba(255, 107, 107, 0.08);
+}
+
+.ts-summary-success {
+    border-color: var(--success);
+    background: rgba(81, 207, 102, 0.08);
+}
+
+.ts-summary-remove-btn {
+    background: rgba(255, 107, 107, 0.15) !important;
+    color: var(--danger) !important;
+    border-radius: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.ts-summary-remove-btn:hover {
+    transform: rotate(90deg) scale(1.1);
+}
+
+.ts-summary-main-btn {
+    background: linear-gradient(145deg, var(--primary-500), var(--primary-700));
+    border-radius: 1.2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.ts-summary-main-btn::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 25%, rgba(255,255,255,0.2) 50%, transparent 75%);
+    animation: ts-summary-shine 3s infinite;
+}
+
+@keyframes ts-summary-shine {
+    100% { transform: translateX(200%); }
+}
+
+.ts-summary-edit-btn {
+    border: 2px solid var(--primary-300);
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+}
+
+.ts-summary-edit-btn:hover {
+    background: var(--primary-100);
+    border-color: var(--primary-500);
+}
+
+/* Адаптивность */
+@media (max-width: 991.98px) {
+    .ts-summary-title {
+        font-size: 1.8rem;
+    }
+
+    .ts-summary-total {
+        font-size: 1.3rem;
+        padding: 0.6rem 1.2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .ts-summary-container {
+        padding: 1.5rem;
+    }
+
+    .ts-summary-secondary-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ts-summary-title {
+        font-size: 1.6rem;
+        padding-left: 1.5rem;
+    }
+
+    .ts-summary-card-title {
+        font-size: 1.1rem;
+    }
+}

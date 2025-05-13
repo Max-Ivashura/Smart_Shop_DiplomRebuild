@@ -62,8 +62,6 @@ class ProductDetailView(DetailView):
     context_object_name = "product"
     slug_url_kwarg = "product_slug"  # Явное указание slug-параметра
 
-
-
     def get_object(self, queryset=None):
         """Получаем товар с проверкой активности и категории."""
         return get_object_or_404(
@@ -138,3 +136,9 @@ def add_review(request, product_id):
         )
         messages.success(request, "Ваш отзыв успешно добавлен!")
     return redirect(product.get_absolute_url())
+
+
+def categories(request):
+    return {
+        'categories': Category.objects.filter(parent__isnull=True)
+    }

@@ -1,50 +1,59 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}О компании{% endblock %}
+{% block page_title %}О компании{% endblock %}
+{% block meta_description %}Информация о магазине TechShop и наших преимуществах{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
 
 {% block content %}
-    <section class="about-section py-5">
+    <section class="ts-about">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-4">
-                    <h1 class="display-4 mb-4">О нашем магазине</h1>
-                    <p class="lead text-muted">Мы работаем на рынке компьютерных комплектующих с 2010 года</p>
-                    <div class="border-start border-3 border-primary ps-4 my-4">
-                        <p class="mb-0">Более 50 000 довольных клиентов по всей стране</p>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <img src="{% static 'images/about.jpg' %}" alt="О компании" class="img-fluid rounded-3 shadow">
-                </div>
+            <div class="ts-about-header mb-5 text-center">
+                <div class="ts-about-decorative-line"></div>
+                <h1 class="ts-about-title display-4 mb-3">О нашем магазине</h1>
+                <p class="ts-about-subtitle lead">Работаем с 2010 года</p>
             </div>
 
-            <div class="row mt-5">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-award fs-1 text-primary"></i>
-                            <h3 class="h5 mt-3">Гарантия качества</h3>
-                            <p class="text-muted">Все товары проходят многоуровневую проверку</p>
-                        </div>
+            <div class="ts-about-grid">
+                <div class="ts-about-media">
+                    <div class="ts-about-image-wrapper">
+                        <img src="{% static 'images/about.jpg' %}"
+                             alt="О компании"
+                             class="ts-about-image">
                     </div>
                 </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-truck fs-1 text-primary"></i>
-                            <h3 class="h5 mt-3">Быстрая доставка</h3>
-                            <p class="text-muted">Отправка заказов в день оформления</p>
+
+                <div class="ts-about-content">
+                    <div class="ts-about-stats-card card border-0 shadow-lg">
+                        <div class="card-body">
+                            <div class="ts-about-stats">
+                                <div class="ts-about-stat">
+                                    <span class="ts-stat-number">50 000+</span>
+                                    <span class="ts-stat-label">довольных клиентов</span>
+                                </div>
+                                <div class="ts-about-stat">
+                                    <span class="ts-stat-number">12 лет</span>
+                                    <span class="ts-stat-label">на рынке</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 border-0 shadow-sm">
-                        <div class="card-body text-center">
-                            <i class="bi bi-shield-check fs-1 text-primary"></i>
-                            <h3 class="h5 mt-3">Безопасная оплата</h3>
-                            <p class="text-muted">Работаем с надежными платежными системами</p>
-                        </div>
+
+                    <div class="ts-about-advantages row g-4 mt-5">
+                        {% for advantage in advantages %}
+                            <div class="col-md-6 col-lg-4">
+                                <div class="ts-advantage-card card border-0 h-100">
+                                    <div class="card-body">
+                                        <i class="bi bi-award ts-advantage-icon"></i>
+                                        <h3 class="ts-advantage-title h5 mt-3">{{ advantage.title }}</h3>
+                                        <p class="ts-advantage-text">{{ advantage.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>

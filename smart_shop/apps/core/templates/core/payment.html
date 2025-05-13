@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block page_title %}Оплата{% endblock %}
+{% block meta_description %}Безопасная оплата заказов в TechShop - банковские карты, электронные кошельки, наличные{% endblock %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'css/payment.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="techshop-payment">
+        <div class="techshop-container container">
+            <div class="techshop-payment__header">
+                <h1 class="techshop-payment__title">Оформление оплаты</h1>
+                <p class="techshop-payment__subtitle">Выберите удобный способ оплаты</p>
+            </div>
+
+            <div class="techshop-payment__main">
+                <article class="techshop-payment-methods">
+                    <h2 class="techshop-payment-methods__title">Способы оплаты</h2>
+
+                    <form class="techshop-payment-options">
+                        <div class="techshop-payment-option">
+                            <input type="radio"
+                                   name="payment-method"
+                                   id="card"
+                                   class="techshop-payment-option__input">
+                            <label for="card" class="techshop-payment-option__label">
+                                <i class="bi bi-credit-card techshop-payment-option__icon"></i>
+                                <div class="techshop-payment-option__info">
+                                    <h3 class="techshop-payment-option__title">Банковская карта</h3>
+                                    <p class="techshop-payment-option__desc">VISA, Mastercard, Мир</p>
+                                </div>
+                                <i class="bi bi-check-lg techshop-payment-option__check"></i>
+                            </label>
+                        </div>
+
+                        <div class="techshop-payment-option">
+                            <input type="radio"
+                                   name="payment-method"
+                                   id="ewallet"
+                                   class="techshop-payment-option__input">
+                            <label for="ewallet" class="techshop-payment-option__label">
+                                <i class="bi bi-wallet2 techshop-payment-option__icon"></i>
+                                <div class="techshop-payment-option__info">
+                                    <h3 class="techshop-payment-option__title">Электронные кошельки</h3>
+                                    <p class="techshop-payment-option__desc">Qiwi, Яндекс.Деньги, WebMoney</p>
+                                </div>
+                                <i class="bi bi-check-lg techshop-payment-option__check"></i>
+                            </label>
+                        </div>
+
+                        <div class="techshop-payment-option">
+                            <input type="radio"
+                                   name="payment-method"
+                                   id="cash"
+                                   class="techshop-payment-option__input">
+                            <label for="cash" class="techshop-payment-option__label">
+                                <i class="bi bi-cash-coin techshop-payment-option__icon"></i>
+                                <div class="techshop-payment-option__info">
+                                    <h3 class="techshop-payment-option__title">Наличные</h3>
+                                    <p class="techshop-payment-option__desc">При получении заказа</p>
+                                </div>
+                                <i class="bi bi-check-lg techshop-payment-option__check"></i>
+                            </label>
+                        </div>
+                    </form>
+                </article>
+
+                <aside class="techshop-order-summary">
+                    <div class="techshop-order-summary__inner">
+                        <h2 class="techshop-order-summary__title">Ваш заказ</h2>
+
+                        <dl class="techshop-order-details">
+                            <div class="techshop-order-details__item">
+                                <dt>Товары:</dt>
+                                <dd>3 позиции</dd>
+                            </div>
+                            <div class="techshop-order-details__item">
+                                <dt>Доставка:</dt>
+                                <dd>Курьером</dd>
+                            </div>
+                            <div class="techshop-order-details__item techshop-order-details__item--total">
+                                <dt>Итого:</dt>
+                                <dd>12 500 ₽</dd>
+                            </div>
+                        </dl>
+
+                        <button class="techshop-order-summary__submit">
+                            Подтвердить оплату
+                            <i class="bi bi-lock"></i>
+                        </button>
+                    </div>
+                </aside>
+            </div>
+
+            <div class="techshop-payment-security">
+                <article class="techshop-security-card">
+                    <i class="bi bi-shield-check techshop-security-card__icon"></i>
+                    <h3 class="techshop-security-card__title">Безопасная оплата</h3>
+                    <p class="techshop-security-card__text">SSL-шифрование данных</p>
+                </article>
+
+                <article class="techshop-security-card">
+                    <i class="bi bi-arrow-counterclockwise techshop-security-card__icon"></i>
+                    <h3 class="techshop-security-card__title">Гарантия возврата</h3>
+                    <p class="techshop-security-card__text">14 дней на возврат</p>
+                </article>
+
+                <article class="techshop-security-card">
+                    <i class="bi bi-headset techshop-security-card__icon"></i>
+                    <h3 class="techshop-security-card__title">Поддержка 24/7</h3>
+                    <p class="techshop-security-card__text">Помощь при оплате</p>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}
