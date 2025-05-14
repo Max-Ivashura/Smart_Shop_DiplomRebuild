@@ -7,12 +7,12 @@
 {% endblock %}
 
 {% block content %}
-<section class="techshop-profile container py-5">
-    <div class="techshop-profile__card-header d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
+<section class="techshop-wishlist container py-5">
+    <div class="techshop-wishlist__card-header d-flex flex-column flex-md-row justify-content-between align-items-center mb-5">
         <h1 class="h5 mb-0 text-primary-700">
             <i class="bi bi-heart-fill me-2"></i>Мой список желаний
         </h1>
-        <a href="{% url 'products:catalog' %}" class="btn techshop-profile__btn btn-outline-primary">
+        <a href="{% url 'products:catalog' %}" class="btn techshop-wishlist__btn btn-outline-primary">
             <i class="bi bi-arrow-right-circle me-2"></i>Вернуться в каталог
         </a>
     </div>
@@ -21,7 +21,7 @@
     <div class="row g-4">
         {% for item in wishlist_items %}
         <div class="col-12 col-md-6 col-xl-4">
-            <div class="techshop-profile__card card shadow-sm h-100">
+            <div class="techshop-wishlist__card card shadow-sm h-100">
                 <!-- Изображение товара -->
                 <div class="position-relative overflow-hidden">
                     {% with product=item.product %}
@@ -49,7 +49,7 @@
                             </small>
                             <div class="btn-group">
                                 <a href="{% url 'products:detail' item.product.category.slug item.product.slug %}"
-                                   class="btn btn-sm techshop-profile__btn btn-primary">
+                                   class="btn btn-sm techshop-wishlist__btn btn-primary">
                                     <i class="bi bi-eye me-1"></i>Подробнее
                                 </a>
                                 <a href="{% url 'accounts:remove_from_wishlist' item.product.id %}"
@@ -66,14 +66,14 @@
         {% endfor %}
     </div>
     {% else %}
-    <div class="techshop-profile__card card border-2 border-dashed text-center py-5">
+    <div class="techshop-wishlist__card card border-2 border-dashed text-center py-5">
         <div class="card-body">
             <div class="text-primary-500 mb-4">
                 <i class="bi bi-heartbreak fs-1"></i>
             </div>
             <h2 class="text-primary-700 mb-3">Список желаний пуст</h2>
             <p class="text-neutral-600 mb-4">Начните добавлять товары из каталога</p>
-            <a href="{% url 'products:catalog' %}" class="btn techshop-profile__btn btn-primary px-5">
+            <a href="{% url 'products:catalog' %}" class="btn techshop-wishlist__btn btn-primary px-5">
                 <i class="bi bi-search me-2"></i>Найти товары
             </a>
         </div>

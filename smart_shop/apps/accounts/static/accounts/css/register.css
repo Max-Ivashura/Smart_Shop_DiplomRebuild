@@ -1,12 +1,12 @@
 /* accounts/static/accounts/css/register.css */
-.techshop-profile {
+.techshop-register {
     position: relative;
     isolation: isolate;
     padding: 2rem 0;
     background: none;
 }
 
-.techshop-profile__card {
+.techshop-register__card {
     background: var(--neutral-100);
     border: 1px solid var(--neutral-200);
     border-radius: 16px;
@@ -17,20 +17,20 @@
     margin: 0 auto;
 }
 
-.techshop-profile__card-header {
+.techshop-register__card-header {
     background: var(--primary-100);
     border-bottom: 1px solid var(--neutral-200);
     padding: 1.25rem;
     color: var(--text-dark);
 }
 
-.techshop-profile__card-header .bi {
+.techshop-register__card-header .bi {
     font-size: 1.8rem;
     vertical-align: -6px;
     color: var(--primary-600);
 }
 
-.techshop-profile__input-group {
+.techshop-register__input-group {
     background: var(--neutral-150);
     border: 1px solid var(--neutral-250);
     min-width: 45px;
@@ -52,7 +52,7 @@
     box-shadow: 0 0 0 3px rgba(151, 117, 250, 0.15);
 }
 
-.techshop-profile__toggle {
+.techshop-register__toggle {
     background: var(--neutral-150);
     border: 1px solid var(--neutral-250);
     cursor: pointer;
@@ -62,12 +62,12 @@
     outline: none !important;
 }
 
-.techshop-profile__toggle:hover {
+.techshop-register__toggle:hover {
     background: var(--primary-100);
     color: var(--primary-700);
 }
 
-.techshop-profile__btn {
+.techshop-register__btn {
     background: var(--primary-500);
     color: var(--text-light);
     border: none;
@@ -77,19 +77,19 @@
     width: 100%;
 }
 
-.techshop-profile__btn:hover {
+.techshop-register__btn:hover {
     background: var(--primary-600);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(151, 117, 250, 0.25);
     color: var(--text-light) !important;
 }
 
-.techshop-profile__link {
+.techshop-register__link {
     color: var(--primary-600);
     transition: color 0.2s ease;
 }
 
-.techshop-profile__link:hover {
+.techshop-register__link:hover {
     color: var(--primary-800);
 }
 
@@ -101,12 +101,12 @@
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .techshop-profile__card {
+    .techshop-register__card {
         margin: 0 1rem;
         border-radius: 12px;
     }
 
-    .techshop-profile__card-header .bi {
+    .techshop-register__card-header .bi {
         font-size: 1.5rem;
     }
 
@@ -114,13 +114,13 @@
         padding: 0.75rem 1rem;
     }
 
-    .techshop-profile__btn {
+    .techshop-register__btn {
         padding: 0.875rem 1.5rem;
     }
 }
 
 @media (max-width: 576px) {
-    .techshop-profile__card-header h3 {
+    .techshop-register__card-header h3 {
         font-size: 1.1rem;
     }
 

@@ -1,11 +1,11 @@
 /* accounts/static/accounts/css/wishlist.css */
-.techshop-profile__card-header {
+.techshop-wishlist__card-header {
     background: transparent;
     border-bottom: none;
     padding: 0;
 }
 
-.techshop-profile__card.wishlist-card {
+.techshop-wishlist__card.wishlist-card {
     border-radius: 16px;
     overflow: hidden;
     transition:
@@ -14,58 +14,58 @@
     border: 1px solid var(--neutral-200);
 }
 
-.techshop-profile__card.wishlist-card:hover {
+.techshop-wishlist__card.wishlist-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(151, 117, 250, 0.15);
 }
 
-.techshop-profile__card .card-img-top {
+.techshop-wishlist__card .card-img-top {
     border-radius: 16px 16px 0 0;
     height: 240px;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
 
-.techshop-profile__card:hover .card-img-top {
+.techshop-wishlist__card:hover .card-img-top {
     transform: scale(1.03);
 }
 
-.techshop-profile__empty-state {
+.techshop-wishlist__empty-state {
     border: 2px dashed var(--primary-200);
     background-color: var(--primary-50);
     border-radius: 24px;
     padding: 3rem;
 }
 
-.techshop-profile__empty-icon {
+.techshop-wishlist__empty-icon {
     font-size: 3rem;
     opacity: 0.8;
     color: var(--primary-500);
     transition: transform 0.3s ease;
 }
 
-.techshop-profile__empty-state:hover .techshop-profile__empty-icon {
+.techshop-wishlist__empty-state:hover .techshop-wishlist__empty-icon {
     transform: scale(1.1);
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
-    .techshop-profile__card .card-img-top {
+    .techshop-wishlist__card .card-img-top {
         height: 200px;
     }
 
-    .techshop-profile__card-header h1 {
+    .techshop-wishlist__card-header h1 {
         font-size: 1.5rem;
     }
 }
 
 @media (max-width: 576px) {
-    .techshop-profile__empty-state {
+    .techshop-wishlist__empty-state {
         border-radius: 16px;
         padding: 1.5rem;
     }
 
-    .techshop-profile__empty-icon {
+    .techshop-wishlist__empty-icon {
         font-size: 2rem;
     }
 }
