@@ -1,3 +1,5 @@
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView
 from .models import Cart, CartItem
@@ -24,22 +26,24 @@ class CartDetailView(DetailView):
         return _get_or_create_cart(self.request)
 
 
+@require_POST
 def add_to_cart(request, product_id):
-    product = get_object_or_404(
-        Product,
-        id=product_id,
-        is_active=True,
-        stock__gt=0  # Только доступные товары
-    )
-    cart = _get_or_create_cart(request)
+    try:
+        product = Product.objects.get(id=product_id, is_active=True, stock__gt=0)
+        cart = _get_or_create_cart(request)
+        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
 
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    if not created:
-        if cart_item.quantity + 1 <= product.stock:
+        if not created:
             cart_item.quantity += 1
             cart_item.save()
 
-    return redirect("cart:detail")
+        return JsonResponse({
+            'status': 'success',
+            'cart_count': cart.items.count()
+        })
+
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Товар недоступен'}, status=400)
 
 
 def remove_from_cart(request, cart_item_id):

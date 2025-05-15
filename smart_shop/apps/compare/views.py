@@ -35,37 +35,41 @@ class ComparisonDetailView(DetailView):
 
 @require_POST
 def toggle_comparison(request, product_id):
-    product = get_object_or_404(Product, id=product_id)
+    try:
+        product = get_object_or_404(Product, id=product_id)
 
-    if request.user.is_authenticated:
-        comparison, created = Comparison.objects.get_or_create(
-            user=request.user,
-            category=product.category
-        )
-    else:
-        session_key = request.session.session_key
-        if not session_key:
-            request.session.create()
+        if request.user.is_authenticated:
+            comparison, created = Comparison.objects.get_or_create(
+                user=request.user,
+                category=product.category
+            )
+        else:
             session_key = request.session.session_key
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
 
-        comparison, created = Comparison.objects.get_or_create(
-            session_id=session_key,
-            category=product.category
+            comparison, created = Comparison.objects.get_or_create(
+                session_id=session_key,
+                category=product.category
+            )
+
+        item, created = ComparisonItem.objects.get_or_create(
+            comparison=comparison,
+            product=product
         )
 
-    item, created = ComparisonItem.objects.get_or_create(
-        comparison=comparison,
-        product=product
-    )
+        if not created:
+            item.delete()
+            action = 'removed'
+        else:
+            action = 'added'
 
-    if not created:
-        item.delete()
-        action = 'removed'
-    else:
-        action = 'added'
-
-    return JsonResponse({
-        'status': 'success',
-        'action': action,
-        'count': comparison.items.count()
-    })
+        return JsonResponse({
+            'status': 'success',
+            'action': action,
+            'count': comparison.items.count(),
+            'product_id': product_id
+        })
+    except Product.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Товар не найден'}, status=404)

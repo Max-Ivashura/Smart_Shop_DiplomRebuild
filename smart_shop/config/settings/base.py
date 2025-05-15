@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     # PLUGINS
     'mptt',
     'django.contrib.humanize',
+    'imagekit',
 
     # CUSTOM APPS
     'apps.core.apps.CoreConfig',
@@ -49,6 +50,8 @@ MIDDLEWARE = [
 # PATHS
 ROOT_URLCONF = 'config.urls'
 
+APPEND_SLASH = False
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -60,6 +63,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.cart.context_processors.cart_count',
+                'apps.compare.context_processors.comparison',
+                'apps.accounts.context_processors.wishlist',
             ],
         },
     },

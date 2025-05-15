@@ -1,5 +1,7 @@
 from collections import defaultdict
 
+from apps.compare.models import Comparison
+
 
 def get_comparison_data(products):
     specs = []
@@ -22,3 +24,12 @@ def get_comparison_data(products):
         'specs': dict(grouped_specs),
         'categories': {p.category.name for p in products}
     }
+
+
+def get_user_comparison(request):
+    if request.user.is_authenticated:
+        return Comparison.objects.filter(user=request.user).first()
+    else:
+        if not request.session.session_key:
+            request.session.create()
+        return Comparison.objects.filter(session_key=request.session.session_key).first()

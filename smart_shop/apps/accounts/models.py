@@ -9,6 +9,8 @@ from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
 from django.core.files.storage import default_storage
 
+from apps.products.models import Product
+
 
 class CustomUser(AbstractUser):
     # Переопределяем email как обязательное уникальное поле
@@ -88,7 +90,16 @@ class CustomUser(AbstractUser):
 
 
 class Wishlist(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='wishlist')
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='wishlist'
+    )
+    products = models.ManyToManyField(
+        Product,
+        through='WishlistItem',
+        related_name='wishlists'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -96,22 +107,19 @@ class Wishlist(models.Model):
         return f"Wishlist пользователя {self.user.username}"
 
     def add_product(self, product):
-        WishlistItem.objects.get_or_create(wishlist=self, product=product)
+        self.products.add(product)
 
     def remove_product(self, product):
-        WishlistItem.objects.filter(wishlist=self, product=product).delete()
+        self.products.remove(product)
 
     def has_product(self, product):
-        return WishlistItem.objects.filter(wishlist=self, product=product).exists()
+        return self.products.filter(id=product.id).exists()
 
 
 class WishlistItem(models.Model):
-    wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)  # Тип продукта (например, Processor)
-    object_id = models.PositiveIntegerField()  # ID конкретного продукта
-    product = GenericForeignKey('content_type', 'object_id')  # Ссылка на любой продукт
+    wishlist = models.ForeignKey("Wishlist", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)  # Корректное поле
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-added_at']
-        unique_together = ('wishlist', 'content_type', 'object_id')
+        unique_together = ('wishlist', 'product')  # Уникальность связки

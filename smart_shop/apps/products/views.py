@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
 from .models import Product, Review
+from apps.compare.utils import get_user_comparison
 
 
 # apps/products/views.py
@@ -12,47 +13,61 @@ class ProductListView(ListView):
     template_name = "products/catalog.html"
     context_object_name = "products"
     paginate_by = 25
-    ordering = "created_at"  # Дефолтная сортировка
+    ordering = "created_at"
 
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True).select_related("category")
+        self.category = None
 
         # Фильтрация по категории
         if category_slug := self.kwargs.get("category_slug"):
             self.category = get_object_or_404(Category, slug=category_slug)
             queryset = queryset.filter(
-                Q(category=self.category) | Q(category__in=self.category.get_descendants()))
+                Q(category=self.category) | Q(category__in=self.category.get_descendants())
+            )
 
-            # Сортировка
-            sort = self.request.GET.get("sort")
-            if sort == "price_asc":
-                queryset = queryset.order_by("price")
-            elif sort == "price_desc":
-                queryset = queryset.order_by("-price")
-            elif sort == "newest":
-                queryset = queryset.order_by("-created_at")
-            elif sort == "popular":
-                queryset = queryset.annotate(
-                    popularity=Case(
-                        When(stock=0, then=Value(0)),
-                        default=Value(1),
-                        output_field=IntegerField()
-                    )
-                ).order_by("-popularity", "-created_at")
+        # Фильтрация по цене
+        min_price = self.request.GET.get("min_price")
+        max_price = self.request.GET.get("max_price")
+        if min_price and min_price.isdigit():
+            queryset = queryset.filter(price__gte=int(min_price))
+        if max_price and max_price.isdigit():
+            queryset = queryset.filter(price__lte=int(max_price))
+
+        # Сортировка
+        sort = self.request.GET.get("sort", "newest")
+        if sort == "price_asc":
+            queryset = queryset.order_by("price")
+        elif sort == "price_desc":
+            queryset = queryset.order_by("-price")
+        elif sort == "newest":
+            queryset = queryset.order_by("-created_at")
+        elif sort == "popular":
+            queryset = queryset.annotate(
+                popularity=Case(
+                    When(stock=0, then=Value(0)),
+                    default=Value(1),
+                    output_field=IntegerField()
+                )
+            ).order_by("-popularity", "-created_at")
 
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({
-            "categories": Category.objects.all(),
-            "active_category": self.kwargs.get("category_slug"),
-            "sort_param": self.request.GET.get("sort", "newest")
-        })
 
-        if hasattr(self, 'category'):
-            context["breadcrumbs"] = self.category.get_ancestors(include_self=True)
-            context["category"] = self.category
+        # Активная категория (объект, а не slug)
+        active_category = self.category or None
+        categories = Category.objects.all()
+
+        context['comparison'] = get_user_comparison(self.request)
+
+        context.update({
+            "categories": categories,
+            "active_category": active_category,  # Теперь это объект
+            "sort_param": self.request.GET.get("sort", "newest"),
+            "breadcrumbs": active_category.get_ancestors(include_self=True) if active_category else [],
+        })
 
         return context
 
@@ -84,6 +99,11 @@ class ProductDetailView(DetailView):
         # Характеристики товара
         context["specs"] = product.specs  # Используем метод модели
 
+        context['comparison'] = get_user_comparison(self.request)
+
+        context['reviews_count'] = self.object.reviews.count()
+        context['average_rating'] = self.object.average_rating
+
         # Связанные товары (4 штуки из той же категории)
         context["related_products"] = Product.objects.filter(
             category=product.category,
@@ -105,8 +125,11 @@ class ProductSearchView(ListView):
 
     def get_queryset(self):
         query = self.request.GET.get("q", "").strip()
+        if not query:  # Если запрос пустой, возвращаем все товары (или пустой список)
+            return Product.objects.none()
         return Product.objects.filter(
-            name__icontains=query,
+            Q(name__icontains=query) |
+            Q(sku__icontains=query),  # Поиск по артикулу
             is_active=True
         ).select_related("category")
 

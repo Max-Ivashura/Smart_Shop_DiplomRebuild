@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load mptt_tags %}
 {% load static %}
 
 {% block page_title %}{% if active_category %}{{ active_category.name }}{% else %}Каталог{% endif %}{% endblock %}
@@ -12,58 +13,69 @@
         <div class="techshop-container container">
             <div class="row gx-4">
                 <!-- Фильтры -->
-                <aside class="col-lg-3 mb-4 mb-lg-0">
-                    <div class="techshop-catalog-filter-card">
-                        <div class="card-body">
-                            <h2 class="techshop-catalog-filter-title h5 mb-3">Фильтры</h2>
-
-                            <!-- Категории -->
-                            <div class="mb-4">
-                                <h3 class="techshop-catalog-filter-subtitle h6 mb-3">Категории</h3>
-                                <div class="nav flex-column">
-                                    {% for category in categories %}
-                                        <a href="{% url 'products:category' category.slug %}"
-                                           class="techshop-catalog-filter-link nav-link d-flex justify-content-between align-items-center
-                                                  {% if category.slug == active_category.slug %}active{% endif %}">
-                                            {{ category.name }}
-                                            <span class="techshop-catalog-badge bg-primary-200">{{ category.product_count }}</span>
-                                        </a>
-                                    {% endfor %}
-                                </div>
-                            </div>
-
+                <aside class="col-lg-3 mb-4 mb-lg-0 order-lg-1">
+                    <div class="techshop-catalog-filter-card card shadow-primary sticky-top">
+                        <div class="card-body p-3">
                             <!-- Цена -->
                             <div class="mb-4">
-                                <h3 class="techshop-catalog-filter-subtitle h6 mb-3">Цена, ₽</h3>
-                                <div class="techshop-catalog-price-filter">
-                                    <div class="d-flex justify-content-between gap-2 mb-2">
-                                        <input type="number"
-                                               class="techshop-catalog-input form-control form-control-sm"
-                                               placeholder="От"
-                                               id="minPrice">
-                                        <input type="number"
-                                               class="techshop-catalog-input form-control form-control-sm"
-                                               placeholder="До"
-                                               id="maxPrice">
+                                <h3 class="techshop-catalog-filter-subtitle h6 mb-3 text-primary-700">
+                                    <i class="bi bi-coin me-2"></i>Цена
+                                </h3>
+                                <form method="get" id="price-filter">
+                                    <div class="techshop-catalog-price-filter">
+                                        <div class="d-flex justify-content-between gap-2 mb-2">
+                                            <input type="number"
+                                                   class="techshop-catalog-input form-control"
+                                                   placeholder="От"
+                                                   name="min_price"
+                                                   value="{{ request.GET.min_price }}">
+                                            <input type="number"
+                                                   class="techshop-catalog-input form-control"
+                                                   placeholder="До"
+                                                   name="max_price"
+                                                   value="{{ request.GET.max_price }}">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary w-100 btn-sm">
+                                            <i class="bi bi-arrow-clockwise me-2"></i>Применить
+                                        </button>
                                     </div>
-                                </div>
+
+                                    <!-- Сохраняем параметры сортировки и категории -->
+                                    <input type="hidden" name="sort" value="{{ request.GET.sort }}">
+                                    {% if active_category %}
+                                        <input type="hidden" name="category" value="{{ active_category.slug }}">
+                                    {% endif %}
+                                </form>
                             </div>
 
-                            <!-- Производители -->
+                            <!-- Категории -->
                             <div class="border-top pt-3">
-                                <h3 class="techshop-catalog-filter-subtitle h6 mb-3">Производитель</h3>
-                                <div class="techshop-catalog-brand-filter">
-                                    {% for brand in brands|slice:":5" %}
-                                        <div class="form-check">
-                                            <input class="techshop-catalog-checkbox form-check-input"
-                                                   type="checkbox"
-                                                   id="brand{{ forloop.counter }}">
-                                            <label class="techshop-catalog-label form-check-label"
-                                                   for="brand{{ forloop.counter }}">
-                                                {{ brand.name }}
-                                            </label>
+                                <h3 class="techshop-catalog-filter-subtitle h6 mb-3 text-primary-700">
+                                    <i class="bi bi-tags me-2"></i>Категории
+                                </h3>
+                                <div class="techshop-catalog-category-filter">
+                                    {% recursetree categories %}
+                                        <div class="category-group">
+                                            <div class="d-flex align-items-center">
+                                                <a href="{% url 'products:category' node.slug %}"
+                                                   class="flex-grow-1 {% if node == active_category %}active{% endif %}">
+                                                    {{ node.name }}
+                                                </a>
+                                                {% if not node.is_leaf_node %}
+                                                    <button class="btn btn-sm toggle-children"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#cat-{{ node.id }}">
+                                                        <i class="bi bi-chevron-down"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                            {% if not node.is_leaf_node %}
+                                                <div class="children collapse" id="cat-{{ node.id }}">
+                                                    {{ children }}
+                                                </div>
+                                            {% endif %}
                                         </div>
-                                    {% endfor %}
+                                    {% endrecursetree %}
                                 </div>
                             </div>
                         </div>
@@ -71,74 +83,113 @@
                 </aside>
 
                 <!-- Основной контент -->
-                <section class="col-lg-9">
+                <section class="col-lg-9 order-lg-2">
                     <!-- Заголовок -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h1 class="techshop-catalog-main-title h3 mb-0">
+                        <h1 class="techshop-catalog-main-title h3 mb-0 text-primary-700">
                             {% if active_category %}
-                                {{ active_category.name }}
+                                <i class="bi bi-tag-fill me-2"></i>{{ active_category.name }}
                             {% else %}
-                                Все товары
+                                <i class="bi bi-grid-3x3-gap-fill me-2"></i>Все товары
                             {% endif %}
-                            <small class="techshop-catalog-counter">({{ paginator.count }})</small>
+                            <small class="techshop-catalog-counter text-muted">({{ paginator.count }})</small>
                         </h1>
                         <div class="techshop-catalog-sorting">
-                            <select class="techshop-catalog-select form-select form-select-sm">
-                                <option value="newest">Новинки</option>
-                                <option value="price_asc">По возрастанию цены</option>
-                                <option value="price_desc">По убыванию цены</option>
-                                <option value="rating">По рейтингу</option>
-                            </select>
+                            <form method="get" id="sort-form">
+                                <select class="form-select border-primary-200" name="sort" id="sort-select">
+                                    <option value="newest" {% if sort_param == "newest" %}selected{% endif %}>Новинки
+                                    </option>
+                                    <option value="price_asc" {% if sort_param == "price_asc" %}selected{% endif %}>По
+                                        возрастанию цены
+                                    </option>
+                                    <option value="price_desc" {% if sort_param == "price_desc" %}selected{% endif %}>По
+                                        убыванию цены
+                                    </option>
+                                </select>
+
+                                <!-- Сохраняем параметры фильтрации -->
+                                {% if request.GET.min_price %}
+                                    <input type="hidden" name="min_price" value="{{ request.GET.min_price }}">
+                                {% endif %}
+                                {% if request.GET.max_price %}
+                                    <input type="hidden" name="max_price" value="{{ request.GET.max_price }}">
+                                {% endif %}
+                                {% if active_category %}
+                                    <input type="hidden" name="category" value="{{ active_category.slug }}">
+                                {% endif %}
+                            </form>
                         </div>
                     </div>
 
                     <!-- Сетка товаров -->
-                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
                         {% for product in products %}
                             <div class="col">
-                                <article class="techshop-catalog-product-card h-100">
+                                <article class="techshop-catalog-product-card card h-100 shadow-hover">
                                     <div class="position-relative">
-                                        <!-- Изображение -->
-                                        <a href="{{ product.get_absolute_url }}"
-                                           class="techshop-catalog-product-link"
-                                           aria-label="{{ product.name }}">
-                                            {% if product.images.exists %}
-                                                <img src="{{ product.images.first.image.url }}"
-                                                     class="techshop-catalog-product-image"
-                                                     alt="{{ product.name }}"
-                                                     loading="lazy">
-                                            {% else %}
-                                                <div class="techshop-catalog-placeholder-image">
-                                                    <i class="bi bi-image text-muted fs-1"></i>
-                                                </div>
-                                            {% endif %}
-                                        </a>
+                                        <div class="techshop-catalog-product-image-wrapper">
+                                            <!-- Изображение -->
+                                            <a href="{{ product.get_absolute_url }}"
+                                               class="techshop-catalog-product-link"
+                                               aria-label="{{ product.name }}">
+                                                {% if product.images.exists %}
+                                                    <img src="{{ product.images.first.image.url }}"
+                                                         class="techshop-catalog-product-image card-img-top"
+                                                         alt="{{ product.name }}"
+                                                         loading="lazy">
+                                                {% else %}
+                                                    <div class="techshop-catalog-placeholder-image card-img-top bg-primary-50 d-flex align-items-center justify-content-center">
+                                                        <i class="bi bi-image text-muted fs-1"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </a>
+                                        </div>
 
                                         <!-- Бейджи -->
-                                        <div class="techshop-catalog-badges">
+                                        <div class="techshop-catalog-badges position-absolute top-0 start-0 p-2">
                                             {% if product.is_new %}
                                                 <span class="techshop-catalog-badge techshop-catalog-badge-new">NEW</span>
                                             {% endif %}
-                                            {% if product.stock <= 0 %}
-                                                <span class="techshop-catalog-badge techshop-catalog-badge-out-of-stock">Нет в наличии</span>
-                                            {% endif %}
+
+                                        </div>
+
+                                        <!-- Кнопки действий -->
+                                        <div class="techshop-catalog-actions position-absolute top-0 end-0 p-2 d-flex gap-2">
+                                            <!-- Избранное -->
+                                            <button class="techshop-catalog-wishlist-btn btn btn-sm"
+                                                    data-product-id="{{ product.id }}">
+                                                <i class="bi {% if product in request.user.wishlist.products.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                                            </button>
+
+                                            <!-- Сравнение -->
+                                            <button class="techshop-catalog-compare-btn btn btn-sm"
+                                                    data-product-id="{{ product.id }}">
+                                                <i class="bi {% if comparison and product.id in comparison.get_product_ids %}bi-clipboard2-check{% else %}bi-clipboard2-plus{% endif %}"></i>
+                                            </button>
                                         </div>
                                     </div>
 
                                     <!-- Контент -->
-                                    <div class="card-body d-flex flex-column">
-                                        <h3 class="techshop-catalog-product-title h5">
+                                    <div class="card-body d-flex flex-column pb-2">
+                                        <h3 class="techshop-catalog-product-title h5 mb-2">
                                             <a href="{{ product.get_absolute_url }}"
-                                               class="techshop-catalog-product-title-link">
+                                               class="techshop-catalog-product-title-link text-dark text-decoration-none">
                                                 {{ product.name|truncatechars:40 }}
                                             </a>
                                         </h3>
 
                                         <div class="mt-auto d-flex justify-content-between align-items-center">
-                                            <div class="techshop-catalog-product-price">
+                                            <div class="techshop-catalog-product-price text-primary-700 fw-bold">
                                                 {{ product.price|floatformat:"0" }} ₽
                                             </div>
-                                            <button class="techshop-catalog-cart-btn btn btn-sm"
+                                            <div class="position-absolute bottom-0 end-0 m-3">
+                                                {% if product.stock <= 0 %}
+                                                    <span class="techshop-catalog-badge techshop-catalog-badge-out-of-stock">
+                                                        <i class="bi bi-x-circle me-1"></i>Нет в наличии
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            <button class="techshop-catalog-cart-btn btn btn-sm btn-primary"
                                                     data-product-id="{{ product.id }}"
                                                     {% if product.stock <= 0 %}disabled{% endif %}>
                                                 <i class="bi {% if product.stock > 0 %}bi-cart-plus{% else %}bi-cart-x{% endif %}"></i>
@@ -148,11 +199,10 @@
                                 </article>
                             </div>
                         {% empty %}
-                            <div class="col-12 text-center py-5">
-                                <div class="techshop-catalog-empty">
-                                    <i class="bi bi-box-seam fs-1 text-muted"></i>
-                                    <h3 class="techshop-catalog-empty-title h5 mt-3">Товары не найдены</h3>
-                                    <p class="techshop-catalog-empty-text">Попробуйте изменить параметры фильтров</p>
+                            <div class="col-12 d-flex align-items-center justify-content-center">
+                                <div class="techshop-catalog-empty text-center p-4 bg-light rounded-3 shadow-sm w-75">
+                                    <i class="bi bi-box-seam fs-1 text-muted mb-3"></i>
+                                    <h3 class="h5 text-primary-800 mb-2">Товары не найдены</h3>
                                 </div>
                             </div>
                         {% endfor %}
@@ -165,7 +215,15 @@
                                 {% if page_obj.has_previous %}
                                     <li class="techshop-catalog-page-item page-item">
                                         <a class="techshop-catalog-page-link page-link"
-                                           href="?page={{ page_obj.previous_page_number }}">
+                                           href="?page={{ page_obj.previous_page_number }}&sort={{ sort_param }}&min_price={{ request.GET.min_price }}&max_price=
+
+
+
+
+
+
+
+                                                   {{ request.GET.max_price }}{% if active_category %}&category={{ active_category.slug }}{% endif %}">
                                             <i class="bi bi-chevron-left"></i>
                                         </a>
                                     </li>
@@ -174,14 +232,16 @@
                                 {% for num in page_obj.paginator.page_range %}
                                     <li class="techshop-catalog-page-item page-item {% if num == page_obj.number %}active{% endif %}">
                                         <a class="techshop-catalog-page-link page-link"
-                                           href="?page={{ num }}">{{ num }}</a>
+                                           href="?page={{ num }}&sort={{ sort_param }}&min_price={{ request.GET.min_price }}&max_price={{ request.GET.max_price }}{% if active_category %}&category={{ active_category.slug }}{% endif %}">
+                                            {{ num }}
+                                        </a>
                                     </li>
                                 {% endfor %}
 
                                 {% if page_obj.has_next %}
                                     <li class="techshop-catalog-page-item page-item">
                                         <a class="techshop-catalog-page-link page-link"
-                                           href="?page={{ page_obj.next_page_number }}">
+                                           href="?page={{ page_obj.next_page_number }}&sort={{ sort_param }}&min_price={{ request.GET.min_price }}&max_price={{ request.GET.max_price }}{% if active_category %}&category={{ active_category.slug }}{% endif %}">
                                             <i class="bi bi-chevron-right"></i>
                                         </a>
                                     </li>
@@ -194,3 +254,97 @@
         </div>
     </main>
 {% endblock %}
+{% block scripts %}
+    <script>
+        // Добавление в избранное
+        document.querySelectorAll('.techshop-catalog-wishlist-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+                fetch(`{% url 'accounts:add_to_wishlist' 0 %}`.replace('0', productId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const icon = this.querySelector('i');
+                            icon.classList.toggle('bi-heart-fill', data.action === 'added');
+                            icon.classList.toggle('bi-heart', data.action === 'removed');
+                        }
+                    });
+            });
+        });
+
+        // Добавление в сравнение
+        document.querySelectorAll('.techshop-catalog-compare-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+                fetch(`{% url 'compare:toggle_comparison' 0 %}`.replace('0', productId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const icon = this.querySelector('i');
+                            icon.classList.toggle('bi-clipboard2-check', data.action === 'added');
+                            icon.classList.toggle('bi-clipboard2-plus', data.action === 'removed');
+                        }
+                    });
+            });
+        });
+
+        // Добавление в корзину
+        document.querySelectorAll('.techshop-catalog-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const productId = this.dataset.productId;
+                fetch(`{% url 'cart:add' 0 %}`.replace('0', productId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            this.querySelector('i').classList.replace('bi-cart-plus', 'bi-cart-check');
+                        }
+                    });
+            });
+        });
+
+        document.getElementById('sort-select').addEventListener('change', function () {
+            document.getElementById('sort-form').submit(); // Отправляем форму
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Автораскрытие родительских категорий
+            const activeCategory = document.querySelector('.category-group a.active');
+            if (activeCategory) {
+                let parent = activeCategory.closest('.children.collapse');
+                while (parent) {
+                    const toggleBtn = parent.previousElementSibling?.querySelector('.toggle-children');
+                    if (toggleBtn) {
+                        new bootstrap.Collapse(parent, {toggle: true});
+                        toggleBtn.querySelector('i').classList.replace('bi-chevron-down', 'bi-chevron-up');
+                    }
+                    parent = parent.parentElement.closest('.children.collapse');
+                }
+            }
+
+            // Обновление иконок при ручном переключении
+            document.querySelectorAll('.toggle-children').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('bi-chevron-down');
+                    icon.classList.toggle('bi-chevron-up');
+                });
+            });
+        });
+    </script>
+{% endblock %}
+

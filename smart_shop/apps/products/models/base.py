@@ -1,16 +1,19 @@
 from django.db import models
+from django.db.models import Avg
 from django.urls import reverse
 from django.utils.text import slugify
+from mptt.fields import TreeForeignKey
+
 from apps.core.models import TimeStampedModel
-from .category import Category
 from django.utils import timezone
 
+
 class Product(TimeStampedModel):
-    category = models.ForeignKey(
-        Category,
-        verbose_name="Категория",
+    category = TreeForeignKey(
+        'Category',  # Используем строковую ссылку
         on_delete=models.PROTECT,
-        related_name="products",
+        related_name='products',
+        verbose_name="Категория",
         help_text="Выберите категорию товара"
     )
     name = models.CharField(
@@ -18,6 +21,7 @@ class Product(TimeStampedModel):
         max_length=200,
         help_text="Например: Intel Core i9-13900K"
     )
+    description = models.TextField("Описание товара", blank=True)
     price = models.DecimalField(
         "Цена (руб)",
         max_digits=10,
@@ -79,6 +83,14 @@ class Product(TimeStampedModel):
 
     def get_first_image(self):
         return self.images.first()
+
+    @property
+    def in_stock(self):
+        return self.stock > 0
+
+    @property
+    def average_rating(self):
+        return self.reviews.aggregate(Avg('rating'))['rating__avg'] or 0
 
     @property
     def is_new(self):

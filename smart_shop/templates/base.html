@@ -67,6 +67,36 @@
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8="
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Функция для обновления счетчиков
+        function updateHeaderCounters(type, count) {
+            const badges = document.querySelectorAll(`.techshop-header__icon[href*="${type}"] .techshop-header__badge`);
+            badges.forEach(badge => {
+                badge.textContent = count;
+                badge.classList.add('updated');
+                setTimeout(() => badge.classList.remove('updated'), 500);
+            });
+        }
+
+        // Подписка на события
+        document.addEventListener('cart-updated', (e) => {
+            updateHeaderCounters('cart', e.detail.count);
+        });
+
+        document.addEventListener('wishlist-updated', (e) => {
+            updateHeaderCounters('wishlist', e.detail.count);
+        });
+
+        document.addEventListener('comparison-updated', (e) => {
+            updateHeaderCounters('comparison', e.detail.count);
+        });
+
+        // Инициализация тултипов
+        const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltips.map(tooltip => new bootstrap.Tooltip(tooltip));
+    });
+</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

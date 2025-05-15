@@ -8,6 +8,8 @@ urlpatterns = [
     # Core pages
     path('', views.home, name='home'),
 
+
+
     path('about/', views.about, name='about'),
     path('delivery/', views.delivery, name='delivery'),
     path('contacts/', views.contacts, name='contacts'),
@@ -20,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Apps
+    path('api/get-counters/', views.get_counters, name='get-counters'),
     path('catalog/', include(('apps.products.urls', 'products'), namespace='products')),
     path('accounts/', include(('apps.accounts.urls', 'accounts'), namespace='accounts')),
     path('cart/', include(('apps.cart.urls', 'cart'), namespace='cart')),

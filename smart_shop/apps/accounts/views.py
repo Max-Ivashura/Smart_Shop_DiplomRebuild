@@ -2,9 +2,9 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import redirect, render
-
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from apps.accounts.forms import CustomUserCreationForm, CustomUserForm, LoginForm
 from apps.accounts.models import Wishlist, WishlistItem
 from apps.products.models import Product
@@ -106,38 +106,32 @@ def change_password(request):
 @login_required
 def wishlist_view(request):
     wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
-    items = WishlistItem.objects.filter(wishlist=wishlist).prefetch_related('content_type')
-
-    # Загружаем реальные объекты продуктов
-    products = []
-    for item in items:
-        product = item.product
-        if hasattr(product, 'main_image'):
-            product.main_image = product.images.first()  # Пример для модели Product
-        products.append(product)
+    items = WishlistItem.objects.filter(wishlist=wishlist).select_related('product')
 
     return render(request, 'accounts/wishlist.html', {
-        'wishlist_items': items,
-        'products': products
+        'wishlist_items': items  # Убираем 'products'
     })
 
 
+@require_POST
 @login_required
 def add_to_wishlist(request, product_id):
     try:
         product = Product.objects.get(id=product_id)
-        content_type = ContentType.objects.get_for_model(product)
         wishlist, _ = Wishlist.objects.get_or_create(user=request.user)
-        WishlistItem.objects.get_or_create(
-            wishlist=wishlist,
-            content_type=content_type,
-            object_id=product.id
-        )
-        messages.success(request, "Товар добавлен в список желаний!")
-        return redirect('products:detail', category_slug=product.category.slug, product_slug=product.slug)
+
+        # Проверяем, есть ли товар в избранном
+        if wishlist.products.filter(id=product.id).exists():
+            wishlist.products.remove(product)
+            action = 'removed'
+        else:
+            wishlist.products.add(product)
+            action = 'added'
+
+        return JsonResponse({'status': 'success', 'action': action})
+
     except Product.DoesNotExist:
-        messages.error(request, "Товар не найден.")
-        return redirect('home')
+        return JsonResponse({'status': 'error', 'message': 'Товар не найден'}, status=404)
 
 
 @login_required
@@ -145,7 +139,7 @@ def remove_from_wishlist(request, product_id):
     try:
         item = WishlistItem.objects.get(
             wishlist=request.user.wishlist,
-            object_id=product_id
+            product_id=product_id  # Используем product_id вместо object_id
         )
         item.delete()
         messages.success(request, "Товар удален из избранного")

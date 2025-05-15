@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from apps.accounts.models import CustomUser
 from apps.products.models import Product, Category
 
+
 class Comparison(models.Model):
     user = models.ForeignKey(
         CustomUser,
@@ -23,6 +24,9 @@ class Comparison(models.Model):
         verbose_name="Категория"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_product_ids(self):
+        return list(self.items.values_list('product_id', flat=True))
 
     class Meta:
         verbose_name = "Сравнение"
@@ -47,6 +51,7 @@ class Comparison(models.Model):
         # Проверка при добавлении товаров
         if self.items.count() >= 4:
             raise ValidationError("Максимум 4 товара в сравнении")
+
 
 class ComparisonItem(models.Model):
     comparison = models.ForeignKey(

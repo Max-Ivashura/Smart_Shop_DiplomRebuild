@@ -13,12 +13,13 @@
 {% block content %}
     <main class="ts-product-detail py-5">
         <div class="techshop-container container">
+
             <!-- Хлебные крошки -->
-            <nav aria-label="breadcrumb" class="mb-4">
-                <ol class="breadcrumb">
+            <nav aria-label="Навигация" class="ts-breadcrumb mb-4">
+                <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
                         <a href="{% url 'home' %}" class="text-decoration-none">
-                            <i class="bi bi-house-door"></i>
+                            <i class="bi bi-house-door me-1"></i>Главная
                         </a>
                     </li>
                     {% for cat in breadcrumbs|slice:":-1" %}
@@ -28,138 +29,215 @@
                             </a>
                         </li>
                     {% endfor %}
-                    <li class="breadcrumb-item active text-truncate">{{ product.name }}</li>
+                    <li class="breadcrumb-item active text-truncate" aria-current="page">
+                        {{ product.name|truncatechars:40 }}
+                    </li>
                 </ol>
             </nav>
-            <!-- Основной контент -->
-            <div class="row g-4">
+
+            <!-- Основная секция -->
+            <article class="row g-5">
                 <!-- Галерея -->
-                <div class="col-lg-6">
+                <section class="col-lg-5">
                     <div class="ts-gallery">
-                        <div class="ts-gallery__main-image ratio ratio-1x1">
+                        <div class="ts-main-image mb-3">
                             {% if product.images.exists %}
                                 <img src="{{ product.images.first.image.url }}"
-                                     class="rounded-4 object-fit-cover"
+                                     class="active"
                                      alt="{{ product.name }}"
-                                     id="mainImage">
+                                     id="mainImage"
+                                     loading="eager">
                             {% else %}
-                                <div class="bg-light d-flex align-items-center justify-content-center rounded-4">
-                                    <i class="bi bi-image text-muted fs-1"></i>
+                                <div class="no-image">
+                                    <i class="bi bi-image"></i>
                                 </div>
                             {% endif %}
                         </div>
 
-                        {% if product.images.count > 1 %}
-                            <div class="ts-gallery__thumbnails-scroller">
-                                <div class="d-flex gap-3 py-2">
-                                    {% for image in product.images.all %}
-                                        <button class="ts-gallery__thumbnail-btn p-0 bg-transparent
-                                              {% if forloop.first %}ts-gallery__thumbnail-btn--active{% endif %}"
-                                                data-image="{{ image.image.url }}">
-                                            <img src="{{ image.thumbnail.url }}"
-                                                 class="img-fluid rounded-2"
-                                                 alt="Превью {{ forloop.counter }}"
-                                                 loading="lazy">
-                                        </button>
-                                    {% endfor %}
+                        <div class="ts-thumbs-scroller">
+                            {% for image in product.images.all %}
+                                {% if image.thumbnail %}
+                                    <div class="ts-thumb-wrap {% if forloop.first %}active{% endif %}"
+                                         data-image="{{ image.image.url }}">
+                                        <img src="{{ image.thumbnail.url }}"
+                                             alt="Превью {{ forloop.counter }}"
+                                             class="ts-thumb"
+                                             loading="lazy">
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Информация о товаре -->
+                <section class="col-lg-7">
+                    <header class="ts-product-header mb-4">
+                        <h1 class="ts-product-title display-5 fw-bold mb-3">{{ product.name }}</h1>
+
+                        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+                            <div class="ts-price-block">
+                                <span class="text-primary fw-bold fs-2">{{ product.price|intcomma }} ₽</span>
+                                <div class="ts-rating d-flex align-items-center mt-2">
+                                    <div class="stars"
+                                         data-rating="{{ product.average_rating|floatformat:'1' }}">
+                                        <div class="stars-overlay"></div>
+                                    </div>
+                                    <small class="text-muted ms-2">({{ reviews_count }} отзывов)</small>
                                 </div>
                             </div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Информация -->
-                <div class="col-lg-6">
-                    <div class="ts-product-info">
-                        <h1 class="ts-product-title display-5 mb-3 fw-bold">{{ product.name }}</h1>
-
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="ts-price-block">
-                            <span class="h2 text-primary">
-                                {{ product.price|intcomma }} ₽
-                            </span>
-                                {% if product.old_price %}
-                                    <del class="text-muted ms-2 fs-5">{{ product.old_price|intcomma }} ₽</del>
+                            <span class="badge bg-{% if product.in_stock %}success{% else %}danger{% endif %} py-2 px-3">
+                                {% if product.in_stock %}
+                                    <i class="bi bi-check-circle me-1"></i>В наличии ({{ product.stock }} шт.)
+                                {% else %}
+                                    <i class="bi bi-x-circle me-1"></i>Нет в наличии
                                 {% endif %}
-                            </div>
-                            <span class="badge bg-{% if product.in_stock %}success{% else %}danger{% endif %} py-2 px-3 fs-6">
-                            <i class="bi bi-{% if product.in_stock %}check2-circle{% else %}x-circle{% endif %} me-1"></i>
-                            {{ product.get_stock_status }}
-                        </span>
+                            </span>
+                        </div>
+                    </header>
+
+                    <!-- Кнопки действий -->
+                    <div class="ts-action-buttons d-flex gap-3 mb-5 flex-wrap">
+                        <form action="{% url 'cart:add' product.id %}" method="post" class="flex-grow-1">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-primary btn-lg w-100 py-3"
+                                    {% if not product.in_stock %}disabled{% endif %}>
+                                <i class="bi bi-cart3 me-2"></i>
+                                {% if product.in_stock %}В корзину{% else %}Нет в наличии{% endif %}
+                            </button>
+                        </form>
+
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-wishlist btn-outline-danger btn-lg px-3"
+                                    data-product-id="{{ product.id }}">
+                                <i class="bi {% if product in request.user.wishlist.products.all %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+                            </button>
+
+                            <button class="btn btn-compare btn-outline-primary btn-lg px-3"
+                                    data-product-id="{{ product.id }}">
+                                <i class="bi {% if comparison and product.id in comparison.get_product_ids %}bi-clipboard2-check{% else %}bi-clipboard2-plus{% endif %}"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Краткие характеристики -->
+                    <section class="ts-features mb-4">
+                        <h3 class="h5 mb-3"><i class="bi bi-star-fill text-warning me-2"></i>Особенности товара</h3>
+                        <div class="ts-description bg-light rounded-3 p-4">
+                            {{ product.description|linebreaks }}
+                        </div>
+                    </section>
+                </section>
+            </article>
+
+            <!-- Полные характеристики -->
+            <section class="ts-full-specs mt-5">
+                <h2 class="h4 mb-4">Технические характеристики</h2>
+
+                {% for group, specs in product.specs.items %}
+                    <div class="spec-group mb-4">
+                        <div class="spec-group-header mb-3">
+                            <i class="bi bi-gear me-2"></i>
+                            <h3 class="mb-0">{{ group }}</h3>
                         </div>
 
-                        <!-- Аккордеон характеристик -->
-                        <div class="ts-specs-accordion accordion" id="specsAccordion">
-                            {% for group_name, params in specs.items %}
-                                <div class="accordion-item">
-                                    <h3 class="accordion-header">
-                                        <button class="accordion-button {% if not forloop.first %}collapsed{% endif %}"
-                                                type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#specs-{{ forloop.counter }}">
-                                            <i class="bi bi-pc-display-horizontal me-3 text-primary"></i>
-                                            <span class="fw-semibold">{{ group_name }}</span>
-                                        </button>
-                                    </h3>
-                                    <div id="specs-{{ forloop.counter }}"
-                                         class="accordion-collapse collapse {% if forloop.first %}show{% endif %}"
-                                         data-bs-parent="#specsAccordion">
-                                        <div class="accordion-body">
-                                            <div class="row g-3">
-                                                {% for param, value in params.items %}
-                                                    <div class="col-6 ts-specs-param">
-                                                        <div class="d-flex justify-content-between">
-                                                            <span class="text-muted">{{ param }}</span>
-                                                            <span class="fw-medium">{{ value }}</span>
-                                                        </div>
-                                                    </div>
+                        <div class="spec-grid">
+                            {% for param, value in specs.items %}
+                                <div class="spec-item">
+                                    <span class="spec-param">{{ param }}</span>
+                                    <span class="spec-dots"></span>
+                                    <span class="spec-value">{{ value }}</span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+
+            <!-- Отзывы -->
+            <section class="ts-reviews border-top pt-5">
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                    <h2 class="h4 mb-0">Отзывы о товаре</h2>
+                    <button class="btn btn-primary" id="showReviewForm">
+                        Написать отзыв
+                    </button>
+                </div>
+
+                <!-- Форма отзыва -->
+                <div class="ts-review-form mb-5" id="reviewForm" style="display: none;">
+                    <form method="post" action="{% url 'products:add_review' product.id %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label">Оценка</label>
+                            <div class="rating-stars mb-3">
+                                {% for i in "12345" %}
+                                    <button type="button" class="star-btn" data-value="{{ i }}">
+                                        <i class="bi bi-star"></i>
+                                    </button>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" name="rating" id="id_rating" value="5" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Текст отзыва</label>
+                            <textarea name="text" class="form-control" rows="4"
+                                      placeholder="Опишите ваши впечатления..." required></textarea>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn btn-primary">Отправить</button>
+                            <button type="button" class="btn btn-outline-secondary"
+                                    id="cancelReview">Отмена
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="row g-4">
+                    {% for review in product.reviews.all %}
+                        <div class="col-md-6">
+                            <div class="ts-review-card card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center gap-3 mb-3">
+                                        <div class="ts-review-avatar">
+                                            {{ review.user.get_initials }}
+                                        </div>
+                                        <div>
+                                            <div class="fw-medium">{{ review.user.get_full_name }}</div>
+                                            <div class="ts-review-rating text-warning">
+                                                {% for i in "12345" %}
+                                                    <i class="bi bi-star{% if forloop.counter <= review.rating %}-fill{% endif %}"></i>
                                                 {% endfor %}
                                             </div>
                                         </div>
                                     </div>
+                                    <p class="mb-0">{{ review.text }}</p>
                                 </div>
-                            {% endfor %}
+                                <div class="card-footer text-muted small">
+                                    {{ review.created_at|date:"d.m.Y" }}
+                                </div>
+                            </div>
                         </div>
-
-                        <!-- Действия -->
-                        <div class="ts-action-buttons d-flex">
-                            <form action="{% url 'cart:add' product.id %}" method="post" class="flex-grow-1">
-                                {% csrf_token %}
-                                <button type="submit"
-                                        class="btn btn-lg btn-primary h-100"
-                                        {% if not product.in_stock %}disabled{% endif %}>
-                                    <i class="bi bi-cart3 me-2"></i>
-                                    {% if product.in_stock %}В корзину{% else %}Нет в наличии{% endif %}
-                                </button>
-                            </form>
-
-                            <form action="{% url 'accounts:add_to_wishlist' product.id %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit"
-                                        class="btn btn-lg ts-wishlist-btn"
-                                        data-bs-toggle="tooltip">
-                                    <i class="bi bi-heart{% if product in wishlist %}-fill{% endif %}"></i>
-                                </button>
-                            </form>
+                    {% empty %}
+                        <div class="text-center py-5">
+                            <i class="bi bi-chat-square-text fs-1 text-muted"></i>
+                            <p class="mt-2">Пока нет отзывов</p>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            </div>
+            </section>
 
-            <!-- Связанные товары -->
             {% if related_products %}
-                <section class="ts-related-products">
-                    <h3 class="ts-related-products__title mb-4">
-                        С этим товаром покупают
-                    </h3>
+                <aside class="ts-related-products border-top pt-5">
+                    <h3 class="h4 mb-4">С этим товаром покупают</h3>
                     <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
                         {% for product in related_products %}
-                            <div class="col">
-                                {% include "products/includes/product_card.html" %}
-                            </div>
+                            <div class="col">{% include "products/includes/product_card.html" %}</div>
                         {% endfor %}
                     </div>
-                </section>
+                </aside>
             {% endif %}
         </div>
     </main>
@@ -167,5 +245,51 @@
 
 {% block scripts %}
     <script src="{% static 'products/js/detail.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Избранное (как в каталоге)
+            document.querySelectorAll('.btn-wishlist').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const productId = {{ product.id }};
+                    fetch(`{% url 'accounts:add_to_wishlist' 0 %}`.replace('0', productId), {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                const icon = this.querySelector('i');
+                                icon.classList.toggle('bi-heart-fill', data.action === 'added');
+                                icon.classList.toggle('bi-heart', data.action === 'removed');
+                            }
+                        });
+                });
+            });
+
+            // Сравнение (аналогично каталогу)
+            document.querySelectorAll('.btn-compare').forEach(btn => {
+                btn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const productId = {{ product.id }};
+                    fetch(`{% url 'compare:toggle_comparison' 0 %}`.replace('0', productId), {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const icon = this.querySelector('i');
+                            icon.classList.toggle('bi-clipboard2-check', data.action === 'added');
+                            icon.classList.toggle('bi-clipboard2-plus', data.action === 'removed');
+                        });
+                });
+            });
+        });
+    </script>
 {% endblock %}
-[file content end]

@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.utils.text import slugify
 from mptt.models import MPTTModel, TreeForeignKey  # Если используется django-mptt
 
+from apps.products.models import Product
+
 
 class Category(MPTTModel):  # Для древовидной структуры (рекомендуется)
     name = models.CharField(
@@ -59,3 +61,11 @@ class Category(MPTTModel):  # Для древовидной структуры (
 
     def get_absolute_url(self):
         return reverse("products:category", kwargs={"slug": self.slug})
+
+    def get_product_count(self):
+        """Считает товары во всех подкатегориях"""
+        descendants = self.get_descendants(include_self=True)
+        return Product.objects.filter(
+            category__in=descendants,
+            is_active=True
+        ).count()
