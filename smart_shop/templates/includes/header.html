@@ -48,9 +48,9 @@
                     <div class="input-group">
                         <input type="search"
                                name="q"
-                        class="form-control"
-                        placeholder="Поиск товаров..."
-                        value="{{ request.GET.q }}">
+                               class="form-control"
+                               placeholder="Поиск товаров..."
+                               value="{{ request.GET.q }}">
                         <button type="submit"
                                 class="btn btn-outline-dark techshop-header__search-btn">
                             <i class="bi bi-search"></i>
@@ -115,6 +115,8 @@
                 '.techshop-catalog-cart-btn, ' +
                 '.techshop-catalog-compare-btn, ' +
                 '.techshop-catalog-wishlist-btn, ' +
+                '.ts-cart-compare, ' +
+                '.ts-cart-favorite, ' +
                 '.btn-wishlist, .btn-compare'
             ).forEach(btn => {
                 btn.addEventListener('click', () => {

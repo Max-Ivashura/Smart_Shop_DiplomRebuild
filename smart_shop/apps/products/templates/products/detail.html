@@ -116,7 +116,7 @@
 
                             <button class="btn btn-compare btn-outline-primary btn-lg px-3"
                                     data-product-id="{{ product.id }}">
-                                <i class="bi {% if comparison and product.id in comparison.get_product_ids %}bi-clipboard2-check{% else %}bi-clipboard2-plus{% endif %}"></i>
+                                <i class="bi {% if product.id in comparison_product_ids %}bi-clipboard2-check{% else %}bi-clipboard2-plus{% endif %}"></i>
                             </button>
                         </div>
                     </div>

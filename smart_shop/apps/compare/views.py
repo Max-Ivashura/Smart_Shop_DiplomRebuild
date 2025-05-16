@@ -69,7 +69,8 @@ def toggle_comparison(request, product_id):
             'status': 'success',
             'action': action,
             'count': comparison.items.count(),
-            'product_id': product_id
+            'product_id': product_id,
+            'product_ids': list(comparison.items.values_list('product_id', flat=True))
         })
     except Product.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Товар не найден'}, status=404)

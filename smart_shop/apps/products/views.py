@@ -1,5 +1,7 @@
 from django.db.models import Q, Case, When, Value, IntegerField
 from django.views.generic import ListView, DetailView
+
+from apps.compare.models import Comparison
 from .models import Product, Category
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -55,20 +57,31 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['active_category'] = self.category or None
+        context['categories'] = Category.objects.all()
+        context['sort_param'] = self.request.GET.get("sort", "newest")
 
-        # Активная категория (объект, а не slug)
-        active_category = self.category or None
-        categories = Category.objects.all()
+        # Получаем все ID товаров в сравнениях пользователя
+        comparison_product_ids = set()
 
-        context['comparison'] = get_user_comparison(self.request)
+        # Для авторизованных пользователей
+        if self.request.user.is_authenticated:
+            comparisons = Comparison.objects.filter(user=self.request.user)
+        # Для анонимных пользователей
+        else:
+            session_key = self.request.session.session_key
+            if not session_key:
+                self.request.session.create()
+                session_key = self.request.session.session_key
+            comparisons = Comparison.objects.filter(session_key=session_key)
 
-        context.update({
-            "categories": categories,
-            "active_category": active_category,  # Теперь это объект
-            "sort_param": self.request.GET.get("sort", "newest"),
-            "breadcrumbs": active_category.get_ancestors(include_self=True) if active_category else [],
-        })
+        # Собираем все ID товаров из всех сравнений
+        for comparison in comparisons:
+            comparison_product_ids.update(
+                comparison.items.values_list('product_id', flat=True)
+            )
 
+        context['comparison_product_ids'] = comparison_product_ids
         return context
 
 
@@ -103,6 +116,23 @@ class ProductDetailView(DetailView):
 
         context['reviews_count'] = self.object.reviews.count()
         context['average_rating'] = self.object.average_rating
+
+        comparison_product_ids = set()
+        if self.request.user.is_authenticated:
+            comparisons = Comparison.objects.filter(user=self.request.user)
+        else:
+            session_key = self.request.session.session_key
+            if not session_key:
+                self.request.session.create()
+                session_key = self.request.session.session_key
+            comparisons = Comparison.objects.filter(session_key=session_key)
+
+        for comparison in comparisons:
+            comparison_product_ids.update(
+                comparison.items.values_list('product_id', flat=True)
+            )
+
+        context['comparison_product_ids'] = comparison_product_ids
 
         # Связанные товары (4 штуки из той же категории)
         context["related_products"] = Product.objects.filter(

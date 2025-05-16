@@ -26,7 +26,9 @@
     <link rel="stylesheet" href="{% static 'css/footer.css' %}">
 
     {% block extra_styles %}{% endblock %}
-    {% block extra_head %}{% endblock %}
+    {% block extra_head %}
+        <meta name="csrf-token" content="{{ csrf_token }}">
+    {% endblock %}
 </head>
 
 <body class="techshop-base purple-theme d-flex flex-column min-vh-100" style="position: relative; z-index: 0;">

@@ -1,0 +1,293 @@
+/* cart/static/cart/css/cart.css */
+
+/* ===== ОСНОВНЫЕ СТИЛИ ===== */
+.ts-cart-container {
+    isolation: isolate;
+    position: relative;
+    padding: 2rem 0;
+}
+
+.ts-cart-title {
+    font-size: 2.2rem;
+    letter-spacing: -0.5px;
+    position: relative;
+    padding-left: 1.5rem;
+    border-bottom: 3px solid var(--primary-100);
+    padding-bottom: 1rem;
+}
+
+.ts-cart-title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background: var(--primary-500);
+    border-radius: 2px;
+}
+
+/* ===== КАРТОЧКА ТОВАРА ===== */
+.ts-cart-card {
+    border-radius: 18px !important;
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    height: 100%;
+    position: relative; /* Добавлено для z-index контекста */
+}
+
+.ts-cart-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(103, 65, 217, 0.1) !important;
+}
+
+/* ===== ИЗОБРАЖЕНИЕ ===== */
+.ts-cart-media {
+    position: relative;
+    z-index: 1; /* Убедимся, что изображение ниже кнопок */
+}
+
+.ts-cart-image-wrapper {
+    background: rgba(243, 240, 255, 0.6);
+    border: 2px solid white !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 12px;
+    overflow: hidden;
+}
+
+.ts-cart-image {
+    object-fit: contain !important;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.ts-cart-card:hover .ts-cart-image {
+    transform: scale(1.05);
+}
+
+/* ===== КНОПКИ ДЕЙСТВИЙ ===== */
+.ts-cart-top-controls {
+    position: absolute;
+    z-index: 3; /* Увеличим z-index для верхних кнопок */
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.ts-cart-top-controls .btn {
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.ts-cart-top-controls .btn:hover {
+    background: white !important;
+    transform: scale(1.05);
+}
+
+.ts-cart-favorite:hover {
+    color: var(--danger) !important;
+    border-color: var(--danger) !important;
+}
+
+.ts-cart-compare:hover {
+    color: var(--primary-600) !important;
+    border-color: var(--primary-600) !important;
+}
+
+/* ===== БЛОК УПРАВЛЕНИЯ ===== */
+.ts-cart-controls {
+    border-left: 2px solid rgba(151, 117, 250, 0.1);
+    position: relative;
+    z-index: 2; /* Управление количеством выше изображения */
+}
+
+.ts-cart-quantity-block {
+    margin: 3rem 0;
+}
+
+.ts-cart-quantity {
+    border: 2px solid rgba(151, 117, 250, 0.2) !important;
+    border-radius: 50px !important;
+    max-width: 200px;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1; /* Кнопки +/- поверх разделителя */
+}
+
+.ts-cart-quantity:hover {
+    border-color: var(--primary-300) !important;
+    box-shadow: 0 2px 12px rgba(103, 65, 217, 0.1);
+}
+
+.ts-cart-quantity-input {
+    font-weight: 600;
+    color: var(--primary-700) !important;
+    background: transparent !important;
+    width: 50px;
+    z-index: 2; /* Поле ввода поверх кнопок */
+}
+
+/* Кнопки +/- */
+.btn.plus-btn,
+.btn.minus-btn {
+    z-index: 3; /* Выше других элементов */
+    position: relative;
+}
+
+/* Разделительная линия */
+.ts-cart-divider {
+    border-color: rgba(151, 117, 250, 0.2);
+    border-width: 2px;
+    width: 100%;
+    position: relative;
+    top: 10px; /* Сдвигаем линию ниже кнопок */
+}
+
+/* Суммарная стоимость */
+.ts-cart-total-price {
+    font-size: 1.2rem;
+    color: var(--primary-700);
+    padding: 0.5rem 0;
+    text-align: center;
+}
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 767.98px) {
+    .ts-cart-title {
+        font-size: 1.8rem;
+        padding-left: 1rem;
+    }
+
+    .ts-cart-image-wrapper {
+        padding: 8px;
+    }
+
+    .ts-cart-controls {
+        border-left: none;
+        border-top: 2px solid rgba(151, 117, 250, 0.1);
+    }
+
+    .ts-cart-divider {
+        width: 100% !important;
+        margin: 0;
+        top: -5px;
+    }
+
+    .ts-cart-total-price {
+        font-size: 1.1rem;
+    }
+
+    .ts-cart-quantity {
+        max-width: 160px; /* Уменьшаем для мобилок */
+    }
+}
+
+@media (min-width: 768px) {
+    .ts-cart-image-wrapper {
+        min-height: 140px;
+    }
+}
+
+/* ===== ПУСТАЯ КОРЗИНА ===== */
+.ts-cart-empty {
+    border-radius: 24px;
+    background: linear-gradient(145deg,
+    rgba(255, 255, 255, 0.95),
+    rgba(243, 240, 255, 0.6));
+    border: 2px dashed var(--primary-300);
+}
+
+.ts-cart-empty-icon {
+    opacity: 0.8;
+    transition: transform 0.3s ease;
+}
+
+.ts-cart-empty:hover .ts-cart-empty-icon {
+    transform: rotate(-8deg) scale(1.05);
+}
+
+/* Убираем стрелочки у числового поля */
+.ts-cart-quantity-input::-webkit-outer-spin-button,
+.ts-cart-quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.ts-cart-quantity-input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* Убираем обводку и настраиваем позиционирование */
+.ts-cart-quantity {
+    border: none !important; /* Убираем границу */
+    box-shadow: none !important; /* Убираем тень */
+    background: rgba(243, 240, 255, 0.3) !important; /* Добавляем фон */
+    padding: 0.5rem 0;
+}
+
+.ts-cart-quantity-input {
+    width: 40px !important; /* Увеличиваем ширину */
+    font-size: 1.1rem;
+    text-align: center !important; /* Центрируем текст */
+    padding: 0 !important;
+    margin: 0; /* Центрируем поле ввода */
+}
+
+/* Стили для кнопок +/- */
+.btn.plus-btn,
+.btn.minus-btn {
+    padding: 0 0.7rem !important;
+    z-index: 2;
+    position: relative;
+}
+
+.btn.plus-btn:hover,
+.btn.minus-btn:hover {
+    background: rgba(151, 117, 250, 0.1) !important;
+}
+
+/* ===== ИЗОБРАЖЕНИЕ ===== */
+.ts-cart-media {
+    display: flex;
+    align-items: center; /* Вертикальное выравнивание */
+    justify-content: center; /* Горизонтальное выравнивание */
+    background: white !important; /* Белый фон */
+    padding: 15px;
+}
+
+.ts-cart-image-wrapper {
+    background: white !important; /* Убираем фиолетовый фон */
+    max-width: 140px; /* Ограничиваем размер */
+    width: 100%;
+}
+
+.ts-cart-image {
+    object-fit: contain !important;
+    max-height: 140px;
+    width: auto !important;
+}
+
+/* ===== ФОРМАТИРОВАНИЕ ЦЕН ===== */
+.item-total,
+.ts-cart-total-price {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+}
+
+.item-total::after,
+.ts-cart-total-price::after {
+    content: " ₽";
+    font-weight: 500;
+}

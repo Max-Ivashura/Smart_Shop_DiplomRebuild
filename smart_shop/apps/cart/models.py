@@ -1,4 +1,6 @@
 from django.db import models
+from rest_framework.exceptions import ValidationError
+
 from apps.accounts.models import CustomUser
 from apps.products.models import Product
 
@@ -55,6 +57,19 @@ class CartItem(models.Model):
         default=1
     )
     added_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def get_total_price(self):
+        return self.product.price * self.quantity
+
+    def clean(self):
+        if self.quantity > self.product.stock:
+            raise ValidationError("Недостаточно товара на складе")
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     class Meta:
         unique_together = ("cart", "product")
