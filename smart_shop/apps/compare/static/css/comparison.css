@@ -1,12 +1,59 @@
 /* Изолированные стили с префиксом ts-compare */
 .ts-compare-container {
+    --border-color: rgba(151, 117, 250, 0.15);
+    --shadow-primary: 0 8px 32px rgba(103, 65, 217, 0.08);
     isolation: isolate;
     position: relative;
+    min-height: 60vh;
 }
 
+/* Вкладки категорий */
+.ts-compare-tabs {
+    border-bottom: 2px solid var(--neutral-200);
+    gap: 0.5rem;
+}
+
+.ts-compare-tabs .nav-link {
+    border: none;
+    border-radius: 0.75rem 0.75rem 0 0;
+    color: var(--neutral-600);
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    font-weight: 500;
+}
+
+.ts-compare-tabs .nav-link.active {
+    color: var(--primary-700);
+    background: var(--primary-50);
+    transform: translateY(1px);
+    border-bottom: 3px solid var(--primary-500) !important;
+}
+
+.ts-compare-tabs .nav-link:not(.active):hover {
+    color: var(--primary-600);
+    background: var(--primary-100);
+}
+
+/* Анимация переключения */
+.ts-compare-category-content {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.ts-compare-category-content.active {
+    opacity: 1;
+    transform: translateY(0);
+    display: block !important;
+}
+
+/* Заголовок */
 .ts-compare-title {
-    font-size: 2.2rem;
-    letter-spacing: -0.5px;
+    font-size: 2rem;
+    letter-spacing: -0.015em;
+    font-weight: 700;
     position: relative;
     padding-left: 2rem;
 }
@@ -23,14 +70,15 @@
     border-radius: 2px;
 }
 
+/* Таблица сравнения */
 .ts-compare-table {
-    --border-color: rgba(151, 117, 250, 0.15);
-    --header-bg: var(--primary-100);
-    --diff-bg: rgba(255, 193, 7, 0.1);
+    --border-color: rgba(151, 117, 250, 0.1);
+    --header-bg: var(--primary-50);
+    --diff-bg: rgba(255, 193, 7, 0.08);
     border-collapse: separate;
     border-spacing: 0;
     background: white;
-    box-shadow: 0 8px 32px rgba(103, 65, 217, 0.08);
+    box-shadow: var(--shadow-primary);
     border-radius: 1.5rem;
     overflow: hidden;
     transition: box-shadow 0.3s ease;
@@ -42,66 +90,78 @@
 
 .ts-compare-table th,
 .ts-compare-table td {
-    padding: 1.5rem;
+    padding: 1.25rem;
     vertical-align: middle;
     border: 1px solid var(--border-color);
     background: white;
+    position: relative;
 }
 
+/* Шапка таблицы */
 .ts-compare-param-header {
     background: var(--header-bg) !important;
     border-bottom: 3px solid var(--primary-300) !important;
     font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-700);
 }
 
 .ts-compare-product-header {
     vertical-align: bottom !important;
     border-left: 2px solid var(--border-color) !important;
+    min-width: 280px;
 }
 
+/* Карточка товара */
 .ts-compare-product-card {
     position: relative;
     padding: 1.5rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease,
+    box-shadow 0.3s ease;
+    border-radius: 1rem;
 }
 
 .ts-compare-product-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .ts-compare-product-img {
-    max-height: 140px;
+    max-height: 160px;
     width: auto;
     margin: 0 auto 1.5rem;
     padding: 15px;
     transition: transform 0.3s ease;
+    object-fit: contain;
 }
 
 .ts-compare-product-card:hover .ts-compare-product-img {
-    transform: scale(1.05);
+    transform: scale(1.06);
 }
 
+/* Кнопка удаления */
 .ts-compare-remove-btn {
     position: absolute;
     top: 1rem;
     right: 1rem;
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition:
-        transform 0.2s ease,
-        opacity 0.2s ease;
+    transition: transform 0.2s ease,
+    opacity 0.2s ease;
+    z-index: 2;
 }
 
 .ts-compare-remove-btn:hover {
-    transform: scale(1.1);
+    transform: scale(1.15);
     opacity: 0.9;
 }
 
+/* Группы характеристик */
 .ts-compare-group-header td {
     background: rgba(243, 240, 255, 0.6);
     font-weight: 600;
@@ -110,9 +170,11 @@
     backdrop-filter: blur(2px);
 }
 
+/* Различия */
 .ts-compare-diff {
     background: var(--diff-bg) !important;
     position: relative;
+    font-weight: 500;
 }
 
 .ts-compare-diff::after {
@@ -122,15 +184,16 @@
     top: 50%;
     transform: translateY(-50%);
     color: var(--primary-500);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
+/* Пустое состояние */
 .ts-compare-empty {
     border-radius: 24px;
     background: linear-gradient(
-        145deg,
-        rgba(243, 240, 255, 0.6),
-        rgba(255, 255, 255, 0.9)
+            145deg,
+            rgba(243, 240, 255, 0.6),
+            rgba(255, 255, 255, 0.9)
     );
     backdrop-filter: blur(4px);
 }
@@ -150,6 +213,17 @@
         min-width: 800px;
     }
 
+    .ts-compare-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .ts-compare-tabs .nav-link {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+
     .ts-compare-product-img {
         max-height: 120px;
     }
@@ -157,17 +231,24 @@
 
 @media (max-width: 767.98px) {
     .ts-compare-title {
-        font-size: 1.8rem;
+        font-size: 1.75rem;
         padding-left: 1.5rem;
     }
 
-    .ts-compare-add-btn {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
+    .ts-compare-product-header {
+        min-width: 240px;
+    }
+
+    .ts-compare-table td {
+        padding: 1rem;
     }
 }
 
 @media (max-width: 575.98px) {
+    .ts-compare-container {
+        padding: 1.5rem 0;
+    }
+
     .ts-compare-product-title {
         font-size: 0.95rem;
     }
@@ -176,7 +257,35 @@
         font-size: 0.9rem;
     }
 
-    .ts-compare-table td {
-        padding: 1rem;
+    .ts-compare-group-header td {
+        font-size: 0.9rem;
     }
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulseBadge {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.comparison-count.updated {
+    animation: pulseBadge 0.4s ease;
 }

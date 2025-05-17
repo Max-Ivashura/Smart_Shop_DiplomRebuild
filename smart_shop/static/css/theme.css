@@ -35,18 +35,37 @@
     --text-light: #ffffff;
     --text-muted: var(--neutral-600);
 
+    /* Цвета статусов */
+
+    .bg-success {
+        background: var(--success) !important;
+    }
+
+    .bg-warning {
+        background: var(--warning) !important;
+    }
+
+    .bg-primary {
+        background: var(--primary-500) !important;
+    }
+
     /* Градиенты */
     --primary-gradient: linear-gradient(
-        135deg,
-        var(--primary-500) 0%,
-        var(--primary-700) 100%
+            135deg,
+            var(--primary-500) 0%,
+            var(--primary-700) 100%
     );
 
     /* Тени */
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.15);
-    --shadow-lg: 0 10px 20px rgba(0,0,0,0.19);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19);
     --primary-shadow: 0 4px 24px rgba(103, 65, 217, 0.15);
+}
+
+.badge.bg-warning {
+    color: var(--neutral-800) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Базовые стили */
@@ -58,15 +77,34 @@
 }
 
 /* Текстовые цвета */
-.text-primary-500 { color: var(--primary-500) !important; }
-.text-primary-600 { color: var(--primary-600) !important; }
-.text-primary-700 { color: var(--primary-700) !important; }
-.text-muted { color: var(--text-muted) !important; }
+.text-primary-500 {
+    color: var(--primary-500) !important;
+}
+
+.text-primary-600 {
+    color: var(--primary-600) !important;
+}
+
+.text-primary-700 {
+    color: var(--primary-700) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
 
 /* Фоновые цвета */
-.bg-primary-50 { background: var(--primary-50) !important; }
-.bg-primary-100 { background: var(--primary-100) !important; }
-.bg-primary-500 { background: var(--primary-500) !important; }
+.bg-primary-50 {
+    background: var(--primary-50) !important;
+}
+
+.bg-primary-100 {
+    background: var(--primary-100) !important;
+}
+
+.bg-primary-500 {
+    background: var(--primary-500) !important;
+}
 
 /* Градиентные модификаторы */
 .purple-theme {
@@ -76,9 +114,17 @@
 }
 
 /* Утилиты */
-.rounded-xl { border-radius: 1rem !important; }
-.shadow-primary { box-shadow: var(--primary-shadow) !important; }
-.transition { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+.rounded-xl {
+    border-radius: 1rem !important;
+}
+
+.shadow-primary {
+    box-shadow: var(--primary-shadow) !important;
+}
+
+.transition {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
 
 /* Кастомные элементы форм */
 ::selection {
@@ -98,11 +144,15 @@
 
 /* Адаптивная типографика */
 @media (max-width: 768px) {
-    html { font-size: 15px; }
+    html {
+        font-size: 15px;
+    }
 }
 
 @media (max-width: 576px) {
-    html { font-size: 14px; }
+    html {
+        font-size: 14px;
+    }
 }
 
 /* Стили для системы уведомлений */

@@ -52,6 +52,8 @@
                                 <div class="techshop-profile__avatar">
                                     <img src="
 
+
+
                                             {% if user.avatar %}{{ user.avatar.url }}{% else %}{% static 'accounts/images/avatar.png' %}{% endif %}"
                                          alt="Аватар"
                                          class="techshop-profile__avatar-img rounded-circle"
@@ -189,7 +191,10 @@
                                                         <td>{{ order.created_at|date:"d.m.Y" }}</td>
                                                         <td>{{ order.items.count }} позиций</td>
                                                         <td>
-                                                    <span class="badge {% if order.status == 'completed' %}bg-success{% else %}bg-primary{% endif %}">
+                                                    <span class="badge
+                                                        {% if order.status == 'completed' %}bg-success
+                                                        {% elif order.status == 'pending' %}bg-warning
+                                                        {% else %}bg-primary{% endif %}">
                                                         {{ order.get_status_display }}
                                                     </span>
                                                         </td>

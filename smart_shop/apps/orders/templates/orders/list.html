@@ -8,60 +8,76 @@
 {% block page_title %}Мои заказы{% endblock %}
 
 {% block content %}
-<div class="techshop-order-list-container techshop-container container">
-    <div class="techshop-order-list-header d-flex justify-content-between align-items-center mb-5">
-        <h1 class="techshop-order-list-title">
-            <i class="bi bi-receipt me-2"></i>История заказов
-        </h1>
-        <a href="{% url 'products:catalog' %}" class="techshop-order-list-catalog-btn">
-            <i class="bi bi-arrow-right-circle me-2"></i>Каталог
-        </a>
-    </div>
+    <div class="techshop-order-list-container techshop-container container">
+        <!-- Заголовок -->
+        <div class="techshop-order-list-header d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-5">
+            <h1 class="techshop-order-list-title mb-3 mb-md-0">
+                <i class="bi bi-receipt-cutoff me-2"></i>История заказов
+            </h1>
+            <a href="{% url 'products:catalog' %}" class="techshop-order-list-catalog-btn order-md-1">
+                <i class="bi bi-arrow-right-circle me-2"></i>Вернуться в каталог
+            </a>
+        </div>
 
-    {% if object_list %}
-    <div class="row g-4">
-        {% for order in object_list %}
-        <div class="col-12">
-            <article class="techshop-order-list-card">
-                <div class="card-body position-relative">
-                    <a href="{% url 'orders:detail' order.pk %}"
-                       class="stretched-link"
-                       aria-label="Подробности заказа #{{ order.id }}"></a>
+        {% if object_list %}
+            <div class="row g-4">
+                {% for order in object_list %}
+                    <div class="col-12">
+                        <article class="techshop-order-list-card position-relative">
+                            <div class="card-body p-4">
+                                <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-4">
+                                    <!-- Левая часть -->
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <div class="techshop-order-list-icon">
+                                                <i class="bi bi-box-seam"></i>
+                                            </div>
+                                            <div>
+                                                <h2 class="techshop-order-list-id mb-1">Заказ #{{ order.id }}</h2>
+                                                <div class="techshop-order-list-meta d-flex flex-wrap gap-3">
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-calendar me-1"></i>{{ order.created_at|date:"d.m.Y H:i" }}
+                                                    </small>
+                                                    <small class="text-muted">
+                                                        <i class="bi bi-cart-check me-1"></i>{{ order.items.count }}
+                                                        позиций
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                        <div class="mb-3 mb-md-0">
-                            <div class="d-flex align-items-center gap-2 mb-2">
-                                <i class="bi bi-box-seam text-primary-500 fs-5"></i>
-                                <h2 class="techshop-order-list-id">Заказ #{{ order.id }}</h2>
+                                    <!-- Правая часть -->
+                                    <div class="d-flex flex-column flex-md-row align-items-center gap-4">
+                                        <div class="techshop-order-list-total text-nowrap">
+                                            {{ order.total_price }} ₽
+                                        </div>
+                                        <div class="techshop-order-list-status-wrapper">
+                                <span class="techshop-order-list-status bg-{{ order.status_color }}">
+                                    <i class="bi {% if order.status == 'completed' %}bi-check2-circle{% else %}bi-clock{% endif %} me-2"></i>
+                                    {{ order.get_status_display }}
+                                </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <small class="techshop-order-list-date">
-                                <i class="bi bi-calendar me-1"></i>{{ order.created_at|date:"d.m.Y H:i" }}
-                            </small>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-4">
-                            <span class="techshop-order-list-total">{{ order.total_price }} ₽</span>
-                            <span class="techshop-order-list-status bg-{{ order.status_color }}">
-                                {{ order.get_status_display }}
-                            </span>
-                        </div>
+                            <a href="{% url 'orders:detail' order.pk %}" class="stretched-link"></a>
+                        </article>
                     </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Пустое состояние -->
+            <div class="techshop-order-list-empty text-center py-6">
+                <div class="techshop-order-list-empty-icon mb-4">
+                    <i class="bi bi-box2-heart"></i>
                 </div>
-            </article>
-        </div>
-        {% endfor %}
+                <h2 class="techshop-order-list-title h3 mb-3">Заказов не найдено</h2>
+                <p class="text-neutral-600 mb-4">Начните делать покупки в нашем каталоге</p>
+                <a href="{% url 'products:catalog' %}" class="techshop-order-list-catalog-btn">
+                    <i class="bi bi-search me-2"></i>Перейти к товарам
+                </a>
+            </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="techshop-order-list-empty">
-        <div class="text-primary-500 mb-4">
-            <i class="bi bi-box2-heart fs-1"></i>
-        </div>
-        <h2 class="techshop-order-list-title mb-3">Заказов не найдено</h2>
-        <p class="text-neutral-600 mb-4">Начните делать покупки в нашем каталоге</p>
-        <a href="{% url 'products:catalog' %}" class="techshop-order-list-catalog-btn">
-            <i class="bi bi-search me-2"></i>Выбрать товары
-        </a>
-    </div>
-    {% endif %}
-</div>
 {% endblock %}

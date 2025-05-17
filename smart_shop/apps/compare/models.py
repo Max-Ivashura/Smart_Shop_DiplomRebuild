@@ -1,3 +1,4 @@
+# models.py
 from django.db import models
 from django.core.exceptions import ValidationError
 from apps.accounts.models import CustomUser
@@ -18,39 +19,31 @@ class Comparison(models.Model):
         null=True,
         blank=True
     )
-    category = models.ForeignKey(
+    categories = models.ManyToManyField(  # Изменено на M2M
         Category,
-        on_delete=models.CASCADE,
-        verbose_name="Категория"
+        verbose_name="Категории сравнения",
+        related_name='comparisons'
     )
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def get_product_ids(self):
-        return list(self.items.values_list('product_id', flat=True))
 
     class Meta:
         verbose_name = "Сравнение"
         verbose_name_plural = "Сравнения"
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'category'],
-                name='unique_user_category_comparison',
+                fields=['user'],
+                name='unique_user_comparison',
                 condition=models.Q(user__isnull=False)
             ),
             models.UniqueConstraint(
-                fields=['session_key', 'category'],
-                name='unique_session_category_comparison',
+                fields=['session_key'],  # Исправлено session_id → session_key
+                name='unique_session_comparison',
                 condition=models.Q(user__isnull=True)
             )
         ]
 
     def __str__(self):
-        return f"Сравнение {self.category} ({self.user or 'аноним'})"
-
-    def clean(self):
-        # Проверка при добавлении товаров
-        if self.items.count() >= 4:
-            raise ValidationError("Максимум 4 товара в сравнении")
+        return f"Сравнение #{self.id}"
 
 
 class ComparisonItem(models.Model):
@@ -65,6 +58,11 @@ class ComparisonItem(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Товар"
     )
+    category = models.ForeignKey(  # Новая связь с категорией
+        Category,
+        on_delete=models.CASCADE,
+        verbose_name="Категория товара"
+    )
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -78,14 +76,16 @@ class ComparisonItem(models.Model):
             )
         ]
 
-    def __str__(self):
-        return f"{self.product.name} в сравнении"
-
     def clean(self):
-        # Проверка соответствия категорий
-        if self.product.category != self.comparison.category:
-            raise ValidationError("Товар должен принадлежать категории сравнения")
+        # Проверка соответствия категории товара
+        if self.product.category != self.category:
+            raise ValidationError("Категория товара не совпадает")
+
+        # Проверка лимита товаров в категории
+        category_items = self.comparison.items.filter(category=self.category)
+        if category_items.count() >= 4:
+            raise ValidationError("Максимум 4 товара в категории")
 
     def save(self, *args, **kwargs):
-        self.clean()
+        self.category = self.product.category  # Автоматическое назначение категории
         super().save(*args, **kwargs)

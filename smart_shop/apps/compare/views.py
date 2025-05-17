@@ -14,22 +14,44 @@ class ComparisonDetailView(DetailView):
     context_object_name = 'comparison'
 
     def get_object(self):
+        # Для аутентифицированных пользователей
         if self.request.user.is_authenticated:
-            comparison, _ = Comparison.objects.get_or_create(
-                user=self.request.user,
-                category_id=self.kwargs['category_id']
-            )
-        else:
-            comparison, _ = Comparison.objects.get_or_create(
-                session_id=self.request.session.session_key,
-                category_id=self.kwargs['category_id']
-            )
+            comparison, _ = Comparison.objects.get_or_create(user=self.request.user)
+            return comparison
+
+        # Для анонимных пользователей
+        session_key = self.request.session.session_key
+        if not session_key:
+            self.request.session.create()
+            session_key = self.request.session.session_key
+
+        # Получаем или создаем сравнение для сессии
+        comparison, _ = Comparison.objects.get_or_create(session_id=session_key)
         return comparison
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        products = [item.product for item in self.object.items.all()]
-        context.update(get_comparison_data(products))
+        comparison = self.object
+
+        # Группируем товары по категориям
+        categories_data = {}
+        for category in comparison.categories.all():
+            products = [item.product for item in comparison.items.filter(category=category)]
+            if products:
+                categories_data[category] = {
+                    'products': products,
+                    'specs': get_comparison_data(products, category)
+                }
+
+        # Активная категория из GET-параметра
+        active_category_id = self.request.GET.get('category')
+        active_category = None
+
+        context.update({
+            'categories_data': categories_data,
+            'active_category': active_category,
+            'all_categories': comparison.categories.all()
+        })
         return context
 
 
@@ -37,40 +59,41 @@ class ComparisonDetailView(DetailView):
 def toggle_comparison(request, product_id):
     try:
         product = get_object_or_404(Product, id=product_id)
+        category = product.category
 
         if request.user.is_authenticated:
-            comparison, created = Comparison.objects.get_or_create(
-                user=request.user,
-                category=product.category
-            )
+            comparison, _ = Comparison.objects.get_or_create(user=request.user)
         else:
             session_key = request.session.session_key
             if not session_key:
                 request.session.create()
                 session_key = request.session.session_key
+            comparison, _ = Comparison.objects.get_or_create(session_id=session_key)
 
-            comparison, created = Comparison.objects.get_or_create(
-                session_id=session_key,
-                category=product.category
-            )
+        # Добавляем категорию в список категорий сравнения
+        comparison.categories.add(category)
 
         item, created = ComparisonItem.objects.get_or_create(
             comparison=comparison,
-            product=product
+            product=product,
+            category=category
         )
 
         if not created:
             item.delete()
             action = 'removed'
+            # Удаляем категорию если нет товаров
+            if not comparison.items.filter(category=category).exists():
+                comparison.categories.remove(category)
         else:
             action = 'added'
 
         return JsonResponse({
             'status': 'success',
             'action': action,
-            'count': comparison.items.count(),
-            'product_id': product_id,
+            'category_id': category.id,
+            'category_name': category.name,
             'product_ids': list(comparison.items.values_list('product_id', flat=True))
         })
-    except Product.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Товар не найден'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)

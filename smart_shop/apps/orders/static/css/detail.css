@@ -1,111 +1,236 @@
 /* Изолированные стили с префиксом techshop-order-detail- */
 .techshop-order-detail {
-    --shadow-primary: 0 8px 32px rgba(151, 117, 250, 0.1);
+    --shadow-primary: 0 8px 32px rgba(151, 117, 250, 0.15);
     --transition-base: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     isolation: isolate;
-    padding: 4rem 0;
+    padding: 3rem 0;
 }
 
+/* Основная карточка */
 .techshop-order-main-card {
-    border-radius: 2rem;
+    border-radius: 1.5rem;
     background: var(--neutral-100);
-    border: 1px solid var(--neutral-300);
+    border: 1px solid var(--neutral-200);
     box-shadow: var(--shadow-primary);
-    overflow: hidden;
     transition: var(--transition-base);
+    overflow: visible;
 }
 
+/* Карточка товара */
 .techshop-order-product-card {
-    border-radius: 1.25rem;
+    border-radius: 1rem;
     background: white;
-    border: 1px solid var(--neutral-300);
+    border: 1px solid var(--neutral-200);
     transition: var(--transition-base);
+    position: relative;
 }
 
 .techshop-order-product-card:hover {
     transform: translateY(-5px);
-    box-shadow: var(--shadow-primary);
+    box-shadow: 0 12px 24px rgba(103, 65, 217, 0.1);
+    border-color: var(--primary-300);
 }
 
+/* Бейдж статуса */
 .techshop-order-status-badge {
-    font-size: 1rem;
+    font-size: 0.95rem;
     padding: 0.75rem 1.5rem;
     border-radius: 2rem;
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
+/* Изображение товара */
 .techshop-order-product-image {
     background: var(--primary-50);
     border-radius: 1rem 0 0 1rem;
     overflow: hidden;
+    position: relative;
+    padding: 8px !important; /* Рамочка вокруг изображения */
+    background: var(--neutral-100) !important; /* Цвет фона отступа */
+    margin: 6px;
 }
 
+.techshop-order-product-image .ratio {
+    border-radius: 12px !important; /* Уменьшенный радиус скругления */
+    overflow: hidden;
+    border: 3px solid white !important; /* Белая внутренняя рамка */
+    box-shadow: 0 0 0 1px var(--neutral-200); /* Серая внешняя граница */
+    padding: 2px; /* Пространство между рамками */
+    background: white !important; /* Фон между рамками */
+}
+
+.techshop-order-product-image img {
+    transform: scale(0.92); /* Уменьшение размера изображения */
+    transition: transform 0.3s ease; /* Плавное увеличение при ховере */
+}
+
+.techshop-order-product-card:hover .techshop-order-product-image img {
+    transform: scale(0.91); /* Уменьшение с учетом новых рамок */
+    transition: transform 0.3s ease;
+}
+
+.techshop-order-product-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, rgba(241, 237, 254, 0.2), rgba(255, 255, 255, 0.1));
+}
+
+/* Цена товара */
 .techshop-order-product-price {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     color: var(--primary-700);
+    font-weight: 600;
+    letter-spacing: -0.02em;
 }
 
-.techshop-order-modal {
-    border: 2px solid var(--neutral-300);
-    border-radius: 1.5rem;
-}
-
-/* Типографика */
+/* Заголовки */
 .techshop-order-title {
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     color: var(--primary-700);
     letter-spacing: -0.015em;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(103, 65, 217, 0.08);
 }
 
 .techshop-order-section-title {
-    font-size: 1.5rem;
-    color: var(--neutral-700);
-    margin-bottom: 2rem;
+    font-size: 1.4rem;
+    color: var(--neutral-800);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 2rem !important;
+}
+
+.techshop-order-section-title i {
+    left: 0;
+    top: 0.15em;
+    color: var(--primary-500);
+    position: static !important; /* Убираем абсолютное позиционирование */
+    margin-right: 0.75rem;
+    transform: translateY(-1px);
 }
 
 /* Кнопки */
 .techshop-order-back-btn {
-    border: 2px solid var(--neutral-300);
-    border-radius: 1rem;
+    border: 2px solid var(--neutral-200);
+    border-radius: 0.75rem;
     padding: 0.75rem 1.5rem;
     transition: var(--transition-base);
+    background: white;
+    color: var(--neutral-700);
+    display: inline-flex;
+    align-items: center;
 }
 
 .techshop-order-back-btn:hover {
     border-color: var(--primary-300);
     background: var(--primary-50);
+    color: var(--primary-600);
+    transform: translateX(-3px);
 }
 
 .techshop-order-cancel-btn {
     background: var(--danger);
-    color: white;
-    border-radius: 1rem;
+    color: white !important;
+    border-radius: 0.75rem;
     padding: 1rem 2rem;
+    transition: var(--transition-base);
+    border: 2px solid transparent;
+    font-weight: 500;
+}
+
+.techshop-order-cancel-btn:hover {
+    background: var(--danger);
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+}
+
+/* Модальное окно */
+.techshop-order-modal {
+    border: 2px solid var(--neutral-200);
+    border-radius: 1.25rem;
+    background: var(--neutral-50);
+    overflow: hidden;
+}
+
+.techshop-order-modal .modal-header {
+    background: var(--primary-50);
 }
 
 /* Адаптивность */
 @media (max-width: 992px) {
     .techshop-order-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
     }
 
     .techshop-order-product-card {
-        flex-direction: column;
+        margin-bottom: 0.5rem;
+    }
+
+    .techshop-order-section-title {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .techshop-order-main-card {
+        border-radius: 1rem;
     }
 
     .techshop-order-product-image {
         border-radius: 1rem 1rem 0 0;
     }
+
+    .techshop-order-product-card {
+        flex-direction: column;
+        height: auto !important;
+    }
 }
 
 @media (max-width: 576px) {
-    .techshop-order-main-card {
-        border-radius: 1.5rem;
+    .techshop-order-status-badge {
+        font-size: 0.85rem;
+        padding: 0.6rem 1.2rem;
     }
 
-    .techshop-order-status-badge {
-        font-size: 0.875rem;
+    .techshop-order-product-price {
+        font-size: 1rem;
     }
+
+    .techshop-order-cancel-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Анимации */
+@keyframes cardEntry {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.techshop-order-product-card {
+    animation: cardEntry 0.4s ease forwards;
+    opacity: 0;
+}
+
+.techshop-order-product-card:nth-child(odd) {
+    animation-delay: 0.1s;
 }

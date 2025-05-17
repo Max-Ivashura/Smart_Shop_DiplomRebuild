@@ -8,123 +8,127 @@
 {% block page_title %}Заказ #{{ object.id }}{% endblock %}
 
 {% block content %}
-<section class="techshop-order-detail techshop-container container">
-    <!-- Заголовок -->
-    <div class="techshop-order-header d-flex justify-content-between align-items-center mb-5">
-        <h1 class="techshop-order-title">
-            <i class="bi bi-receipt-cutoff me-2"></i>Заказ #{{ object.id }}
-        </h1>
-        <a href="{% url 'orders:list' %}" class="techshop-order-back-btn">
-            <i class="bi bi-arrow-left me-2"></i>К списку заказов
-        </a>
-    </div>
+    <section class="techshop-order-detail techshop-container container">
+        <!-- Заголовок -->
+        <div class="techshop-order-header d-flex justify-content-between align-items-center mb-5">
+            <h1 class="techshop-order-title">
+                <i class="bi bi-receipt-cutoff me-2"></i>Заказ #{{ object.id }}
+            </h1>
+            <a href="{% url 'orders:list' %}" class="techshop-order-back-btn">
+                <i class="bi bi-arrow-left me-2"></i>К списку заказов
+            </a>
+        </div>
 
-    <!-- Основная информация -->
-    <div class="techshop-order-main-card">
-        <div class="card-body p-4">
-            <!-- Статус и сумма -->
-            <div class="techshop-order-status-wrapper d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-                <div class="mb-3 mb-md-0">
-                    <span class="techshop-order-status-badge bg-{{ object.status_color }}">
+        <!-- Основная информация -->
+        <div class="techshop-order-main-card rounded-4 shadow-sm mb-5">
+            <div class="card-body p-4">
+                <!-- Статус и сумма -->
+                <div class="techshop-order-status-wrapper d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-3 border-bottom">
+                    <div class="mb-3 mb-md-0">
+                    <span class="techshop-order-status-badge bg-{{ object.status_color }} rounded-pill shadow-sm">
                         <i class="bi bi-{% if object.status == 'completed' %}check-circle{% else %}hourglass{% endif %}"></i>
                         {{ object.get_status_display }}
                     </span>
-                </div>
-                <div class="text-end">
-                    <div class="techshop-order-total-price h2">{{ object.total_price }} ₽</div>
-                    <small class="techshop-order-date">
-                        <i class="bi bi-clock-history me-1"></i>
-                        {{ object.created_at|date:"d.m.Y H:i" }}
-                    </small>
-                </div>
-            </div>
-
-            <!-- Список товаров -->
-            <div class="techshop-order-items mb-5">
-                <h2 class="techshop-order-section-title">
-                    <i class="bi bi-cart-check me-2"></i>Состав заказа
-                </h2>
-
-                <div class="row g-3">
-                    {% for item in object.items.all %}
-                    <div class="col-12">
-                        <article class="techshop-order-product-card">
-                            <div class="row g-0">
-                                <!-- Изображение -->
-                                <div class="techshop-order-product-image col-3 col-md-2">
-                                    <div class="ratio ratio-1x1">
-                                        <img src="{{ item.product.get_first_image.image.url }}"
-                                             class="img-fluid p-2 object-fit-contain"
-                                             alt="{{ item.product.name }}">
-                                    </div>
-                                </div>
-
-                                <!-- Информация -->
-                                <div class="col-7 col-md-8">
-                                    <div class="card-body">
-                                        <h3 class="techshop-order-product-title h6">{{ item.product.name }}</h3>
-                                        <small class="techshop-order-product-sku">
-                                            <i class="bi bi-upc-scan me-1"></i>{{ item.product.sku }}
-                                        </small>
-                                    </div>
-                                </div>
-
-                                <!-- Цена и количество -->
-                                <div class="col-2">
-                                    <div class="card-body h-100 d-flex flex-column justify-content-center">
-                                        <div class="text-end">
-                                            <div class="techshop-order-product-price">{{ item.price_at_order }} ₽</div>
-                                            <small class="techshop-order-product-quantity">×{{ item.quantity }}</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
                     </div>
-                    {% endfor %}
+                    <div class="text-end">
+                        <div class="techshop-order-total-price h2 mb-1">{{ object.total_price }} ₽</div>
+                        <small class="techshop-order-date text-muted">
+                            <i class="bi bi-clock-history me-1"></i>
+                            {{ object.created_at|date:"d.m.Y H:i" }}
+                        </small>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Действия -->
-            {% if object.status == "pending" %}
-            <div class="border-top pt-4">
-                <button class="techshop-order-cancel-btn"
-                        data-bs-toggle="modal"
-                        data-bs-target="#cancelOrderModal">
-                    <i class="bi bi-x-circle me-2"></i>Отменить заказ
-                </button>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-
-    <!-- Модальное окно отмены -->
-    <div class="modal fade" id="cancelOrderModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="techshop-order-modal modal-content">
-                <div class="modal-header border-0">
-                    <h2 class="techshop-order-modal-title h5">
-                        <i class="bi bi-exclamation-triangle me-2"></i>Отмена заказа
+                <!-- Список товаров -->
+                <div class="techshop-order-items">
+                    <h2 class="techshop-order-section-title mb-4">
+                        <i class="bi bi-cart-check me-2"></i>Состав заказа
                     </h2>
-                    <button class="btn-close" data-bs-dismiss="modal"></button>
+
+                    <div class="row g-4">
+                        {% for item in object.items.all %}
+                            <div class="col-12 col-md-6">
+                                <a href="{{ item.product.get_absolute_url }}" class="text-decoration-none text-dark">
+                                    <article class="techshop-order-product-card rounded-3 shadow-sm h-100">
+                                        <div class="row g-0 h-100">
+                                            <!-- Изображение -->
+                                            <div class="techshop-order-product-image col-4 col-lg-3">
+                                                <div class="ratio ratio-1x1">
+                                                    <img src="{{ item.product.get_first_image.image.url }}"
+                                                         class="img-fluid p-2 object-fit-cover rounded-start"
+                                                         alt="{{ item.product.name }}">
+                                                </div>
+                                            </div>
+
+                                            <!-- Информация -->
+                                            <div class="col-6 col-lg-6 d-flex align-items-center">
+                                                <div class="card-body p-3">
+                                                    <h3 class="techshop-order-product-title h6 mb-1">{{ item.product.name }}</h3>
+                                                    <small class="techshop-order-product-sku text-muted">
+                                                        <i class="bi bi-upc-scan me-1"></i>{{ item.product.sku }}
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <!-- Цена и количество -->
+                                            <div class="col-2  d-flex align-items-center">
+                                                <div class="card-body p-3 text-end">
+                                                    <div class="techshop-order-product-price text-primary fw-bold mb-1">
+                                                        {{ item.price_at_order }} ₽
+                                                    </div>
+                                                    <small class="techshop-order-product-quantity text-muted">
+                                                        ×{{ item.quantity }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <p class="lead">Вы уверены, что хотите отменить заказ #{{ object.id }}?</p>
-                    <p class="text-neutral-600">Это действие нельзя будет отменить</p>
-                </div>
-                <div class="modal-footer border-0">
-                    <form method="post" action="{% url 'orders:cancel' object.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="techshop-order-cancel-btn w-100">
-                            <i class="bi bi-trash me-2"></i>Да, отменить
+
+                <!-- Действия -->
+                {% if object.status == "pending" %}
+                    <div class="border-top pt-4 mt-4">
+                        <button class="techshop-order-cancel-btn w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#cancelOrderModal">
+                            <i class="bi bi-x-circle me-2"></i>Отменить заказ
                         </button>
-                    </form>
-                    <button class="techshop-order-back-btn w-100 mt-2" data-bs-dismiss="modal">
-                        <i class="bi bi-arrow-return-left me-2"></i>Вернуться
-                    </button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Модальное окно отмены -->
+        <div class="modal fade" id="cancelOrderModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="techshop-order-modal modal-content rounded-4">
+                    <div class="modal-header border-0 pb-0">
+                        <h2 class="techshop-order-modal-title h5 mb-0">
+                            <i class="bi bi-exclamation-triangle me-2"></i>Отмена заказа
+                        </h2>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        <p class="lead mb-2">Вы уверены, что хотите отменить заказ #{{ object.id }}?</p>
+                        <p class="text-muted small mb-0">Это действие нельзя будет отменить</p>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <form method="post" action="{% url 'orders:cancel' object.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="techshop-order-cancel-btn w-100">
+                                <i class="bi bi-trash me-2"></i>Да, отменить
+                            </button>
+                        </form>
+                        <button class="techshop-order-back-btn w-100 mt-2" data-bs-dismiss="modal">
+                            <i class="bi bi-arrow-return-left me-2"></i>Вернуться
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock %}
