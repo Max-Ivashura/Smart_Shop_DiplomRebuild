@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class CoolerSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'coolers'
+    CATEGORY_SLUG = 'cooler'
 
     # Общие параметры
     socket_support = models.TextField(

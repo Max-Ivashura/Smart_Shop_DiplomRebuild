@@ -229,16 +229,6 @@
                 </div>
             </section>
 
-            {% if related_products %}
-                <aside class="ts-related-products border-top pt-5">
-                    <h3 class="h4 mb-4">С этим товаром покупают</h3>
-                    <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-4">
-                        {% for product in related_products %}
-                            <div class="col">{% include "products/includes/product_card.html" %}</div>
-                        {% endfor %}
-                    </div>
-                </aside>
-            {% endif %}
         </div>
     </main>
 {% endblock %}

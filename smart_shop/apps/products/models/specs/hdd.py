@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class HardDriveSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'hdds'
+    CATEGORY_SLUG = 'hdd'
 
     # Основные параметры
     capacity = models.PositiveIntegerField(

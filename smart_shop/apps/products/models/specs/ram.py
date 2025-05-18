@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class RAMSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'rams'
+    CATEGORY_SLUG = 'ram'
 
     # Тип и комплектация
     memory_type = models.CharField(

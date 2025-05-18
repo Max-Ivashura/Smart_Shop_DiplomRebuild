@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class VideoCardSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'videocards'
+    CATEGORY_SLUG = 'videocard'
 
     # Общие параметры
     color = models.CharField(

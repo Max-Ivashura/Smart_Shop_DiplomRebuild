@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class MotherboardSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'motherboards'
+    CATEGORY_SLUG = 'motherboard'
 
     # Общие параметры
     color = models.CharField(

@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class CaseFanSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'casefans'
+    CATEGORY_SLUG = 'casefan'
 
     # Общие параметры
     fan_quantity = models.PositiveIntegerField(

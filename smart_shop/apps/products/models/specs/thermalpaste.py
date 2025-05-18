@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class ThermalPasteSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'thermalpastes'
+    CATEGORY_SLUG = 'thermalpaste'
 
     # Общие параметры
     weight = models.FloatField(

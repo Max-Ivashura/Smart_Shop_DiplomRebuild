@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class WaterCoolingSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'watercoolings'
+    CATEGORY_SLUG = 'watercooling'
 
     # Общие параметры
     cooling_type = models.CharField(

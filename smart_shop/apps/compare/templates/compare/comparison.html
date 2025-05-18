@@ -48,12 +48,16 @@
                                                     aria-label="Удалить из сравнения">
                                                 <i class="bi bi-x-lg"></i>
                                             </button>
-                                            <img src="{{ product.get_first_image.image.url }}"
-                                                 alt="{{ product.name }}"
-                                                 class="ts-compare-product-img img-fluid">
-                                            <h5 class="ts-compare-product-title text-primary-700 mt-2 mb-1">{{ product.name }}</h5>
-                                            <div class="ts-compare-product-price text-primary-500 fw-bold">{{ product.price }}
-                                                ₽
+                                            <!-- Ссылка на товар -->
+                                            <a href="{% url 'products:detail' category_slug=product.category.slug product_slug=product.slug %}"
+                                               class="ts-compare-product-link">
+                                                <img src="{{ product.get_first_image.image.url }}"
+                                                     alt="{{ product.name }}"
+                                                     class="ts-compare-product-img">
+                                                <h5 class="ts-compare-product-title">{{ product.name }}</h5>
+                                            </a>
+                                            <div class="ts-compare-product-price text-primary-500 fw-bold">
+                                                {{ product.price|floatformat:"0" }} ₽
                                             </div>
                                         </div>
                                     </th>
@@ -61,7 +65,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for group in data.specs.specs %}
+                            {% for group in data.specs %}
                                 <tr class="ts-compare-group-header">
                                     <td colspan="{{ data.products|length|add:1 }}" class="ps-4">
                                         <i class="bi bi-folder2-open me-2"></i>{{ group.name }}
@@ -72,7 +76,9 @@
                                         <td class="ts-compare-param-name ps-4 text-neutral-600">{{ param.name }}</td>
                                         {% for value in param.values %}
                                             <td class="ts-compare-param-value">
-                                                <span class="text-neutral-700">{{ value|default:"—" }}</span>
+                                                <span class="{% if param.is_diff %}diff{% endif %}">
+                                                    {{ value|default:"—" }}
+                                                </span>
                                             </td>
                                         {% endfor %}
                                     </tr>
@@ -104,4 +110,39 @@
 
 {% block scripts %}
     <script src="{% static 'compare/js/compare.js' %}"></script>
+    <script>
+        document.querySelectorAll('.ts-compare-remove-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                const productId = this.dataset.productId;
+                const activeTab = document.querySelector('.ts-compare-tabs .nav-link.active');
+                const categoryId = activeTab ? activeTab.getAttribute('href').split('=')[1] : null;
+
+                fetch(`{% url 'compare:toggle_comparison' 0 %}`.replace('0', productId), {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Ошибка сети');
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            if (categoryId) {
+                                window.location.href = `?category=${categoryId}`;
+                            } else {
+                                window.location.reload();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка:', error);
+                        alert('Не удалось удалить товар');
+                    });
+            });
+        });
+    </script>
 {% endblock %}

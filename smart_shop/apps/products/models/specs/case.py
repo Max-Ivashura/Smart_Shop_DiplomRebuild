@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class CaseSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'cases'
+    CATEGORY_SLUG = 'case'
 
     # Форм-фактор и габариты
     case_type = models.CharField(

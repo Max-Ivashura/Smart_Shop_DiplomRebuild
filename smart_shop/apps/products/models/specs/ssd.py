@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class SSDSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'ssds'
+    CATEGORY_SLUG = 'ssd'
 
     # Основные характеристики
     capacity = models.PositiveIntegerField(

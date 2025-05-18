@@ -4,7 +4,7 @@ from ..base import Product
 
 
 class PSUSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'psus'
+    CATEGORY_SLUG = 'psu'
 
     # Общие параметры
     wattage = models.PositiveIntegerField(

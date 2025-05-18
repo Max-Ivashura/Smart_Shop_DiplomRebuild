@@ -2,10 +2,13 @@
 .ts-compare-container {
     --border-color: rgba(151, 117, 250, 0.15);
     --shadow-primary: 0 8px 32px rgba(103, 65, 217, 0.08);
+    --diff-bg: #fff3cd; /* Обновленный цвет подсветки */
+    --diff-color: #dc3545; /* Цвет для различий */
     isolation: isolate;
     position: relative;
     min-height: 60vh;
 }
+
 
 /* Вкладки категорий */
 .ts-compare-tabs {
@@ -37,7 +40,6 @@
 
 /* Анимация переключения */
 .ts-compare-category-content {
-    opacity: 0;
     transform: translateY(10px);
     transition: opacity 0.3s ease,
     transform 0.3s ease;
@@ -47,6 +49,10 @@
     opacity: 1;
     transform: translateY(0);
     display: block !important;
+}
+
+.table .ts-compare-table{
+    z-index: 10;
 }
 
 /* Заголовок */
@@ -178,13 +184,7 @@
 }
 
 .ts-compare-diff::after {
-    content: "★";
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--primary-500);
-    font-size: 1.1rem;
+    content: none;
 }
 
 /* Пустое состояние */
@@ -203,8 +203,46 @@
     transition: transform 0.3s ease;
 }
 
+.ts-compare-product-link {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+}
+
+.ts-compare-product-link:hover .ts-compare-product-title {
+    color: var(--primary-600) !important;
+    text-decoration: underline;
+}
+
 .ts-compare-empty:hover .ts-compare-empty-icon {
     transform: rotate(-8deg) scale(1.1);
+}
+
+.comparison-count.updated {
+    animation: pulseBadge 0.4s ease;
+}
+
+.ts-compare-param-value span.diff {
+    color: #e79400 !important;
+    font-weight: 700;
+    position: relative;
+    padding: 2px 4px;
+    border-radius: 4px;
+    background: rgba(255, 165, 0, 0.08);
+}
+
+.ts-compare-param-value span.diff::after {
+    content: none !important;
+    margin-left: 4px;
+    font-size: 0.9em;
+}
+
+.ts-compare-table {
+    opacity: 1 !important; /* Отключите прозрачность */
+    display: table !important; /* Принудительно покажите таблицу */
+}
+.ts-compare-param-row {
+    background: #fff !important; /* Яркий фон для отладки */
 }
 
 /* Адаптивность */
@@ -226,6 +264,11 @@
 
     .ts-compare-product-img {
         max-height: 120px;
+    }
+
+    .ts-compare-param-value span.diff {
+        font-size: 0.9em;
+        padding: 1px 3px;
     }
 }
 
@@ -286,6 +329,5 @@
     }
 }
 
-.comparison-count.updated {
-    animation: pulseBadge 0.4s ease;
-}
+
+

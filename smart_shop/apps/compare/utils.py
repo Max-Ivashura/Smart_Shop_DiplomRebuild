@@ -1,38 +1,53 @@
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 from django.db.models import Q
 from apps.products.models import Category
 from apps.compare.models import Comparison
 
 
 def get_comparison_data(products, category=None):
-    """
-    Возвращает структурированные данные для сравнения с группировкой по категориям
-    """
     # Фильтрация товаров по категории если указана
     if category:
         products = [p for p in products if p.category == category]
 
-    # Собираем все характеристики для выбранной категории
-    specs_tree = defaultdict(lambda: defaultdict(set))
+    # Собираем группы и параметры в порядке их появления
+    ordered_groups = OrderedDict()  # Группы в порядке первого появления
+    group_param_order = defaultdict(OrderedDict)  # Порядок параметров внутри групп
 
     for product in products:
         for group_name, group_specs in product.specs.items():
-            for param_name, param_value in group_specs.items():
-                key = f"{group_name}||{param_name}"
-                specs_tree[group_name][param_name].add(str(param_value))
+            # Добавляем группу, если ее еще нет
+            if group_name not in ordered_groups:
+                ordered_groups[group_name] = OrderedDict()
 
-    # Преобразуем в структуру для шаблона
+            # Добавляем параметры группы в порядке их появления
+            for param_name in group_specs.keys():
+                if param_name not in ordered_groups[group_name]:
+                    ordered_groups[group_name][param_name] = []
+
+        # Заполняем значения для каждого товара
+    for product in products:
+        product_specs = product.specs
+        for group_name in ordered_groups:
+            for param_name in ordered_groups[group_name]:
+                value = product_specs.get(group_name, {}).get(param_name, "—")
+                ordered_groups[group_name][param_name].append(str(value))
+
+        # Формируем структуру для шаблона (исключаем "Основные параметры")
     grouped_specs = []
-    for group, params in specs_tree.items():
+    for group_name, params in ordered_groups.items():
+        if group_name == "Основные параметры":
+            continue
+
         group_data = {
-            'name': group,
+            'name': group_name,
             'params': []
         }
-        for param, values in params.items():
+        for param_name, values in params.items():
+            is_diff = len(set(values)) > 1
             group_data['params'].append({
-                'name': param,
-                'values': list(values),
-                'is_diff': len(values) > 1
+                'name': param_name,
+                'values': values,
+                'is_diff': is_diff
             })
         grouped_specs.append(group_data)
 

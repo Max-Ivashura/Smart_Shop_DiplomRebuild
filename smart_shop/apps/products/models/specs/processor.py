@@ -5,7 +5,7 @@ from ..base import Product
 
 
 class ProcessorSpecs(BaseSpecs):
-    CATEGORY_SLUG = 'processors'
+    CATEGORY_SLUG = 'processor'
 
     # Общие параметры
     includes_cooler = models.BooleanField(
