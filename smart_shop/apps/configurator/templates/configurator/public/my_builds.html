@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block extra_styles %}
+    <link rel="stylesheet" href="{% static 'configurator/css/my_builds.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="techshop-my-builds">
+        <div class="techshop-container container py-5">
+            <div class="d-flex justify-content-between align-items-center mb-5">
+                <h1 class="h2 mb-0">
+                    <i class="bi bi-pc me-3 text-primary"></i>Мои сборки
+                </h1>
+                <a href="{% url 'configurator:start' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-2"></i>Новая сборка
+                </a>
+            </div>
+
+            {% if builds %}
+                <div class="row g-4">
+                    {% for build in builds %}
+                        <div class="col-12">
+                            <div class="techshop-build-card card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <!-- Заголовок и статус -->
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h2 class="h4 mb-1">
+                                                {{ build.title|default:"Без названия" }}
+                                            </h2>
+                                            <!-- В шаблоне my_builds.html -->
+                                            <div class="d-flex align-items-center gap-2">
+                                                <!-- Статус -->
+                                                <span class="badge {% if build.is_public %}bg-success text-white{% else %}bg-secondary text-white{% endif %}">
+                                                    <i class="bi bi-{% if build.is_public %}globe{% else %}lock{% endif %} me-1"></i>
+                                                    {% if build.is_public %}Опубликовано{% else %}Личная
+                                                        сборка{% endif %}
+                                                </span>
+
+                                                <!-- Рейтинг -->
+                                                {% if build.is_public %}
+                                                    <span class="badge bg-warning text-dark">
+                                                    <i class="bi bi-star-fill me-1"></i>
+                                                    {{ build.average_rating|default:"-" }}/5
+                                                </span>
+
+                                                    <!-- Отзывы -->
+                                                    <span class="badge bg-info text-white">
+                                                    <i class="bi bi-chat-dots me-1"></i>
+                                                    {{ build.comments_count }}
+                                                </span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <span class="h4 text-primary mb-0">
+                                {{ build.total_price|intcomma }} ₽
+                            </span>
+                                    </div>
+
+                                    <!-- Превью компонентов -->
+                                    <div class="techshop-preview-scroll mb-3">
+                                        <div class="techshop-components-strip">
+                                            {% for component in build.buildcomponent_set.all %}
+                                                <div class="techshop-component-item">
+                                                    <img src="{{ component.product.images.first.image.url }}"
+                                                         alt="{{ component.product.name }}"
+                                                         class="techshop-component-image"
+                                                         data-bs-toggle="tooltip"
+                                                         title="{{ component.product.name }}">
+                                                    {% if component.quantity > 1 %}
+                                                        <span class="techshop-component-badge">
+                                        ×{{ component.quantity }}
+                                    </span>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <!-- Футер -->
+                                    <div class="d-flex justify-content-between align-items-end">
+                                        <div class="techshop-build-meta">
+                                            <div class="text-muted small mb-1">
+                                                <i class="bi bi-calendar2-week me-1"></i>
+                                                Обновлено: {{ build.updated_at|date:"d.m.Y H:i" }}
+                                            </div>
+                                            <div class="text-muted small">
+                                                <i class="bi bi-puzzle me-1"></i>
+                                                Компонентов: {{ build.buildcomponent_set.count }}
+                                            </div>
+                                        </div>
+
+                                        <div class="techshop-build-actions">
+                                            <div class="d-flex gap-2">
+                                                <a href="{% url 'configurator:edit_build' build.id %}"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+
+                                                {% if not build.is_public %}
+                                                    <form method="post"
+                                                          action="{% url 'configurator:publish_build' build.id %}">
+                                                        {% csrf_token %}
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-outline-success">
+                                                            <i class="bi bi-globe"></i>
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <a href="{% url 'configurator:build_detail' build.id %}"
+                                                       class="btn btn-sm btn-outline-info"
+                                                       title="Посмотреть отзывы">
+                                                        <i class="bi bi-chat-dots"></i>
+                                                    </a>
+                                                {% endif %}
+
+                                                <form method="post"
+                                                      action="{% url 'configurator:delete_build' build.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-outline-danger"
+                                                            onclick="return confirm('Удалить сборку?')">
+                                                        <i class="bi bi-trash3"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="techshop-empty-state text-center py-5">
+                    <div class="techshop-empty-icon mb-4">
+                        <i class="bi bi-pc-display-horizontal fs-1 text-muted"></i>
+                    </div>
+                    <h3 class="h5 text-muted mb-3">У вас нет сохранённых сборок</h3>
+                    <a href="{% url 'configurator:start' %}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-lg me-2"></i>Создать первую сборку
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Инициализация тултипов
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        });
+    </script>
+{% endblock %}

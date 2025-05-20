@@ -2,145 +2,168 @@
 {% load static %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{% static 'configurator/css/build_detail.css' %}">
+    <link rel="stylesheet" href="{% static 'configurator/css/build_detail.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="ts-build-container container">
-    <!-- Заголовок сборки -->
-    <div class="ts-build-header card">
-        <div class="card-body">
-            <div class="ts-build-header-inner d-flex align-items-center justify-content-between mb-4">
-                <div class="d-flex align-items-center gap-3">
-                    <img src="{% static 'images/default-avatar.png' %}"
-                         class="ts-build-avatar"
-                         alt="Аватар {{ build.user.username }}">
-                    <div>
-                        <h1 class="ts-build-title h3 text-primary-700 mb-0">{{ build.title|default:"Моя сборка" }}</h1>
-                        <small class="ts-build-username text-neutral-500">@{{ build.user.username }}</small>
+    <div class="ts-build-container container">
+        <!-- Заголовок сборки -->
+        <div class="ts-build-header card">
+            <div class="card-body">
+                <div class="ts-build-header-inner d-flex align-items-center justify-content-between mb-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="{% static 'images/default-avatar.png' %}"
+                             class="ts-build-avatar"
+                             alt="Аватар {{ build.user.username }}">
+                        <div>
+                            <h1 class="ts-build-title h3 text-primary-700 mb-0">{{ build.title|default:"Моя сборка" }}</h1>
+                            <small class="ts-build-username text-neutral-500">@{{ build.user.username }}</small>
+                        </div>
                     </div>
-                </div>
-                <span class="ts-build-total badge">
+                    <span class="ts-build-total badge">
                     {{ build.total_price }} ₽
                 </span>
-            </div>
+                </div>
 
-            <div class="ts-build-description text-neutral-600">
-                {{ build.description|default:"Описание отсутствует" }}
+                <div class="ts-build-description text-neutral-600">
+                    {{ build.description|default:"Описание отсутствует" }}
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="row g-4">
-        <!-- Список компонентов -->
-        <div class="col-lg-8">
-            <h3 class="ts-build-components-title text-primary-700 mb-4">
-                <i class="bi bi-motherboard me-2"></i>Компоненты
-            </h3>
+        <div class="row g-4">
+            <!-- Список компонентов -->
+            <div class="col-lg-8">
+                <h3 class="ts-build-components-title text-primary-700 mb-4">
+                    <i class="bi bi-motherboard me-2"></i>Компоненты
+                </h3>
 
-            <div class="ts-build-components-list">
-                {% for component in build.components.all %}
-                <div class="ts-build-component card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h4 class="ts-build-component-name h5 text-primary-700 mb-1">{{ component.name }}</h4>
-                                <small class="ts-build-component-category text-neutral-500">
-                                    <i class="bi bi-tag me-1"></i>{{ component.category.name }}
-                                </small>
+                <div class="ts-build-components-list">
+                    {% for component in build.components.all %}
+                        <div class="ts-build-component card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h4 class="ts-build-component-name h5 text-primary-700 mb-1">{{ component.name }}</h4>
+                                        <small class="ts-build-component-category text-neutral-500">
+                                            <i class="bi bi-tag me-1"></i>{{ component.category.name }}
+                                        </small>
+                                    </div>
+                                    <span class="ts-build-component-price h5 text-primary-700">{{ component.price }} ₽</span>
+                                </div>
                             </div>
-                            <span class="ts-build-component-price h5 text-primary-700">{{ component.price }} ₽</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Блок действий -->
+            <div class="col-lg-4 ts-build-actions">
+                <div class="ts-build-actions-card card">
+                    <div class="card-body">
+                        <h3 class="ts-build-actions-title h5 text-primary-700 mb-4">
+                            <i class="bi bi-gear me-2"></i>Действия
+                        </h3>
+
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'configurator:clone_build' build.id %}"
+                               class="ts-build-clone-btn btn">
+                                <i class="bi bi-files me-2"></i>Клонировать
+                            </a>
+                            {% if build.user == request.user %}
+                                <a href="{% url 'configurator:edit_build' build.id %}"
+                                   class="ts-build-edit-btn btn">
+                                    <i class="bi bi-pencil-square me-2"></i>Редактировать
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
 
-        <!-- Блок действий -->
-        <div class="col-lg-4 ts-build-actions">
-            <div class="ts-build-actions-card card">
-                <div class="card-body">
-                    <h3 class="ts-build-actions-title h5 text-primary-700 mb-4">
-                        <i class="bi bi-gear me-2"></i>Действия
-                    </h3>
+        <!-- Комментарии и оценки -->
+        <section class="ts-build-comments mt-5">
+            <h3 class="ts-build-comments-title text-primary-700 mb-4">
+                <i class="bi bi-chat-dots me-2"></i>Обсуждение
+            </h3>
 
-                    <div class="d-grid gap-2">
-                        <a href="{% url 'configurator:clone_build' build.id %}"
-                           class="ts-build-clone-btn btn">
-                            <i class="bi bi-files me-2"></i>Клонировать
-                        </a>
-                        {% if build.user == request.user %}
-                        <a href="{% url 'configurator:edit_build' build.id %}"
-                           class="ts-build-edit-btn btn">
-                            <i class="bi bi-pencil-square me-2"></i>Редактировать
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Комментарии и оценки -->
-    <section class="ts-build-comments mt-5">
-        <h3 class="ts-build-comments-title text-primary-700 mb-4">
-            <i class="bi bi-chat-dots me-2"></i>Обсуждение
-        </h3>
-
-        {% if user.is_authenticated %}
-        <div class="ts-build-comment-form card mb-4">
-            <div class="card-body">
-                <form method="post" action="{% url 'configurator:add_comment' build.id %}">
-                    {% csrf_token %}
-                    <div class="mb-3">
+            {% if user.is_authenticated %}
+                <!-- Форма комментария -->
+                <div class="ts-build-comment-form card mb-4">
+                    <div class="card-body">
+                        <form method="post" action="{% url 'configurator:add_comment' build.id %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
                         <textarea name="text"
                                   class="ts-build-comment-input form-control"
                                   rows="3"
-                                  placeholder="Напишите ваш комментарий..."></textarea>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="ts-build-rating rating-stars">
-                            {% for i in "54321" %}
-                            <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}">
-                            <label for="star{{ i }}" title="{{ i }} звезд">★</label>
-                            {% endfor %}
-                        </div>
-                        <button type="submit" class="ts-build-submit-btn btn">
-                            <i class="bi bi-send me-2"></i>Отправить
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        {% endif %}
-
-        <div class="ts-build-comments-list">
-            {% for comment in build.comments.filter(is_approved=True) %}
-            <div class="ts-build-comment card mb-3">
-                <div class="card-body">
-                    <div class="d-flex gap-3">
-                        <div class="flex-shrink-0">
-                            <i class="bi bi-person-circle ts-build-comment-avatar"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between mb-2">
-                                <h5 class="ts-build-comment-author h6 mb-0">{{ comment.user.username }}</h5>
-                                <small class="ts-build-comment-date text-neutral-500">
-                                    {{ comment.created_at|date:"d.m.Y H:i" }}
-                                </small>
+                                  placeholder="Напишите ваш комментарий..."
+                                  required></textarea>
                             </div>
-                            <p class="ts-build-comment-text mb-0">{{ comment.text }}</p>
-                        </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="ts-build-submit-btn btn">
+                                    <i class="bi bi-send me-2"></i>Отправить комментарий
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
+
+                <!-- Форма оценки -->
+                <div class="ts-build-rating-form card mb-4">
+                    <div class="card-body">
+                        <form method="post" action="{% url 'configurator:add_rating' build.id %}">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="ts-build-rating-text">Оцените сборку:</span>
+                                <div class="ts-build-rating rating-stars">
+                                    {% for i in "54321" %}
+                                        <input type="radio"
+                                               id="star{{ i }}"
+                                               name="rating"
+                                               value="{{ i }}"
+                                               {% if user_rating == i|add:"0" %}checked{% endif %}>
+                                        <label for="star{{ i }}"
+                                               title="{{ i }} звезд"
+                                               class="{% if user_rating >= i|add:'0' %}checked{% endif %}">★</label>
+                                    {% endfor %}
+                                </div>
+                                <button type="submit" class="ts-build-submit-btn btn btn-sm">
+                                    <i class="bi bi-star-fill me-2"></i>Оценить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="ts-build-comments-list">
+                {% for comment in build.comments.filter(is_approved=True) %}
+                    <div class="ts-build-comment card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-person-circle ts-build-comment-avatar"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <h5 class="ts-build-comment-author h6 mb-0">{{ comment.user.username }}</h5>
+                                        <small class="ts-build-comment-date text-neutral-500">
+                                            {{ comment.created_at|date:"d.m.Y H:i" }}
+                                        </small>
+                                    </div>
+                                    <p class="ts-build-comment-text mb-0">{{ comment.text }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="ts-build-no-comments alert">
+                        <i class="bi bi-info-circle me-2"></i>Пока нет комментариев
+                    </div>
+                {% endfor %}
             </div>
-            {% empty %}
-            <div class="ts-build-no-comments alert">
-                <i class="bi bi-info-circle me-2"></i>Пока нет комментариев
-            </div>
-            {% endfor %}
-        </div>
-    </section>
-</div>
+        </section>
+    </div>
 {% endblock %}

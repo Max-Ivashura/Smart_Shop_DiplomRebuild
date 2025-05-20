@@ -35,8 +35,8 @@ class AddRatingView(LoginRequiredMixin, View):
                 user=request.user,
                 defaults={'value': rating_value}
             )
-            messages.success(request, "Спасибо за оценку!")
+            messages.success(request, "Ваша оценка обновлена!")
         else:
-            messages.error(request, "Некорректная оценка.")
+            messages.error(request, "Некорректное значение оценки")
 
         return redirect("configurator:build_detail", build_id=build_id)

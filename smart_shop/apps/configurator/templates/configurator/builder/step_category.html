@@ -2,124 +2,413 @@
 {% load static %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{% static 'configurator/css/step_category.css' %}">
+    <link rel="stylesheet" href="{% static 'configurator/css/step_category.css' %}">
 {% endblock %}
 
 {% block configurator_content %}
-<div class="ts-config-container container py-4">
-    <!-- Прогресс-бар -->
-    <div class="ts-config-progress progress mb-5">
-        <div class="ts-config-progress-bar progress-bar"
-             role="progressbar"
-             style="width: {{ progress }}%"
-             aria-valuenow="{{ progress }}"
-             aria-valuemin="0"
-             aria-valuemax="100">
-            Шаг {{ step }} из 3
+    <div class="ts-config-container container py-4">
+        <!-- Прогресс-бар -->
+        <div class="ts-config-progress progress mb-5">
+            <div class="ts-config-progress-bar progress-bar"
+                 style="width: {{ progress }}%">
+                Шаг {{ step }} из 3
+            </div>
         </div>
-    </div>
 
-    <div class="row g-4">
-        <!-- Блок текущей сборки -->
-        <div class="col-lg-4">
-            <div class="ts-config-current-card card">
-                <div class="ts-config-current-header card-header">
-                    <h3 class="ts-config-current-title h5 mb-0">
-                        <i class="bi bi-tools me-2"></i>Текущая сборка
-                    </h3>
-                </div>
-                <div class="ts-config-current-body card-body">
-                    {% if selected_components %}
-                    <div class="ts-config-components">
-                        {% for component in selected_components %}
-                        <div class="ts-config-component-item mb-3 {% if component.has_conflict %}ts-config-conflict{% endif %}">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0 me-3">
-                                    {% if component.has_conflict %}
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                    {% else %}
-                                    <i class="bi bi-check-circle-fill"></i>
-                                    {% endif %}
-                                </div>
-                                <div class="flex-grow-1">
-                                    <div class="ts-config-component-name">{{ component.product.name }}</div>
-                                    <small class="ts-config-component-category">{{ component.product.category.name }}</small>
-                                </div>
-                            </div>
+        <div class="row g-4">
+            <!-- Блок текущей сборки -->
+            <div class="col-lg-5">
+                <div class="ts-config-current-card card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h3 class="h5 mb-0"><i class="bi bi-motherboard me-2"></i>Сборка</h3>
+                        <span class="ts-config-compat-badge bg-danger">
+                        {{ total_conflicts }} {{ total_conflicts|pluralize:"ошибка,ошибок" }}
+                    </span>
+                    </div>
+
+                    <!-- Блок ошибок -->
+                    {% if compatibility_errors %}
+                        <div class="card-footer ts-config-errors">
+                            <h5 class="h6 mb-2"><i class="bi bi-exclamation-octagon me-1"></i>Конфликты:</h5>
+                            <ul class="mb-0">
+                                {% for error in compatibility_errors.values %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
                         </div>
-                        {% endfor %}
-                    </div>
-                    {% else %}
-                    <div class="ts-config-alert alert">
-                        <i class="bi bi-info-circle me-2"></i>Выберите первый компонент
-                    </div>
                     {% endif %}
-                </div>
-                <div class="ts-config-current-footer card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span class="ts-config-compat-text">Совместимость:</span>
-                        <span class="ts-config-compat-badge bg-{% if total_conflicts == 0 %}success{% else %}danger{% endif %}">
-                            {{ total_conflicts }} {{ total_conflicts|pluralize:"ошибка,ошибок" }}
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <!-- Блок выбора категорий -->
-        <div class="col-lg-8">
-            <div class="ts-config-category-header d-flex justify-content-between align-items-center mb-4">
-                <h2 class="ts-config-category-title h4 mb-0">
-                    <i class="bi bi-box-seam me-2"></i>Выберите компонент
-                </h2>
-                <a href="{% url 'products:catalog' %}" class="ts-config-add-btn btn btn-outline-primary btn-sm">
-                    <i class="bi bi-plus-lg me-2"></i>Добавить
-                </a>
-            </div>
 
-            <div class="ts-config-category-grid row row-cols-1 row-cols-md-2 g-3">
-                {% for category in categories %}
-                <div class="col">
-                    <a href="{% url 'configurator:select_component' category.slug %}"
-                       class="ts-config-category-card card
-                       {% if category.slug in selected_categories_slugs %}
-                           {% if category.has_conflict %}ts-config-category-conflict{% else %}ts-config-category-selected{% endif %}
-                       {% endif %}">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="ts-config-category-img flex-shrink-0 me-3">
-                                    <img src="{% if category.image %}{{ category.image.url }}{% else %}{% static 'configurator/img/default-category.png' %}{% endif %}"
-                                         alt="{{ category.name }}"
-                                         class="img-fluid rounded"
-                                         width="60">
-                                </div>
-                                <div class="flex-grow-1">
-                                    <h4 class="ts-config-category-name h6 mb-1">{{ category.name }}</h4>
-                                    <div class="ts-config-category-status">
-                                        {% if category.slug in selected_categories_slugs %}
-                                            {% if category.has_conflict %}
-                                            <span class="ts-config-status-conflict"><i class="bi bi-exclamation-circle me-1"></i>Конфликт</span>
-                                            {% else %}
-                                            <span class="ts-config-status-selected"><i class="bi bi-check-circle me-1"></i>Выбрано</span>
-                                            {% endif %}
-                                        {% else %}
-                                            <span class="ts-config-status-default">Не выбрано</span>
-                                        {% endif %}
+                    <!-- Список компонентов с миниатюрами -->
+                    <div class="card-body">
+                        {% for component in selected_components %}
+                            <div class="ts-config-component-item mb-3">
+                                <div class="d-flex gap-3 align-items-center">
+                                    <img src="{{ component.product.images.first.image.url }}"
+                                         class="ts-config-component-img"
+                                         width="60"
+                                         alt="{{ component.product.name }}">
+                                    <div>
+                                        <div class="fw-bold">{{ component.product.name }}</div>
+                                        <small class="text-muted">{{ component.product.category.name }}</small>
+                                    </div>
+                                    <div class="ms-auto text-end">
+                                        <div>{{ component.product.price }} ₽</div>
+                                        <small class="text-muted">×{{ component.quantity|default:"N/A" }}</small>
                                     </div>
                                 </div>
                             </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="ts-config-total-price card-footer bg-transparent border-0">
+                        <div class="d-flex justify-content-between align-items-center py-3">
+                            <span class="fw-bold">Итого:</span>
+                            <span class="ts-config-total h4 text-primary mb-0">{{ build.total_price|floatformat:2 }} ₽</span>
                         </div>
-                    </a>
-                </div>
-                {% empty %}
-                <div class="col-12">
-                    <div class="ts-config-warning alert">
-                        <i class="bi bi-exclamation-triangle me-2"></i>Категории не настроены
+                    </div>
+
+                    <!-- Блок действий -->
+                    <!-- Блок действий -->
+                    <div class="ts-config-actions card-footer border-top-0 pt-0">
+                        <div class="d-flex flex-column gap-3">
+                            <!-- Поле для названия -->
+                            <div class="mb-3">
+                                <input type="text"
+                                       id="build_title_input"
+                                       class="form-control"
+                                       placeholder="Введите название сборки"
+                                       value="{{ build.title }}">
+                            </div>
+
+                            <!-- Добавить в корзину -->
+                            <div class="d-grid gap-3">
+                                <form method="post" action="{% url 'configurator:summary' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="build_title" id="build_title_hidden1">
+                                    <button type="submit"
+                                            name="add_to_cart"
+                                            class="btn btn-primary btn-lg w-100 py-3"
+                                            {% if compatibility_errors or not selected_components %}disabled{% endif %}>
+                                        <i class="bi bi-cart-plus me-2"></i>Добавить в корзину
+                                    </button>
+                                </form>
+
+                                <!-- Сохранить сборку -->
+                                <div class="ts-config-save-group d-flex gap-3">
+                                    <form method="post" action="{% url 'configurator:summary' %}" class="flex-grow-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="build_title" id="build_title_hidden2">
+                                        <button type="submit"
+                                                name="save_build"
+                                                class="btn btn-outline-primary w-100"
+                                                {% if compatibility_errors %}disabled{% endif %}>
+                                            <i class="bi bi-save me-2"></i>Сохранить
+                                        </button>
+                                    </form>
+
+                                    <!-- Опубликовать -->
+                                    <form method="post" action="{% url 'configurator:summary' %}" class="flex-grow-1">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="build_title" id="build_title_hidden3">
+                                        <button type="submit"
+                                                name="publish_build"
+                                                class="btn btn-success w-100"
+                                                {% if compatibility_errors %}disabled{% endif %}>
+                                            <i class="bi bi-globe me-2"></i>Опубликовать
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
+            </div>
+
+            <!-- Блок выбора категорий -->
+            <div class="col-lg-7">
+                <div class="ts-config-category-header d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="ts-config-category-title h4 mb-0">
+                        <i class="bi bi-box-seam me-2"></i>Выберите компонент
+                    </h2>
+                    <a href="{% url 'products:catalog' %}" class="ts-config-add-btn btn btn-outline-primary btn-sm">
+                        <i class="bi bi-plus-lg me-2"></i>Добавить
+                    </a>
+                </div>
+
+                <div class="ts-config-required-categories mb-5">
+                    <h3 class="h4 mb-4">
+                        <i class="bi bi-motherboard text-danger me-2"></i>
+                        Основные компоненты
+                    </h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        {% for category in required_categories %}
+                            <div class="col">
+                                <a href="{% url 'configurator:select_component' category.slug %}"
+                                   class="ts-config-category-card card
+                                   {% if category.slug in selected_categories_slugs %}
+                                       {% if category.has_conflict %}ts-config-category-conflict{% else %}ts-config-category-selected{% endif %}
+                                   {% endif %}">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="ts-config-category-img flex-shrink-0 me-3">
+                                                <img src="
+
+
+                                                        {% if category.image %}{{ category.image.url }}{% else %}{% static 'configurator/img/default-category.png' %}{% endif %}"
+                                                     alt="{{ category.name }}"
+                                                     class="img-fluid rounded"
+                                                     width="60">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h4 class="ts-config-category-name h6 mb-1">{{ category.name }}</h4>
+                                                <div class="ts-config-category-status">
+                                                    {% if category.slug in selected_categories_slugs %}
+                                                        {% if category.has_conflict %}
+                                                            <span class="ts-config-status-conflict"><i
+                                                                    class="bi bi-exclamation-circle me-1"></i>Конфликт</span>
+                                                        {% else %}
+                                                            <span class="ts-config-status-selected"><i
+                                                                    class="bi bi-check-circle me-1"></i>Выбрано</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="ts-config-status-default">Не выбрано</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="ts-config-warning alert">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Категории не настроены
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Охлаждение процессора -->
+                <div class="ts-config-cpu-cooling mb-5">
+                    <h3 class="h4 mb-4">
+                        <i class="bi bi-fan text-info me-2"></i>
+                        Охлаждение процессора
+                    </h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        {% for category in cpu_cooling_categories %}
+                            <div class="col">
+                                <a href="{% url 'configurator:select_component' category.slug %}"
+                                   class="ts-config-category-card card
+                       {% if category.slug in selected_categories_slugs %}
+                           {% if category.has_conflict %}ts-config-category-conflict{% else %}ts-config-category-selected{% endif %}
+                       {% endif %}">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="ts-config-category-img flex-shrink-0 me-3">
+                                                <img src="
+
+
+
+                                                        {% if category.image %}{{ category.image.url }}{% else %}{% static 'configurator/img/default-category.png' %}{% endif %}"
+                                                     alt="{{ category.name }}"
+                                                     class="img-fluid rounded"
+                                                     width="60">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h4 class="ts-config-category-name h6 mb-1">{{ category.name }}</h4>
+                                                <div class="ts-config-category-status">
+                                                    {% if category.slug in selected_categories_slugs %}
+                                                        {% if category.has_conflict %}
+                                                            <span class="ts-config-status-conflict"><i
+                                                                    class="bi bi-exclamation-circle me-1"></i>Конфликт</span>
+                                                        {% else %}
+                                                            <span class="ts-config-status-selected"><i
+                                                                    class="bi bi-check-circle me-1"></i>Выбрано</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="ts-config-status-default">Не выбрано</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="ts-config-warning alert">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Категории не настроены
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Накопители -->
+                <div class="ts-config-storage mb-5">
+                    <h3 class="h4 mb-4">
+                        <i class="bi bi-hdd-stack text-primary me-2"></i>
+                        Накопители
+                    </h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        {% for category in storage_categories %}
+                            <div class="col">
+                                <a href="{% url 'configurator:select_component' category.slug %}"
+                                   class="ts-config-category-card card
+                       {% if category.slug in selected_categories_slugs %}
+                           {% if category.has_conflict %}ts-config-category-conflict{% else %}ts-config-category-selected{% endif %}
+                       {% endif %}">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="ts-config-category-img flex-shrink-0 me-3">
+                                                <img src="
+
+
+                                                        {% if category.image %}{{ category.image.url }}{% else %}{% static 'configurator/img/default-category.png' %}{% endif %}"
+                                                     alt="{{ category.name }}"
+                                                     class="img-fluid rounded"
+                                                     width="60">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h4 class="ts-config-category-name h6 mb-1">{{ category.name }}</h4>
+                                                <div class="ts-config-category-status">
+                                                    {% if category.slug in selected_categories_slugs %}
+                                                        {% if category.has_conflict %}
+                                                            <span class="ts-config-status-conflict"><i
+                                                                    class="bi bi-exclamation-circle me-1"></i>Конфликт</span>
+                                                        {% else %}
+                                                            <span class="ts-config-status-selected"><i
+                                                                    class="bi bi-check-circle me-1"></i>Выбрано</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="ts-config-status-default">Не выбрано</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="ts-config-warning alert">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Категории не настроены
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Дополнительные компоненты -->
+                <div class="ts-config-optional-categories">
+                    <h3 class="h4 mb-4">
+                        <i class="bi bi-plus-circle-fill text-success me-2"></i>
+                        Дополнительные компоненты
+                    </h3>
+                    <div class="row row-cols-1 row-cols-md-2 g-3">
+                        {% for category in optional_categories %}
+                            <div class="col">
+                                <a href="{% url 'configurator:select_component' category.slug %}"
+                                   class="ts-config-category-card card
+                       {% if category.slug in selected_categories_slugs %}
+                           {% if category.has_conflict %}ts-config-category-conflict{% else %}ts-config-category-selected{% endif %}
+                       {% endif %}">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center">
+                                            <div class="ts-config-category-img flex-shrink-0 me-3">
+                                                <img src="
+
+
+                                                        {% if category.image %}{{ category.image.url }}{% else %}{% static 'configurator/img/default-category.png' %}{% endif %}"
+                                                     alt="{{ category.name }}"
+                                                     class="img-fluid rounded"
+                                                     width="60">
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <h4 class="ts-config-category-name h6 mb-1">{{ category.name }}</h4>
+                                                <div class="ts-config-category-status">
+                                                    {% if category.slug in selected_categories_slugs %}
+                                                        {% if category.has_conflict %}
+                                                            <span class="ts-config-status-conflict"><i
+                                                                    class="bi bi-exclamation-circle me-1"></i>Конфликт</span>
+                                                        {% else %}
+                                                            <span class="ts-config-status-selected"><i
+                                                                    class="bi bi-check-circle me-1"></i>Выбрано</span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="ts-config-status-default">Не выбрано</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        {% empty %}
+                            <div class="col-12">
+                                <div class="ts-config-warning alert">
+                                    <i class="bi bi-exclamation-triangle me-2"></i>Категории не настроены
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ block.super }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const updateData = async () => {
+                try {
+                    // Обновление ошибок и прогресс-бара
+                    const compatResponse = await fetch("{% url 'configurator:compatibility_status' %}");
+                    const compatData = await compatResponse.json();
+
+                    // Обновление бейджа ошибок
+                    const compatBadge = document.querySelector(".ts-config-compat-badge");
+                    if (compatBadge) {
+                        compatBadge.textContent = `${compatData.total_conflicts} ${compatData.total_conflicts === 1 ? 'ошибка' : 'ошибок'}`;
+                    }
+
+                    // Обновление прогресс-бара
+                    const progressBar = document.querySelector(".ts-config-progress-bar");
+                    if (progressBar) {
+                        progressBar.style.width = `${compatData.progress}%`;
+                        progressBar.textContent = `Шаг ${Math.floor(compatData.progress / 33.34) + 1} из 3`;
+                    }
+
+                    // Обновление итоговой цены
+                    const totalPriceElement = document.querySelector(".ts-config-total");
+                    if (totalPriceElement) {
+                        const priceResponse = await fetch("{% url 'configurator:price_update' %}");
+                        const priceData = await priceResponse.json();
+                        totalPriceElement.textContent = `${parseFloat(priceData.total_price).toFixed(2)} ₽`;
+                    }
+
+                } catch (error) {
+                    console.error("Ошибка обновления данных:", error);
+                }
+            };
+
+            updateData();
+            setInterval(updateData, 60000);
+            document.addEventListener("componentChanged", updateData);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const titleInput = document.getElementById('build_title_input');
+            const hiddenFields = document.querySelectorAll('input[type="hidden"][name="build_title"]');
+
+            titleInput.addEventListener('input', function () {
+                hiddenFields.forEach(field => field.value = titleInput.value);
+            });
+        });
+    </script>
 {% endblock %}

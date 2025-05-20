@@ -10,6 +10,8 @@ from apps.configurator.views.builder import (
 )
 from apps.configurator.views.feedback import AddCommentView, AddRatingView
 from apps.configurator.views.moderation import ModerateCommentsView, ApproveCommentView, DeleteCommentView
+from configurator import views
+from configurator.views import MyBuildsView, DeleteBuildView, PublishBuildView
 
 app_name = "configurator"
 
@@ -34,4 +36,15 @@ urlpatterns = [
     path("moderate/comments/", ModerateCommentsView.as_view(), name="moderate_comments"),
     path("moderate/approve-comment/<int:comment_id>/", ApproveCommentView.as_view(), name="approve_comment"),
     path("moderate/delete-comment/<int:comment_id>/", DeleteCommentView.as_view(), name="delete_comment"),
+
+    path("api/compatibility_status/", views.CompatibilityStatusView.as_view(), name="compatibility_status"),
+    path("api/price_update/", views.PriceUpdateView.as_view(), name="price_update"),
+
+    path("my-builds/", MyBuildsView.as_view(), name="my_builds"),
+    path("build/delete/<int:build_id>/", DeleteBuildView.as_view(), name="delete_build"),
+    path(
+        "build/publish/<int:build_id>/",
+        PublishBuildView.as_view(),
+        name="publish_build"
+    ),
 ]

@@ -20,6 +20,9 @@ class RemoveComponentView(LoginRequiredMixin, View):
         component = get_object_or_404(BuildComponent, id=component_id, build=build)
         component.delete()
 
+        build.update_total_price()
+        build.check_compatibility()
+
         return redirect("configurator:edit_build", build_id=build.id)
 
 
@@ -42,23 +45,27 @@ class AddComponentView(LoginRequiredMixin, View):
 
         build_id = request.session.get("current_build_id")
         if not build_id:
+            # Создаем сборку только при добавлении первого компонента
             build = PCBuild.objects.create(user=request.user)
             request.session["current_build_id"] = build.id
         else:
             build = get_object_or_404(PCBuild, id=build_id)
 
-        # Удаляем компоненты той же категории через промежуточную модель
+        # Удаляем компоненты той же категории
         BuildComponent.objects.filter(
             build=build,
             product__category=product.category
         ).delete()
 
-        # Добавляем новый компонент с явным созданием через BuildComponent
+        # Добавляем новый компонент
         BuildComponent.objects.create(
             build=build,
             product=product,
-            quantity=1  # Указываем значение по умолчанию
+            quantity=1
         )
+
+        build.update_total_price()
+        build.check_compatibility()
 
         return redirect("configurator:select_category")
 
@@ -68,103 +75,142 @@ class ConfiguratorStartView(LoginRequiredMixin, View):
     """Создает новую сборку и перенаправляет на выбор категории."""
 
     def get(self, request):
+        # Удаляем старую незавершенную сборку
+        if "current_build_id" in request.session:
+            build_id = request.session["current_build_id"]
+            PCBuild.objects.filter(id=build_id, components__isnull=True).delete()
+            del request.session["current_build_id"]
+
         # Создаем новую сборку
         build = PCBuild.objects.create(user=request.user)
-        # Сохраняем ID сборки в сессии
         request.session["current_build_id"] = build.id
-        # Перенаправляем на выбор категории
         return redirect("configurator:select_category")
+
 
 # apps/configurator/views/builder.py
 class ComponentCategoryView(LoginRequiredMixin, View):
     """Выбор категории компонента с визуализацией конфликтов"""
 
     REQUIRED_SLUGS = [
-        'processor',
-        'motherboard',
-        'ram',
-        'psu',
-        'case'
+        'processor', 'motherboard', 'ram', 'psu', 'case'
+    ]
+
+    CPU_COOLING_SLUGS = ['cooler', 'watercooling']
+
+    STORAGE_SLUGS = ['ssd', 'm2ssd', 'hdd']
+
+    OPTIONAL_SLUGS = [
+        'videocard', 'thermalpaste', 'fan'
     ]
 
     def get(self, request):
-        # Получаем текущую сборку
         build_id = request.session.get('current_build_id')
         if not build_id:
             return redirect('configurator:start')
 
+        try:
+            build = PCBuild.objects.get(id=build_id)
+        except PCBuild.DoesNotExist:
+            # Если сборка удалена, очищаем сессию
+            del request.session["current_build_id"]
+            return redirect("configurator:start")
+
         build = PCBuild.objects.get(id=build_id)
         selected_components = build.buildcomponent_set.select_related('product').all()
 
-        # Проверяем совместимость всей сборки
+        # Проверка совместимости
         checker = CompatibilityChecker([bc.product for bc in selected_components])
         compatibility_errors = checker.validate()
 
-        # Формируем данные для категорий
-        categories_data = []
+        # Формирование данных категорий
         selected_slugs = []
         total_conflicts = 0
 
-        for category in Category.objects.filter(slug__in=self.REQUIRED_SLUGS):
+        required_categories = []
+        cpu_cooling_categories = []
+        storage_categories = []
+        optional_categories = []
+
+        for category in Category.objects.filter(
+                slug__in=self.REQUIRED_SLUGS + self.CPU_COOLING_SLUGS + self.STORAGE_SLUGS + self.OPTIONAL_SLUGS):
             component = selected_components.filter(product__category=category).first()
             has_conflict = any(
                 error_key in compatibility_errors
-                and error_key == category.slug[:-1]  # processors -> processor
+                and error_key == category.slug[:-1]
                 for error_key in compatibility_errors
             )
 
             if has_conflict:
                 total_conflicts += 1
 
-            categories_data.append({
+            if category.slug in self.REQUIRED_SLUGS:
+                required_categories.append({
+                    'slug': category.slug,
+                    'name': category.name,
+                    'image': category.image,
+                    'has_conflict': has_conflict,
+                    'is_selected': component is not None
+                })
+            elif category.slug in self.CPU_COOLING_SLUGS:
+                cpu_cooling_categories.append({
+                    'slug': category.slug,
+                    'name': category.name,
+                    'image': category.image,
+                    'has_conflict': has_conflict,
+                    'is_selected': component is not None
+                })
+            elif category.slug in self.STORAGE_SLUGS:
+                storage_categories.append({
                 'slug': category.slug,
                 'name': category.name,
                 'image': category.image,
                 'has_conflict': has_conflict,
                 'is_selected': component is not None
-            })
+                })
+            else:
+                optional_categories.append({
+                    'slug': category.slug,
+                    'name': category.name,
+                    'image': category.image,
+                    'has_conflict': has_conflict,
+                    'is_selected': component is not None
+                })
 
             if component:
                 selected_slugs.append(category.slug)
 
         # Проверка обязательных компонентов
         missing = [
-            cat['name'] for cat in categories_data
+            cat['name'] for cat in required_categories
             if not cat['is_selected']
-               and cat['slug'] in ['processors', 'motherboards', 'psus', 'cases']
+               and cat['slug'] in ['processor', 'motherboard', 'psu', 'case']
         ]
 
         if missing:
             messages.error(request, f"Обязательные компоненты: {', '.join(missing)}")
 
         return render(request, "configurator/builder/step_category.html", {
-            # Основные данные
-            'categories': categories_data,
+            'required_categories': required_categories,
+            'cpu_cooling_categories': cpu_cooling_categories,
+            'storage_categories': storage_categories,
+            'optional_categories': optional_categories,
             'selected_components': [
                 {
                     'product': bc.product,
+                    'quantity': bc.quantity,
                     'has_conflict': any(
                         k in compatibility_errors
                         for k in [bc.product.category.slug[:-1], 'system']
                     )
                 } for bc in selected_components
             ],
-
-            # Статусы
             'total_conflicts': total_conflicts,
             'selected_categories_slugs': selected_slugs,
             'missing_components': missing,
-
-            # Прогресс
-            'progress': self._calculate_progress(selected_slugs),
-            'step': 1
+            'progress': build.calculate_progress(),  # Используем метод модели
+            'step': 1,
+            'compatibility_errors': checker.validate(),
         })
-
-    def _calculate_progress(self, selected_slugs):
-        """Рассчитывает прогресс сборки в %"""
-        required_count = len(self.REQUIRED_SLUGS)
-        selected = len([s for s in selected_slugs if s in self.REQUIRED_SLUGS])
-        return int((selected / required_count) * 100)
 
 
 # apps/configurator/views/builder.py
@@ -244,40 +290,48 @@ class BuildSummaryView(LoginRequiredMixin, View):
 
     def post(self, request):
         build_id = request.session.get("current_build_id")
-        build = get_object_or_404(PCBuild, id=request.session.get("current_build_id"))
+        build = get_object_or_404(PCBuild, id=build_id, user=request.user)
         errors = CompatibilityChecker(build.components.all()).validate()
 
-        if any(key in errors for key in ["cpu", "motherboard", "ram", "psu", "case"]):
-            return render(request, "configurator/builder/summary.html", {
-                "build": build,
-                "errors": errors,
-                "progress": 100,
-                "step": 3
-            })
+        if build.buildcomponent_set.count() == 0:
+            messages.error(request, "Добавьте компоненты перед сохранением.")
+            return redirect("configurator:select_category")
 
         # Добавление в корзину
-        if "add_to_cart" in request.POST:
-            if errors:
-                return render(request, "configurator/builder/summary.html", {
-                    "build": build,
-                    "errors": errors,
-                    "progress": 100,
-                    "step": 3
-                })
-
+        if "add_to_cart" in request.POST and not errors:
             cart, _ = Cart.objects.get_or_create(user=request.user)
-            for component in build.components.all():
+            for component in build.buildcomponent_set.all():  # Исправлено: buildcomponent_set вместо components
                 CartItem.objects.get_or_create(
                     cart=cart,
-                    product=component,
-                    defaults={"quantity": 1}
+                    product=component.product,
+                    defaults={"quantity": component.quantity}
                 )
             return redirect("cart:detail")
 
         # Сохранение сборки
-        build.is_public = "is_public" in request.POST
-        build.save()
-        return redirect("configurator:public_builds")
+        if "save_build" in request.POST and not errors:
+            build.is_public = False
+            build.is_verified = False  # Добавлено явное сохранение статуса
+            build.title = request.POST.get("build_title", build.title)
+            build.save()
+            messages.success(request, "Сборка сохранена в личном кабинете.")
+            request.session.pop("current_build_id", None)  # Очистка сессии
+            return redirect("configurator:my_builds")
+
+        # Публикация
+        if "publish_build" in request.POST and not errors:
+            build.is_public = True
+            build.title = request.POST.get("build_title", build.title)
+            build.save()
+            messages.success(request, "Сборка опубликована в каталоге.")
+            request.session.pop("current_build_id", None)  # Очистка сессии
+            return redirect("configurator:public_builds")
+
+        # Если есть ошибки, остаемся на странице
+        return render(request, "configurator/builder/summary.html", {
+            "build": build,
+            "errors": errors
+        })
 
 
 # apps/configurator/views/builder.py
@@ -297,10 +351,40 @@ class BuildEditView(LoginRequiredMixin, View):
 
     def post(self, request, build_id):
         build = get_object_or_404(PCBuild, id=build_id, user=request.user)
-        # Удаляем старые компоненты
-        build.components.clear()
-        # Добавляем новые (логика из сессии)
-        new_components = PCBuild.objects.get(id=request.session.get("current_build_id")).components.all()
-        build.components.set(new_components)
+        # Удаляем старые компоненты через промежуточную модель
+        BuildComponent.objects.filter(build=build).delete()
+
+        # Добавляем новые компоненты из сессии
+        new_build_id = request.session.get("current_build_id")
+        if new_build_id:
+            new_components = BuildComponent.objects.filter(build_id=new_build_id)
+            for component in new_components:
+                BuildComponent.objects.create(
+                    build=build,
+                    product=component.product,
+                    quantity=component.quantity
+                )
+
+        build.title = request.POST.get("build_title", "")
         build.save()
         return redirect("configurator:summary")
+
+
+# Для получения обновлённых ошибок совместимости
+class CompatibilityStatusView(LoginRequiredMixin, View):
+    def get(self, request):
+        build_id = request.session.get("current_build_id")
+        build = get_object_or_404(PCBuild, id=build_id)
+        return JsonResponse({
+            "errors": build.compatibility_errors,
+            "total_conflicts": len(build.compatibility_errors),
+            "progress": build.calculate_progress()
+        })
+
+
+# Для получения актуальной цены
+class PriceUpdateView(LoginRequiredMixin, View):
+    def get(self, request):
+        build_id = request.session.get("current_build_id")
+        build = get_object_or_404(PCBuild, id=build_id)
+        return JsonResponse({"total_price": build.total_price})

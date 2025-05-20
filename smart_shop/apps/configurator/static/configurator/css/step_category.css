@@ -17,9 +17,9 @@
     font-weight: 600;
     letter-spacing: 0.5px;
     background: linear-gradient(
-        90deg,
-        var(--primary-500) 0%,
-        var(--primary-700) 100%
+            90deg,
+            var(--primary-500) 0%,
+            var(--primary-700) 100%
     );
     transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
@@ -34,10 +34,10 @@
     width: 50%;
     height: 100%;
     background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.2) 50%,
-        rgba(255, 255, 255, 0) 100%
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0) 100%
     );
     animation: ts-config-progress-shine 2s infinite;
 }
@@ -88,8 +88,12 @@
 }
 
 @keyframes ts-config-conflict-pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.02); }
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
 }
 
 .ts-config-category-card {
@@ -132,6 +136,16 @@
     letter-spacing: -0.3px;
 }
 
+.ts-config-component-img {
+    object-fit: cover;
+    border: 1px solid #dee2e6;
+}
+
+.ts-config-component-price {
+    min-width: 100px;
+    font-weight: 500;
+}
+
 /* Адаптивность */
 @media (max-width: 767.98px) {
     .ts-config-current-card {
@@ -156,5 +170,458 @@
 
     .ts-config-category-img img {
         width: 48px !important;
+    }
+}
+
+/* Базовые стили контейнера */
+.ts-config-container {
+    isolation: isolate;
+    position: relative;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+}
+
+/* Прогресс-бар */
+.ts-config-progress {
+    height: 1.4rem;
+    border-radius: 2rem;
+    overflow: hidden;
+    background: rgba(241, 243, 245, 0.8);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.ts-config-progress-bar {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #6745d7 0%, #8e6eff 100%);
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    padding-right: 1rem;
+    text-align: right;
+}
+
+/* Карточка текущей сборки */
+.ts-config-current-card {
+    border: 2px solid #e9ecef;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 40px rgba(103, 69, 215, 0.08);
+    overflow: hidden;
+}
+
+.ts-config-current-card .card-header {
+    background: linear-gradient(135deg, #6745d7, #8e6eff);
+    color: white;
+    border-radius: 1.5rem 1.5rem 0 0;
+    padding: 1.2rem 1.5rem;
+}
+
+.ts-config-compat-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Список компонентов */
+.ts-config-component-item {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: rgba(248, 249, 250, 0.6);
+    transition: all 0.3s ease;
+    margin-bottom: 0.8rem;
+    border: 1px solid transparent;
+}
+
+.ts-config-component-item:hover {
+    transform: translateX(5px);
+    background: white;
+    box-shadow: 0 4px 20px rgba(103, 69, 215, 0.1);
+    border-color: #e9ecef;
+}
+
+.ts-config-component-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 0.8rem;
+    border: 2px solid #f1f3f5;
+    transition: transform 0.3s ease;
+}
+
+.ts-config-component-item:hover .ts-config-component-img {
+    transform: scale(1.05);
+}
+
+/* Блок ошибок */
+.ts-config-errors {
+    background: #fff5f5;
+    border-top: 2px solid #ff6b6b;
+    border-radius: 0 0 1.5rem 1.5rem;
+    padding: 1.5rem;
+    font-size: 0.9rem;
+}
+
+.ts-config-errors h5 {
+    color: #ff6b6b;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+.ts-config-errors li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.ts-config-errors ul {
+    list-style: none; /* Отключаем стандартные маркеры */
+    padding-left: 0;
+}
+
+.ts-config-errors li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #ff6b6b;
+
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .ts-config-progress-bar {
+        font-size: 0.75rem;
+        padding-right: 0.5rem;
+    }
+
+    .ts-config-component-item {
+        padding: 0.8rem;
+    }
+
+    .ts-config-component-img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ts-config-container {
+        padding-top: 1rem;
+    }
+
+    .ts-config-progress {
+        height: 1.2rem;
+    }
+
+    .ts-config-current-card .card-header {
+        padding: 1rem;
+    }
+
+    .ts-config-errors {
+        padding: 1rem;
+    }
+}
+
+.ts-config-total {
+    font-weight: 700;
+    color: var(--primary-700);
+    letter-spacing: -0.5px;
+}
+
+.ts-config-total-price {
+    border-top: 2px dashed var(--primary-200) !important;
+}
+
+/* Блок действий */
+.ts-config-actions .btn {
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+}
+
+.ts-config-actions .btn-lg {
+    font-size: 1.1rem;
+}
+
+.ts-config-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Иконки */
+.ts-config-actions .bi {
+    font-size: 1.2em;
+    vertical-align: middle;
+}
+
+/* ===== Базовые стили ===== */
+.ts-config-container {
+    isolation: isolate;
+    position: relative;
+    padding: 2rem 0 4rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* ===== Прогресс-бар ===== */
+.ts-config-progress {
+
+    border-radius: 2rem;
+    background: rgba(241, 243, 245, 0.8);
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+    margin: 0 1rem 3rem;
+    position: relative;
+    overflow: visible;
+}
+
+.ts-config-progress-bar {
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-700) 100%);
+    border-radius: inherit;
+    padding: 0 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 2;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    min-width: 120px; /* Минимальная ширина для текста */
+}
+
+.ts-config-progress-bar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0) 100%
+    );
+    animation: ts-config-progress-shine 2s infinite;
+    z-index: 1;
+}
+
+@keyframes ts-config-progress-shine {
+    100% {
+        left: 200%;
+    }
+}
+
+/* ===== Секции категорий ===== */
+.ts-config-section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid var(--neutral-200);
+}
+
+.ts-config-section-header i {
+    font-size: 1.4em;
+    margin-right: 0.8rem;
+}
+
+/* Основные компоненты */
+.ts-config-required-categories .ts-config-section-header {
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+/* Охлаждение */
+.ts-config-cpu-cooling .ts-config-section-header {
+    color: var(--info);
+    border-color: var(--info);
+}
+
+/* Накопители */
+.ts-config-storage .ts-config-section-header {
+    color: var(--primary-600);
+    border-color: var(--primary-600);
+}
+
+/* Дополнительные компоненты */
+.ts-config-optional-categories .ts-config-section-header {
+    color: var(--success);
+    border-color: var(--success);
+}
+
+/* ===== Карточки категорий ===== */
+.ts-config-category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.2rem;
+}
+
+.ts-config-category-card {
+    border: 2px solid var(--neutral-200);
+    border-radius: 1.2rem;
+    background: white;
+    padding: 1.2rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.ts-config-category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(151, 117, 250, 0.15);
+}
+
+.ts-config-category-img {
+    width: 64px;
+    height: 64px;
+    border-radius: 0.8rem;
+    border: 2px solid var(--neutral-100);
+    transition: transform 0.3s ease;
+}
+
+.ts-config-category-card:hover .ts-config-category-img {
+    transform: rotate(-5deg) scale(1.1);
+}
+
+.ts-config-category-status {
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+}
+
+.ts-config-status-conflict {
+    background: rgba(var(--danger-rgb), 0.1);
+    color: var(--danger);
+}
+
+.ts-config-status-selected {
+    background: rgba(var(--success-rgb), 0.1);
+    color: var(--success);
+}
+
+.ts-config-status-default {
+    background: rgba(var(--neutral-600-rgb), 0.1);
+    color: var(--neutral-600);
+}
+
+/* ===== Адаптивность ===== */
+@media (max-width: 1200px) {
+    .ts-config-container {
+        padding: 2rem 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .ts-config-progress {
+        height: 1.8rem;
+        margin: 0 0 2rem;
+    }
+
+    .ts-config-progress-bar {
+        font-size: 0.8rem;
+        min-width: 100px;
+        padding: 0 1rem;
+    }
+
+    .ts-config-category-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .ts-config-progress-bar {
+        font-size: 0.75rem;
+        justify-content: center;
+        min-width: 0;
+    }
+
+    .ts-config-section-header {
+        font-size: 1.1rem;
+    }
+
+    .ts-config-category-img {
+        width: 56px;
+        height: 56px;
+    }
+}
+
+/* ===== Анимации ===== */
+@keyframes ts-config-conflict-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+/* ===== Дополнения ===== */
+.ts-config-compat-badge {
+    font-size: 0.9rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ts-config-component-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 20px rgba(103, 69, 215, 0.1);
+}
+
+.ts-config-total-price {
+    border-top: 2px dashed var(--primary-200) !important;
+}
+
+/* Базовые стили кнопок */
+.ts-config-action-btn {
+    border-radius: 0.8rem !important;
+    transition: all 0.3s ease !important;
+    padding: 0.75rem 1.5rem !important;
+    min-width: 120px; /* Фиксированная ширина для маленькой кнопки */
+}
+
+/* Большие кнопки */
+.ts-config-save-btn,
+.ts-config-publish-btn {
+    padding: 1rem 2rem !important;
+    font-size: 1.1rem !important;
+}
+
+/* Цвета и градиенты */
+.ts-config-save-btn {
+    background: linear-gradient(135deg, var(--primary-500), var(--primary-700)) !important;
+    color: white !important;
+    border: none !important;
+    margin-bottom: 1rem;
+}
+
+.ts-config-publish-btn {
+    background: linear-gradient(135deg, var(--success), #2ecc71) !important;
+    border: none !important;
+}
+
+/* Ховер-эффекты */
+.ts-config-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .ts-config-action-btn {
+        width: 100% !important; /* На мобильных - полная ширина */
+        min-width: auto;
+    }
+
+    .ts-config-actions .d-flex {
+        flex-direction: column; /* Вертикальное расположение */
+        gap: 1rem !important;
     }
 }

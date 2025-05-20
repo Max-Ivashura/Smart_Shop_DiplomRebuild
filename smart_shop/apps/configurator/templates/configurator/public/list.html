@@ -1,70 +1,118 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static humanize %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{% static 'configurator/css/list.css' %}">
+    <link rel="stylesheet" href="{% static 'configurator/css/list.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="ts-build-list-container container">
-    <div class="ts-build-list-header d-flex justify-content-between align-items-center mb-5">
-        <h1 class="ts-build-list-title text-primary-700">
-            <i class="bi bi-pc-display-horizontal me-2"></i>Публичные сборки
-        </h1>
-        <a href="{% url 'configurator:start' %}" class="ts-build-list-create-btn btn btn-outline-primary">
-            <i class="bi bi-plus-circle me-2"></i>Создать свою
-        </a>
-    </div>
+    <div class="ts-public-builds">
+        <div class="container py-5">
+            <div class="ts-header d-flex justify-content-between align-items-center mb-5">
+                <h1 class="ts-title display-5 text-primary">
+                    <i class="bi bi-globe me-3"></i>Публичные сборки
+                </h1>
+                <a href="{% url 'configurator:start' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>Создать сборку
+                </a>
+            </div>
 
-    <div class="row g-4">
-        {% for build in public_builds %}
-        <div class="col-12 col-lg-6">
-            <div class="ts-build-card card">
-                <div class="card-body">
-                    <div class="ts-build-card-header d-flex justify-content-between align-items-center">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-person-circle ts-build-author-icon"></i>
-                            <h2 class="ts-build-card-title h5 mb-0">{{ build.title|default:"Без названия" }}</h2>
-                        </div>
-                        <span class="ts-build-price-badge badge">
-                            {{ build.total_price }} ₽
-                        </span>
-                    </div>
+            <div class="row g-4">
+                {% for build in public_builds %}
+                    <div class="col-12 col-lg-6">
+                        <div class="ts-build-card card border-0 shadow-lg h-100">
+                            <div class="card-body p-4">
+                                <!-- Заголовок -->
+                                <div class="ts-build-header mb-4">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h2 class="ts-build-title h3 mb-2">
+                                                {{ build.title|default:"Без названия" }}
+                                            </h2>
+                                            <div class="d-flex align-items-center gap-2">
+                                        <span class="badge bg-primary text-white">
+                                            <i class="bi bi-person-circle me-2"></i>
+                                            {{ build.user.username }}
+                                        </span>
+                                                <span class="text-muted small">
+                                            <i class="bi bi-calendar me-1"></i>
+                                            {{ build.created_at|date:"d.m.Y" }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <span class="ts-price h4 text-primary">
+                                    {{ build.total_price|intcomma }} ₽
+                                </span>
+                                    </div>
+                                </div>
 
-                    <div class="ts-build-components mb-4">
-                        <h3 class="ts-build-components-title h6 mb-3">
-                            <i class="bi bi-motherboard me-2"></i>Компоненты
-                        </h3>
-                        <div class="ts-build-components-grid d-flex flex-wrap gap-2">
-                            {% for component in build.components.all %}
-                            <div class="ts-build-component-tag">
-                                <span class="ts-build-component-name">{{ component.name }}</span>
-                                <small class="ts-build-component-category">{{ component.category.name }}</small>
+                                <!-- Компоненты с фото -->
+                                <div class="ts-components-preview mb-4">
+                                    <div class="ts-components-grid">
+                                        {% for component in build.buildcomponent_set.all|slice:":6" %}
+                                            <div class="ts-component-item">
+                                                <div class="ts-component-img-wrapper">
+                                                    <img src="{{ component.product.images.first.image.url }}"
+                                                         alt="{{ component.product.name }}"
+                                                         class="ts-component-img">
+                                                    {% if component.quantity > 1 %}
+                                                        <span class="ts-component-quantity">
+                                            ×{{ component.quantity }}
+                                        </span>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="ts-component-name small text-center">
+                                                    {{ component.product.name|truncatechars:20 }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <!-- Статистика -->
+                                <div class="ts-build-footer d-flex justify-content-between align-items-center">
+                                    <div class="ts-stats">
+                                        <div class="ts-rating d-flex align-items-center gap-2">
+                                            <div class="stars text-warning">
+                                                {% for _ in "12345" %}
+                                                    <i class="bi bi-star{% if forloop.counter <= build.average_rating %}-fill{% endif %}"></i>
+                                                {% endfor %}
+                                            </div>
+                                            <small class="text-muted">
+                                                ({{ build.ratings.count }} оценок)
+                                            </small>
+                                        </div>
+                                        <div class="ts-comments mt-2">
+                                            <a href="{% url 'configurator:build_detail' build.id %}"
+                                               class="text-decoration-none text-primary">
+                                                <i class="bi bi-chat-left-text me-2"></i>
+                                                {{ build.comments_count }} комментариев
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="ts-actions">
+                                        <a href="{% url 'configurator:clone_build' build.id %}"
+                                           class="btn btn-outline-primary">
+                                            <i class="bi bi-files me-2"></i>Клонировать
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
-                            {% endfor %}
                         </div>
                     </div>
-
-                    <div class="ts-build-actions d-flex justify-content-end">
-                        <a href="{% url 'configurator:clone_build' build.id %}"
-                           class="ts-build-clone-btn btn">
-                            <i class="bi bi-files me-2"></i>Клонировать сборку
-                        </a>
+                {% empty %}
+                    <div class="col-12">
+                        <div class="ts-empty-state text-center py-5">
+                            <div class="ts-empty-icon mb-4">
+                                <i class="bi bi-pc-display text-muted fs-1"></i>
+                            </div>
+                            <h2 class="h3 text-primary mb-3">Публичных сборок пока нет</h2>
+                            <p class="text-muted lead">Будьте первым, кто поделится своей уникальной конфигурацией!</p>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="ts-build-empty alert text-center py-5">
-                <div class="ts-build-empty-icon text-primary-500 mb-3">
-                    <i class="bi bi-pc-display fs-1"></i>
-                </div>
-                <h2 class="ts-build-empty-title text-primary-700 mb-3">Публичных сборок пока нет</h2>
-                <p class="ts-build-empty-text text-neutral-600">Станьте первым, кто поделится своей конфигурацией</p>
-            </div>
-        </div>
-        {% endfor %}
     </div>
-</div>
 {% endblock %}

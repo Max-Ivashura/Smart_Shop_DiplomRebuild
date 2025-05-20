@@ -2,100 +2,103 @@
 {% load static %}
 
 {% block extra_styles %}
-<link rel="stylesheet" href="{% static 'configurator/css/step_component.css' %}">
+    <link rel="stylesheet" href="{% static 'configurator/css/step_component.css' %}">
 {% endblock %}
 
 {% block configurator_content %}
-<section class="ts-comp-container container">
-    <div class="ts-comp-back mb-4">
-        <a href="{% url 'configurator:select_category' %}"
-           class="ts-comp-back-btn btn btn-outline-primary btn-sm"
-           aria-label="Вернуться к выбору категории">
-            <i class="bi bi-arrow-left me-2"></i>Назад
-        </a>
-    </div>
+    <section class="ts-comp-container container">
+        <div class="ts-comp-back mb-4">
+            <a href="{% url 'configurator:select_category' %}"
+               class="ts-comp-back-btn btn btn-outline-primary btn-sm"
+               aria-label="Вернуться к выбору категории">
+                <i class="bi bi-arrow-left me-2"></i>Назад
+            </a>
+        </div>
 
-    <h2 class="ts-comp-title text-primary-700 mb-4">
-        <i class="bi bi-pc-display me-2"></i>{{ category.name }}
-    </h2>
+        <h2 class="ts-comp-title text-primary-700 mb-4">
+            <i class="bi bi-pc-display me-2"></i>{{ category.name }}
+        </h2>
 
-    <div class="ts-comp-grid row g-4">
-        {% for product in products %}
-        <div class="col-12 col-lg-6">
-            <article class="ts-comp-card card
+        <div class="ts-comp-grid row g-4">
+            {% for product in products %}
+                <div class="col-12 col-lg-6">
+                    <article class="ts-comp-card card
                 {% if product.compatibility_issues %}ts-comp-warning{% endif %}">
-                <div class="card-body">
-                    <h3 class="ts-comp-product-title h5 text-primary-700 mb-3">{{ product.name }}</h3>
+                        <div class="card-body">
+                            <h3 class="ts-comp-product-title h5 text-primary-700 mb-3">{{ product.name }}</h3>
 
-                    <!-- Изображение товара -->
-                    {% with product.images.first as image %}
-                    <div class="ts-comp-image-wrapper ratio ratio-16x9 mb-4">
-                        <img src="{% if image %}{{ image.image.url }}{% else %}{% static 'images/placeholder.png' %}{% endif %}"
-                             class="ts-comp-image object-fit-contain p-3"
-                             alt="{{ product.name }}">
-                    </div>
-                    {% endwith %}
+                            <!-- Изображение товара -->
+                            {% with product.images.first as image %}
+                                <div class="ts-comp-image-wrapper ratio ratio-16x9 mb-4">
+                                    <img src="
 
-                    <!-- Характеристики -->
-                    <div class="ts-comp-specs">
-                        {% for group, params in product.specs.items %}
-                        <div class="ts-comp-spec-group mb-3">
-                            <h6 class="ts-comp-spec-title mb-2"><i class="bi bi-gear me-2"></i>{{ group }}</h6>
-                            <ul class="ts-comp-spec-list list-unstyled">
-                                {% for key, value in params.items %}
-                                <li class="ts-comp-spec-item mb-1">
-                                    <strong>{{ key }}:</strong>
-                                    <span class="ts-comp-spec-value">{{ value }}</span>
-                                </li>
+
+
+                                            {% if image %}{{ image.image.url }}{% else %}{% static 'images/placeholder.png' %}{% endif %}"
+                                         class="ts-comp-image object-fit-contain p-3"
+                                         alt="{{ product.name }}">
+                                </div>
+                            {% endwith %}
+
+                            <!-- Характеристики -->
+                            <div class="ts-comp-specs">
+                                {% for group, params in product.specs.items %}
+                                    <div class="ts-comp-spec-group mb-3">
+                                        <h6 class="ts-comp-spec-title mb-2"><i class="bi bi-gear me-2"></i>{{ group }}
+                                        </h6>
+                                        <ul class="ts-comp-spec-list list-unstyled">
+                                            {% for key, value in params.items %}
+                                                <li class="ts-comp-spec-item mb-1">
+                                                    <strong>{{ key }}:</strong>
+                                                    <span class="ts-comp-spec-value">{{ value }}</span>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
                                 {% endfor %}
-                            </ul>
-                        </div>
-                        {% endfor %}
-                    </div>
+                            </div>
 
-                    <!-- Цена и кнопка -->
-                    <div class="ts-comp-footer d-flex flex-wrap justify-content-between align-items-center">
-                        <div class="ts-comp-price">
-                            {{ product.price }} ₽
-                            <small class="ts-comp-stock d-block text-{% if product.stock > 0 %}success{% else %}danger{% endif %}">
-                                {{ product.stock|yesno:"В наличии,Под заказ" }}
-                            </small>
-                        </div>
-                        <form method="post" action="{% url 'configurator:add_component' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="product_id" value="{{ product.id }}">
-                            <button type="submit"
-                                    class="ts-comp-select-btn btn btn-primary"
-                                    aria-label="Выбрать {{ product.name }}">
-                                <i class="bi bi-check-circle me-2"></i>Выбрать
-                            </button>
-                        </form>
-                    </div>
+                            <!-- Цена и кнопка -->
+                            <div class="ts-comp-footer d-flex flex-wrap justify-content-between align-items-center">
+                                <div class="ts-comp-price">
+                                    {{ product.price }} ₽
+                                    <small class="ts-comp-stock d-block text-{% if product.stock > 0 %}success{% else %}danger{% endif %}">
+                                        {{ product.stock|yesno:"В наличии,Под заказ" }}
+                                    </small>
+                                </div>
+                                <form method="post" action="{% url 'configurator:add_component' %}">
+                                    {% csrf_token %}  <!-- Добавьте эту строку -->
+                                    <input type="hidden" name="product_id" value="{{ product.id }}">
+                                    <button type="submit" class="ts-comp-select-btn btn btn-primary">
+                                        <i class="bi bi-check-circle me-2"></i>Выбрать
+                                    </button>
+                                </form>
+                            </div>
 
-                    <!-- Предупреждения о совместимости -->
-                    {% if product.compatibility_issues %}
-                    <div class="ts-comp-alert alert mt-4">
-                        <h4 class="ts-comp-alert-title h6 text-danger mb-3">
-                            <i class="bi bi-exclamation-octagon me-2"></i>Ограничения
-                        </h4>
-                        <ul class="ts-comp-alert-list list-unstyled mb-0">
-                            {% for issue in product.compatibility_issues %}
-                            <li class="ts-comp-alert-item mb-1">{{ issue }}</li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
+                            <!-- Предупреждения о совместимости -->
+                            {% if product.compatibility_issues %}
+                                <div class="ts-comp-alert alert mt-4">
+                                    <h4 class="ts-comp-alert-title h6 text-danger mb-3">
+                                        <i class="bi bi-exclamation-octagon me-2"></i>Ограничения
+                                    </h4>
+                                    <ul class="ts-comp-alert-list list-unstyled mb-0">
+                                        {% for issue in product.compatibility_issues %}
+                                            <li class="ts-comp-alert-item mb-1">{{ issue }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </article>
                 </div>
-            </article>
+            {% empty %}
+                <div class="col-12">
+                    <div class="ts-comp-warning alert">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Нет доступных компонентов, соответствующих требованиям совместимости
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="col-12">
-            <div class="ts-comp-warning alert">
-                <i class="bi bi-exclamation-triangle me-2"></i>
-                Нет доступных компонентов, соответствующих требованиям совместимости
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</section>
+    </section>
 {% endblock %}

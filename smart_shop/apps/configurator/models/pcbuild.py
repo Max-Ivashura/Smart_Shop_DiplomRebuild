@@ -11,6 +11,12 @@ class PCBuild(models.Model):
         related_name='builds',
         verbose_name='Пользователь'
     )
+    title = models.CharField(
+        "Название сборки",
+        max_length=100,
+        blank=True,
+        default=""
+    )
     components = models.ManyToManyField(
         Product,
         through='BuildComponent',
@@ -33,11 +39,39 @@ class PCBuild(models.Model):
     created_at = models.DateTimeField('Дата создания', auto_now_add=True)
     updated_at = models.DateTimeField('Дата обновления', auto_now=True)
 
+    @property
+    def average_rating(self):
+        from django.db.models import Avg
+        return self.ratings.aggregate(Avg('value'))['value__avg']
+
+    @property
+    def comments_count(self):
+        return self.comments.filter(is_approved=True).count()
+
+    def save(self, *args, **kwargs):
+        if not self.title:  # Автогенерация, если название пустое
+            self.title = f"Сборка #{self.id}"
+        super().save(*args, **kwargs)
+
+    def update_total_price(self):
+        self.total_price = sum(
+            component.product.price * component.quantity
+            for component in self.buildcomponent_set.all()
+        )
+        self.save()
+
     def check_compatibility(self):
         """Проверить совместимость компонентов и обновить поле ошибок."""
         checker = CompatibilityChecker(self.components.all())
         self.compatibility_errors = checker.validate()
         self.save()
+
+    def calculate_progress(self):
+        REQUIRED_SLUGS = ['processor', 'motherboard', 'ram', 'psu', 'case']
+        selected = self.buildcomponent_set.filter(
+            product__category__slug__in=REQUIRED_SLUGS
+        ).values_list('product__category__slug', flat=True).distinct().count()
+        return int((selected / len(REQUIRED_SLUGS)) * 100)
 
     class Meta:
         verbose_name = 'Сборка ПК'
